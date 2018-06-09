@@ -52,16 +52,16 @@ public class DatamigrationService {
 
     private final Logger logger;
     private final CustomerManager customerManager;
-    private final DatamigrarionConnector datamigrarionConnector;
+  //  private final DatamigrarionConnector datamigrarionConnector = new DatamigrarionConnector();
 
 
     @Autowired
     public DatamigrationService(@Qualifier(ServiceConstants.LOGGER_NAME) final Logger logger,
-                            final CustomerManager customerManager, final DatamigrarionConnector datamigrarionConnector) {
+                            final CustomerManager customerManager) {
         super();
         this.logger = logger;
         this.customerManager = customerManager;
-        this.datamigrarionConnector = datamigrarionConnector;
+      // this.datamigrarionConnector = datamigrarionConnector;
     }
 
 
@@ -343,7 +343,7 @@ public class DatamigrationService {
                     customer.setLastModifiedBy(lastModifiedBy);
                     customer.setLastModifiedOn(lastModifiedOn);
 
-                    this.datamigrarionConnector.authenticate();
+                    //this.datamigrarionConnector.authenticate();
                     customerManager.createCustomer(customer);
 
                 }

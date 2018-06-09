@@ -69,6 +69,8 @@ public class DatamigrationConfiguration extends WebMvcConfigurerAdapter {
     super();
   }
 
+
+
   @Bean(name = ServiceConstants.LOGGER_NAME)
   public Logger logger() {
     return LoggerFactory.getLogger(ServiceConstants.LOGGER_NAME);
@@ -78,4 +80,6 @@ public class DatamigrationConfiguration extends WebMvcConfigurerAdapter {
   public void configurePathMatch(final PathMatchConfigurer configurer) {
     configurer.setUseSuffixPatternMatch(Boolean.FALSE);
   }
+
+
 }
