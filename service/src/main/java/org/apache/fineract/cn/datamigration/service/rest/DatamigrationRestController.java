@@ -77,17 +77,15 @@ public class DatamigrationRestController {
           value = "/customers/download",
           method = RequestMethod.GET
   )
-  public void download(HttpServletResponse response, Model model) throws ClassNotFoundException {
-      datamigrationService.customersFormDownload(response,model);
+  public void download(HttpServletResponse response) throws ClassNotFoundException {
+      datamigrationService.customersFormDownload(response);
   }
 
 
   @Permittable(value = AcceptedTokenType.TENANT, groupId = PermittableGroupIds.DATAMIGRATION_MANAGEMENT)
   @RequestMapping(
             value = "/customers",
-            method = RequestMethod.POST,
-            produces = MediaType.APPLICATION_JSON_VALUE,
-            consumes = MediaType.APPLICATION_JSON_VALUE
+            method = RequestMethod.POST
   )
   public ResponseEntity<String> customersFormUpload(@RequestParam("file") MultipartFile file) throws IOException {
         datamigrationService.customersFormUpload(file);

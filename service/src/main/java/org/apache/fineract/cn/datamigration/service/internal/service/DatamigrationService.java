@@ -24,18 +24,16 @@ import org.apache.fineract.cn.customer.api.v1.domain.ContactDetail;
 import org.apache.fineract.cn.customer.api.v1.domain.Customer;
 
 import org.apache.fineract.cn.customer.catalog.api.v1.domain.Value;
-import org.apache.fineract.cn.datamigration.service.Connector.DatamigrarionConnector;
+
 
 import org.apache.fineract.cn.datamigration.service.ServiceConstants;
 import org.apache.fineract.cn.lang.DateOfBirth;
 import org.apache.poi.hssf.usermodel.*;
-import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.Font;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
-import org.springframework.ui.Model;
 
 import org.slf4j.Logger;
 import org.springframework.web.multipart.MultipartException;
@@ -45,6 +43,7 @@ import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.IntStream;
 
 
 @Component
@@ -52,38 +51,38 @@ public class DatamigrationService {
 
     private final Logger logger;
     private final CustomerManager customerManager;
-  //  private final DatamigrarionConnector datamigrarionConnector = new DatamigrarionConnector();
+   // private final DatamigrarionConnector datamigrarionConnector = new DatamigrarionConnector();
 
 
     @Autowired
     public DatamigrationService(@Qualifier(ServiceConstants.LOGGER_NAME) final Logger logger,
-                            final CustomerManager customerManager) {
+                            final CustomerManager customerManager
+                                       //final DatamigrarionConnector datamigrarionConnector
+    ) {
         super();
         this.logger = logger;
         this.customerManager = customerManager;
-      // this.datamigrarionConnector = datamigrarionConnector;
+        //this.datamigrarionConnector = datamigrarionConnector;
     }
 
 
-  public void customersFormDownload(HttpServletResponse response, Model model){
+  public void customersFormDownload(HttpServletResponse response){
     HSSFWorkbook workbook = new HSSFWorkbook();
     HSSFSheet worksheet = workbook.createSheet("customers");
 
-    int startRowIndex = 0;
-    int startColIndex = 0;
+      int startRowIndex = 0;
+      int startColIndex = 0;
 
-    Font font = worksheet.getWorkbook().createFont();
-    font.setBoldweight(Font.BOLDWEIGHT_BOLD);
-    HSSFCellStyle headerCellStyle = worksheet.getWorkbook().createCellStyle();
-    headerCellStyle.setAlignment(CellStyle.ALIGN_CENTER);
-    headerCellStyle.setWrapText(true);
-    headerCellStyle.setFont(font);
-    headerCellStyle.setBorderRight(CellStyle.BORDER_THICK);
-    headerCellStyle.setBorderBottom(CellStyle.BORDER_THICK);
-    HSSFRow rowHeader = worksheet.createRow((short) startRowIndex);
-    rowHeader.setHeight((short) 500);
+      Font font = worksheet.getWorkbook().createFont();
+      HSSFCellStyle headerCellStyle = worksheet.getWorkbook().createCellStyle();
 
-    HSSFCell cell1 = rowHeader.createCell(startColIndex+0);
+      headerCellStyle.setWrapText(true);
+      headerCellStyle.setFont(font);
+      HSSFRow rowHeader = worksheet.createRow((short) startRowIndex);
+      rowHeader.setHeight((short) 500);
+
+
+      HSSFCell cell1 = rowHeader.createCell(startColIndex+0);
     cell1.setCellValue("identifier");
     cell1.setCellStyle(headerCellStyle);
 
@@ -221,7 +220,9 @@ public class DatamigrationService {
     cell33.setCellValue("lastModifiedOn");
     cell33.setCellStyle(headerCellStyle);
 
-    response.setHeader("Content-Disposition", "inline; filename=Customer.xls");
+    IntStream.range(0, 33).forEach((columnIndex) -> worksheet.autoSizeColumn(columnIndex));
+
+    response.setHeader("Content-Disposition", "attachment; filename=Customer.xls");
     response.setContentType("application/vnd.ms-excel");
 
     try {
