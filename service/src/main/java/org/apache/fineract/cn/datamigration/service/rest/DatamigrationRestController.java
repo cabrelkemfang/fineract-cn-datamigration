@@ -28,6 +28,8 @@ import org.apache.fineract.cn.datamigration.service.internal.service.Datamigrati
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.core.io.InputStreamResource;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -36,6 +38,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletResponse;
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 
 @SuppressWarnings("unused")
@@ -77,12 +80,22 @@ public class DatamigrationRestController {
           value = "/customers/download",
           method = RequestMethod.GET
   )
-  public void download(HttpServletResponse response) throws ClassNotFoundException {
-      datamigrationService.customersFormDownload(response);
+  public ResponseEntity  download() throws ClassNotFoundException {
+      ByteArrayInputStream bis = datamigrationService.customersFormDownload();
+
+      HttpHeaders headers = new HttpHeaders();
+      headers.setContentType(MediaType.parseMediaType("application/vnd.ms-excel"));
+      headers.add("Content-Disposition", "attachment; filename=customers.xls");
+      return ResponseEntity
+              .ok()
+              .headers(headers)
+              .contentType(MediaType.parseMediaType("application/vnd.ms-excel"))
+              .body(new InputStreamResource(bis));
   }
 
 
-  @Permittable(value = AcceptedTokenType.TENANT, groupId = PermittableGroupIds.DATAMIGRATION_MANAGEMENT)
+
+    @Permittable(value = AcceptedTokenType.TENANT, groupId = PermittableGroupIds.DATAMIGRATION_MANAGEMENT)
   @RequestMapping(
             value = "/customers",
             method = RequestMethod.POST

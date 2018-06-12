@@ -28,8 +28,8 @@ import org.apache.fineract.cn.customer.catalog.api.v1.domain.Value;
 
 import org.apache.fineract.cn.datamigration.service.ServiceConstants;
 import org.apache.fineract.cn.lang.DateOfBirth;
-import org.apache.poi.hssf.usermodel.*;
 import org.apache.poi.ss.usermodel.Font;
+import org.apache.poi.xssf.usermodel.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
@@ -38,9 +38,8 @@ import org.springframework.stereotype.Component;
 import org.slf4j.Logger;
 import org.springframework.web.multipart.MultipartException;
 import org.springframework.web.multipart.MultipartFile;
-
-import javax.servlet.ServletOutputStream;
-import javax.servlet.http.HttpServletResponse;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.IntStream;
@@ -66,175 +65,174 @@ public class DatamigrationService {
     }
 
 
-  public void customersFormDownload(HttpServletResponse response){
-    HSSFWorkbook workbook = new HSSFWorkbook();
-    HSSFSheet worksheet = workbook.createSheet("customers");
+  public  final ByteArrayInputStream customersFormDownload(){
+
+      ByteArrayOutputStream outByteStream = new ByteArrayOutputStream();
+    XSSFWorkbook workbook = new XSSFWorkbook();
+   XSSFSheet worksheet = workbook.createSheet("customers");
 
       int startRowIndex = 0;
       int startColIndex = 0;
 
       Font font = worksheet.getWorkbook().createFont();
-      HSSFCellStyle headerCellStyle = worksheet.getWorkbook().createCellStyle();
+      XSSFCellStyle headerCellStyle = worksheet.getWorkbook().createCellStyle();
 
       headerCellStyle.setWrapText(true);
       headerCellStyle.setFont(font);
-      HSSFRow rowHeader = worksheet.createRow((short) startRowIndex);
+      XSSFRow rowHeader = worksheet.createRow((short) startRowIndex);
       rowHeader.setHeight((short) 500);
 
 
-      HSSFCell cell1 = rowHeader.createCell(startColIndex+0);
+      XSSFCell cell1 = rowHeader.createCell(startColIndex+0);
     cell1.setCellValue("identifier");
     cell1.setCellStyle(headerCellStyle);
 
-    HSSFCell cell2 = rowHeader.createCell(startColIndex+1);
+    XSSFCell cell2 = rowHeader.createCell(startColIndex+1);
     cell2.setCellValue("type");
     cell2.setCellStyle(headerCellStyle);
 
 
-    HSSFCell cell3 = rowHeader.createCell(startColIndex+2);
+    XSSFCell cell3 = rowHeader.createCell(startColIndex+2);
     cell3.setCellValue("givenName");
     cell3.setCellStyle(headerCellStyle);
 
-    HSSFCell cell4 = rowHeader.createCell(startColIndex+3);
+    XSSFCell cell4 = rowHeader.createCell(startColIndex+3);
     cell4.setCellValue("middleName");
     cell4.setCellStyle(headerCellStyle);
 
-    HSSFCell cell5 = rowHeader.createCell(startColIndex+4);
+    XSSFCell cell5 = rowHeader.createCell(startColIndex+4);
     cell5.setCellValue("surname ");
     cell5.setCellStyle(headerCellStyle);
 
 //dateOfBirth
-    HSSFCell cell6 = rowHeader.createCell(startColIndex+5);
+    XSSFCell cell6 = rowHeader.createCell(startColIndex+5);
     cell6.setCellValue("year ");
     cell6.setCellStyle(headerCellStyle);
 
-    HSSFCell cell7 = rowHeader.createCell(startColIndex+6);
+    XSSFCell cell7 = rowHeader.createCell(startColIndex+6);
     cell7.setCellValue("month ");
     cell7.setCellStyle(headerCellStyle);
 
-    HSSFCell cell8 = rowHeader.createCell(startColIndex+7);
+    XSSFCell cell8 = rowHeader.createCell(startColIndex+7);
     cell8.setCellValue("day ");
     cell8.setCellStyle(headerCellStyle);
 
-    HSSFCell cell9= rowHeader.createCell(startColIndex+8);
+    XSSFCell cell9= rowHeader.createCell(startColIndex+8);
     cell9.setCellValue("member");
     cell9.setCellStyle(headerCellStyle);
 
-    HSSFCell cell10= rowHeader.createCell(startColIndex+9);
+    XSSFCell cell10= rowHeader.createCell(startColIndex+9);
     cell10.setCellValue("accountBeneficiary");
     cell10.setCellStyle(headerCellStyle);
 
-    HSSFCell cell11= rowHeader.createCell(startColIndex+10);
+    XSSFCell cell11= rowHeader.createCell(startColIndex+10);
     cell11.setCellValue("referenceCustomer");
     cell11.setCellStyle(headerCellStyle);
 
-    HSSFCell cell12= rowHeader.createCell(startColIndex+11);
+    XSSFCell cell12= rowHeader.createCell(startColIndex+11);
     cell12.setCellValue("assignedOffice");
     cell12.setCellStyle(headerCellStyle);
 
-    HSSFCell cell13= rowHeader.createCell(startColIndex+12);
+    XSSFCell cell13= rowHeader.createCell(startColIndex+12);
     cell13.setCellValue("assignedEmployee");
     cell13.setCellStyle(headerCellStyle);
 
 //address
-    HSSFCell cell14= rowHeader.createCell(startColIndex+13);
+    XSSFCell cell14= rowHeader.createCell(startColIndex+13);
     cell14.setCellValue("street");
     cell14.setCellStyle(headerCellStyle);
 
-    HSSFCell cell15= rowHeader.createCell(startColIndex+14);
+    XSSFCell cell15= rowHeader.createCell(startColIndex+14);
     cell15.setCellValue("city");
     cell15.setCellStyle(headerCellStyle);
 
-    HSSFCell cell16= rowHeader.createCell(startColIndex+15);
+    XSSFCell cell16= rowHeader.createCell(startColIndex+15);
     cell16.setCellValue("region");
     cell16.setCellStyle(headerCellStyle);
 
-    HSSFCell cell17= rowHeader.createCell(startColIndex+16);
+    XSSFCell cell17= rowHeader.createCell(startColIndex+16);
     cell17.setCellValue("postalCode");
     cell17.setCellStyle(headerCellStyle);
 
-    HSSFCell cell18= rowHeader.createCell(startColIndex+17);
+    XSSFCell cell18= rowHeader.createCell(startColIndex+17);
     cell18.setCellValue("countryCode");
     cell18.setCellStyle(headerCellStyle);
 
-    HSSFCell cell19= rowHeader.createCell(startColIndex+18);
+    XSSFCell cell19= rowHeader.createCell(startColIndex+18);
     cell19.setCellValue("country");
     cell19.setCellStyle(headerCellStyle);
 
     //contactDetail
-    HSSFCell cell20= rowHeader.createCell(startColIndex+19);
+    XSSFCell cell20= rowHeader.createCell(startColIndex+19);
     cell20.setCellValue("type");
     cell20.setCellStyle(headerCellStyle);
 
-    HSSFCell cell21= rowHeader.createCell(startColIndex+20);
+    XSSFCell cell21= rowHeader.createCell(startColIndex+20);
     cell21.setCellValue("group");
     cell21.setCellStyle(headerCellStyle);
 
-    HSSFCell cell22= rowHeader.createCell(startColIndex+21);
+    XSSFCell cell22= rowHeader.createCell(startColIndex+21);
     cell22.setCellValue("value");
     cell22.setCellStyle(headerCellStyle);
 
-    HSSFCell cell23= rowHeader.createCell(startColIndex+22);
+    XSSFCell cell23= rowHeader.createCell(startColIndex+22);
     cell23.setCellValue("preferenceLevel");
     cell23.setCellStyle(headerCellStyle);
 
-    HSSFCell cell24= rowHeader.createCell(startColIndex+23);
+    XSSFCell cell24= rowHeader.createCell(startColIndex+23);
     cell24.setCellValue("validated");
     cell24.setCellStyle(headerCellStyle);
 
 
-    HSSFCell cell25= rowHeader.createCell(startColIndex+24);
+    XSSFCell cell25= rowHeader.createCell(startColIndex+24);
     cell25.setCellValue("currentState");
     cell25.setCellStyle(headerCellStyle);
 
-    HSSFCell cell26= rowHeader.createCell(startColIndex+25);
+    XSSFCell cell26= rowHeader.createCell(startColIndex+25);
     cell26.setCellValue("applicationDate");
     cell26.setCellStyle(headerCellStyle);
 
     //value
-    HSSFCell cell27= rowHeader.createCell(startColIndex+26);
+    XSSFCell cell27= rowHeader.createCell(startColIndex+26);
     cell27.setCellValue("catalogIdentifier");
     cell27.setCellStyle(headerCellStyle);
 
-    HSSFCell cell28= rowHeader.createCell(startColIndex+27);
+    XSSFCell cell28= rowHeader.createCell(startColIndex+27);
     cell28.setCellValue("fieldIdentifier");
     cell28.setCellStyle(headerCellStyle);
 
-    HSSFCell cell29= rowHeader.createCell(startColIndex+28);
+    XSSFCell cell29= rowHeader.createCell(startColIndex+28);
     cell29.setCellValue("value");
     cell29.setCellStyle(headerCellStyle);
 
-    HSSFCell cell30= rowHeader.createCell(startColIndex+29);
+    XSSFCell cell30= rowHeader.createCell(startColIndex+29);
     cell30.setCellValue("createdBy");
     cell30.setCellStyle(headerCellStyle);
 
-    HSSFCell cell31= rowHeader.createCell(startColIndex+30);
+    XSSFCell cell31= rowHeader.createCell(startColIndex+30);
     cell31.setCellValue("createdOn");
     cell31.setCellStyle(headerCellStyle);
 
-    HSSFCell cell32= rowHeader.createCell(startColIndex+31);
+    XSSFCell cell32= rowHeader.createCell(startColIndex+31);
     cell32.setCellValue("lastModifiedBy");
     cell32.setCellStyle(headerCellStyle);
 
-    HSSFCell cell33= rowHeader.createCell(startColIndex+32);
+    XSSFCell cell33= rowHeader.createCell(startColIndex+32);
     cell33.setCellValue("lastModifiedOn");
     cell33.setCellStyle(headerCellStyle);
 
     IntStream.range(0, 33).forEach((columnIndex) -> worksheet.autoSizeColumn(columnIndex));
 
-    response.setHeader("Content-Disposition", "attachment; filename=Customer.xls");
-    response.setContentType("application/vnd.ms-excel");
-
     try {
-      // Retrieve the output stream
-      ServletOutputStream outputStream = response.getOutputStream();
-      // Write to the output stream
-      worksheet.getWorkbook().write(outputStream);
+
+      worksheet.getWorkbook().write(outByteStream);
       // Flush the stream
-      outputStream.flush();
+        outByteStream.flush();
     } catch (Exception e) {
       System.out.println("Unable to write report to the output stream");
     }
+      return new ByteArrayInputStream(outByteStream.toByteArray());
+
 
   }
 
@@ -243,9 +241,9 @@ public class DatamigrationService {
             throw new MultipartException("Only excel files accepted!");
         } else {
             try{
-                HSSFWorkbook customers = new HSSFWorkbook(file.getInputStream());
-                HSSFSheet worksheet = customers.getSheetAt(0);
-                HSSFRow entry;
+                XSSFWorkbook customers = new XSSFWorkbook(file.getInputStream());
+               XSSFSheet worksheet = customers.getSheetAt(0);
+                XSSFRow entry;
                 Integer noOfEntries=1;
 
                 //getLastRowNum and getPhysicalNumberOfRows showing false values sometimes.
