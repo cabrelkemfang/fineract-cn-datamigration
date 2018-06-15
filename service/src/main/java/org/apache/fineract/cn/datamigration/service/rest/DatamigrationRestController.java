@@ -105,4 +105,11 @@ public class DatamigrationRestController {
       return new ResponseEntity<>("Upload successuly", HttpStatus.OK);
     }
 
+
+    //testing porpuse
+    @RequestMapping(value = "/test",method = RequestMethod.GET)
+    public  String test(){
+      return "Hello test is working";
+    }
+
 }
