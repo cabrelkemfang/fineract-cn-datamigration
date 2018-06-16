@@ -116,7 +116,7 @@ public class TestSample extends SuiteTestEnvironment {
     }
   }
 
-  @Test
+  /*@Test
   public void shouldCreateSample() throws InterruptedException {
     logger.info("Running test shouldCreateSample.");
     final Sample sample = Sample.create(RandomStringUtils.randomAlphanumeric(8), RandomStringUtils.randomAlphanumeric(512));
@@ -133,5 +133,5 @@ public class TestSample extends SuiteTestEnvironment {
     logger.info("Running test shouldListSamples.");
     final List<Sample> allEntities = this.testSubject.findAllEntities();
     Assert.assertNotNull(allEntities);
-  }
+  }*/
 }
