@@ -12,7 +12,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Base64Utils;
 
-@Service
+@Component
 public class DatamigrarionConnector {
 
     private final Logger logger;

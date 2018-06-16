@@ -26,16 +26,17 @@ import org.apache.fineract.cn.customer.api.v1.domain.Customer;
 import org.apache.fineract.cn.customer.catalog.api.v1.domain.Value;
 
 
+import org.apache.fineract.cn.datamigration.service.Connector.DatamigrarionConnector;
 import org.apache.fineract.cn.datamigration.service.ServiceConstants;
 import org.apache.fineract.cn.lang.DateOfBirth;
 import org.apache.poi.ss.usermodel.Font;
 import org.apache.poi.xssf.usermodel.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.stereotype.Component;
 
 
 import org.slf4j.Logger;
+import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartException;
 import org.springframework.web.multipart.MultipartFile;
 import java.io.ByteArrayInputStream;
@@ -45,12 +46,12 @@ import java.util.List;
 import java.util.stream.IntStream;
 
 
-@Component
+@Service
 public class DatamigrationService {
 
     private final Logger logger;
     private final CustomerManager customerManager;
-   // private final DatamigrarionConnector datamigrarionConnector = new DatamigrarionConnector();
+  // private final DatamigrarionConnector datamigrarionConnector);
 
 
     @Autowired
@@ -61,7 +62,7 @@ public class DatamigrationService {
         super();
         this.logger = logger;
         this.customerManager = customerManager;
-        //this.datamigrarionConnector = datamigrarionConnector;
+       // this.datamigrarionConnector = datamigrarionConnector;
     }
 
 
@@ -237,7 +238,7 @@ public class DatamigrationService {
   }
 
     public void customersFormUpload(MultipartFile file){
-        if (!file.getContentType().equals("application/vnd.ms-excel")) {
+        if (!file.getContentType().equals("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")) {
             throw new MultipartException("Only excel files accepted!");
         } else {
             try{
@@ -344,7 +345,6 @@ public class DatamigrationService {
 
                     //this.datamigrarionConnector.authenticate();
                     customerManager.createCustomer(customer);
-
                 }
             }catch(Exception e){
                 System.out.println(e.getMessage()+" "+e.getCause());

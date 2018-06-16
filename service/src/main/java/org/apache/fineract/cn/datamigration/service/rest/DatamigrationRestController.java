@@ -33,11 +33,10 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.servlet.http.HttpServletResponse;
+
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 
@@ -67,9 +66,7 @@ public class DatamigrationRestController {
       consumes = MediaType.ALL_VALUE,
       produces = MediaType.APPLICATION_JSON_VALUE
   )
-  public
-  @ResponseBody
-  ResponseEntity<Void> initialize() throws InterruptedException {
+  public ResponseEntity<Void> initialize() throws InterruptedException {
       this.commandGateway.process(new InitializeServiceCommand());
       return ResponseEntity.accepted().build();
   }
@@ -77,19 +74,19 @@ public class DatamigrationRestController {
 
   @Permittable(value = AcceptedTokenType.TENANT, groupId = PermittableGroupIds.DATAMIGRATION_MANAGEMENT)
   @RequestMapping(
-          value = "/customers/download",
+          value = "customers/download",
           method = RequestMethod.GET
   )
   public ResponseEntity  download() throws ClassNotFoundException {
-      ByteArrayInputStream bis = datamigrationService.customersFormDownload();
 
+      ByteArrayInputStream bis = datamigrationService.customersFormDownload();
       HttpHeaders headers = new HttpHeaders();
-      headers.setContentType(MediaType.parseMediaType("application/vnd.ms-excel"));
-      headers.add("Content-Disposition", "attachment; filename=customers.xls");
+      headers.setContentType(MediaType.parseMediaType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"));
+      headers.add("Content-Disposition", "attachment; filename=customers.xlsx");
       return ResponseEntity
               .ok()
               .headers(headers)
-              .contentType(MediaType.parseMediaType("application/vnd.ms-excel"))
+              .contentType(MediaType.parseMediaType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"))
               .body(new InputStreamResource(bis));
   }
 
@@ -97,7 +94,7 @@ public class DatamigrationRestController {
 
     @Permittable(value = AcceptedTokenType.TENANT, groupId = PermittableGroupIds.DATAMIGRATION_MANAGEMENT)
   @RequestMapping(
-            value = "/customers",
+            value = "customers",
             method = RequestMethod.POST
   )
   public ResponseEntity<String> customersFormUpload(@RequestParam("file") MultipartFile file) throws IOException {
@@ -106,7 +103,7 @@ public class DatamigrationRestController {
     }
 
 
-    //testing porpuse
+    //testing purpose
     @RequestMapping(value = "/test",method = RequestMethod.GET)
     public  String test(){
       return "Hello test is working";
