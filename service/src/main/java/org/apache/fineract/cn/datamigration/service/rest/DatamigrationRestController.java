@@ -35,8 +35,6 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-
-
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 
@@ -74,7 +72,7 @@ public class DatamigrationRestController {
 
   @Permittable(value = AcceptedTokenType.TENANT, groupId = PermittableGroupIds.DATAMIGRATION_MANAGEMENT)
   @RequestMapping(
-          value = "customers/download",
+          value = "/customers/download",
           method = RequestMethod.GET
   )
   public ResponseEntity  download() throws ClassNotFoundException {
@@ -92,20 +90,24 @@ public class DatamigrationRestController {
 
 
 
-    @Permittable(value = AcceptedTokenType.TENANT, groupId = PermittableGroupIds.DATAMIGRATION_MANAGEMENT)
+  @Permittable(value = AcceptedTokenType.TENANT, groupId = PermittableGroupIds.DATAMIGRATION_MANAGEMENT)
   @RequestMapping(
-            value = "customers",
+            value = "/customers",
             method = RequestMethod.POST
   )
   public ResponseEntity<String> customersFormUpload(@RequestParam("file") MultipartFile file) throws IOException {
         datamigrationService.customersFormUpload(file);
-      return new ResponseEntity<>("Upload successuly", HttpStatus.OK);
-    }
+        return new ResponseEntity<>("Upload successuly", HttpStatus.OK);
+
+  }
 
 
-    //testing purpose
-    @RequestMapping(value = "/test",method = RequestMethod.GET)
-    public  String test(){
+  //testing purpose
+  @RequestMapping(
+            value = "/test",
+            method = RequestMethod.GET
+  )
+  public String test(){
       return "Hello test is working";
     }
 

@@ -19,19 +19,47 @@
 package org.apache.fineract.cn.datamigration.api.v1.client;
 import org.apache.fineract.cn.api.annotation.ThrowsException;
 import org.apache.fineract.cn.api.util.CustomFeignClientsConfiguration;
+import org.apache.fineract.cn.datamigration.api.v1.PermittableGroupIds;
 import org.apache.fineract.cn.datamigration.api.v1.domain.Sample;
 import org.springframework.cloud.netflix.feign.FeignClient;
+import org.springframework.core.io.InputStreamResource;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
 import java.util.List;
 
 @SuppressWarnings("unused")
 @FeignClient(value="datamigration-v1", path="/datamigration/v1", configuration = CustomFeignClientsConfiguration.class)
 public interface DatamigrationManager {
+
+  @RequestMapping(
+          value = "/customers/download",
+          method = RequestMethod.GET
+  )
+  ResponseEntity download() ;
+
+
+  @RequestMapping(
+          value = "/customers",
+          method = RequestMethod.POST
+  )
+  ResponseEntity<String> customersFormUpload(@RequestParam("file") MultipartFile file) ;
+
+
+  @RequestMapping(
+          value = "/test",
+          method = RequestMethod.GET
+  )
+  String test();
 
 
   @RequestMapping(

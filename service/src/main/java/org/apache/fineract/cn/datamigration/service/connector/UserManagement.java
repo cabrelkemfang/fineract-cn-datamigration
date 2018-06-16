@@ -1,4 +1,4 @@
-package org.apache.fineract.cn.datamigration.service.Connector;
+package org.apache.fineract.cn.datamigration.service.connector;
 
 import org.apache.fineract.cn.api.util.UserContextHolder;
 import org.apache.fineract.cn.datamigration.service.ServiceConstants;
@@ -8,23 +8,22 @@ import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Base64Utils;
 
-@Component
-public class DatamigrarionConnector {
+@Service
+public class UserManagement {
 
     private final Logger logger;
     private final IdentityManager identityManager;
-    @Value("${Fineract-cn.system.user.name}")
+    @Value("${fineract-cn.system.user.name}")
     private String systemUserName;
-    @Value("${Fineract-cn.system.user.password}")
+    @Value("${fineract-cn.system.user.password}")
     private String systemUserPassword;
 
     @Autowired
-    public DatamigrarionConnector(@Qualifier(ServiceConstants.LOGGER_NAME) final Logger logger,
-                                  final IdentityManager identityManager) {
+    public UserManagement(@Qualifier(ServiceConstants.LOGGER_NAME) final Logger logger,
+                          final IdentityManager identityManager) {
         super();
         this.logger = logger;
         this.identityManager = identityManager;

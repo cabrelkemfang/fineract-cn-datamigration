@@ -68,8 +68,8 @@ async:
 flyway:
   enabled: false
 
-  Fineract-cn:
-    system:
-      user:
-        name: operator
-        password: init1@l
+fineract-cn:
+  system:
+    user:
+      name: operator
+      password: init1@l
