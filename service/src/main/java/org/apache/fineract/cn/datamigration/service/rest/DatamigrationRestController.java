@@ -22,12 +22,9 @@ import org.apache.fineract.cn.anubis.annotation.AcceptedTokenType;
 import org.apache.fineract.cn.anubis.annotation.Permittable;
 import org.apache.fineract.cn.command.gateway.CommandGateway;
 import org.apache.fineract.cn.datamigration.api.v1.PermittableGroupIds;
-import org.apache.fineract.cn.datamigration.service.ServiceConstants;
 import org.apache.fineract.cn.datamigration.service.internal.command.InitializeServiceCommand;
 import org.apache.fineract.cn.datamigration.service.internal.service.DatamigrationService;
-import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -38,21 +35,21 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 
-@SuppressWarnings("unused")
+//@SuppressWarnings("unused")
 @RestController
 @RequestMapping("/")
 public class DatamigrationRestController {
 
-  private final Logger logger;
+  //private final Logger logger;
   private final CommandGateway commandGateway;
   private final DatamigrationService datamigrationService;
 
   @Autowired
-  public DatamigrationRestController(@Qualifier(ServiceConstants.LOGGER_NAME) final Logger logger,
+  public DatamigrationRestController(//@Qualifier(ServiceConstants.LOGGER_NAME) final Logger logger,
                                      final CommandGateway commandGateway,
                                      final DatamigrationService datamigrationService) {
     super();
-    this.logger = logger;
+   // this.logger = logger;
     this.commandGateway = commandGateway;
     this.datamigrationService = datamigrationService;
   }
@@ -64,7 +61,7 @@ public class DatamigrationRestController {
       consumes = MediaType.ALL_VALUE,
       produces = MediaType.APPLICATION_JSON_VALUE
   )
-  public ResponseEntity<Void> initialize() throws InterruptedException {
+  public ResponseEntity<Void> initialize()  {
       this.commandGateway.process(new InitializeServiceCommand());
       return ResponseEntity.accepted().build();
   }
@@ -73,7 +70,8 @@ public class DatamigrationRestController {
   @Permittable(value = AcceptedTokenType.TENANT, groupId = PermittableGroupIds.DATAMIGRATION_MANAGEMENT)
   @RequestMapping(
           value = "/customers/download",
-          method = RequestMethod.GET
+          method = RequestMethod.GET,
+          consumes = MediaType.ALL_VALUE
   )
   public ResponseEntity  download() throws ClassNotFoundException {
 
@@ -93,7 +91,8 @@ public class DatamigrationRestController {
   @Permittable(value = AcceptedTokenType.TENANT, groupId = PermittableGroupIds.DATAMIGRATION_MANAGEMENT)
   @RequestMapping(
             value = "/customers",
-            method = RequestMethod.POST
+            method = RequestMethod.POST,
+            consumes = MediaType.MULTIPART_FORM_DATA_VALUE
   )
   public ResponseEntity<String> customersFormUpload(@RequestParam("file") MultipartFile file) throws IOException {
         datamigrationService.customersFormUpload(file);
@@ -105,7 +104,9 @@ public class DatamigrationRestController {
   //testing purpose
   @RequestMapping(
             value = "/test",
-            method = RequestMethod.GET
+            method = RequestMethod.GET,
+            consumes = MediaType.ALL_VALUE,
+            produces = MediaType.APPLICATION_JSON_VALUE
   )
   public String test(){
       return "Hello test is working";

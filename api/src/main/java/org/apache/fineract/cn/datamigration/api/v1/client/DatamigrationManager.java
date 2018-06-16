@@ -17,25 +17,14 @@
  * under the License.
  */
 package org.apache.fineract.cn.datamigration.api.v1.client;
-import org.apache.fineract.cn.api.annotation.ThrowsException;
 import org.apache.fineract.cn.api.util.CustomFeignClientsConfiguration;
-import org.apache.fineract.cn.datamigration.api.v1.PermittableGroupIds;
-import org.apache.fineract.cn.datamigration.api.v1.domain.Sample;
 import org.springframework.cloud.netflix.feign.FeignClient;
-import org.springframework.core.io.InputStreamResource;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
-
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.util.List;
 
 @SuppressWarnings("unused")
 @FeignClient(value="datamigration-v1", path="/datamigration/v1", configuration = CustomFeignClientsConfiguration.class)
@@ -43,46 +32,27 @@ public interface DatamigrationManager {
 
   @RequestMapping(
           value = "/customers/download",
-          method = RequestMethod.GET
+          method = RequestMethod.GET,
+          consumes = MediaType.ALL_VALUE
   )
   ResponseEntity download() ;
 
 
   @RequestMapping(
           value = "/customers",
-          method = RequestMethod.POST
+          method = RequestMethod.POST,
+          consumes = MediaType.MULTIPART_FORM_DATA_VALUE
   )
   ResponseEntity<String> customersFormUpload(@RequestParam("file") MultipartFile file) ;
 
 
   @RequestMapping(
           value = "/test",
-          method = RequestMethod.GET
+          method = RequestMethod.GET,
+          consumes = MediaType.ALL_VALUE,
+          produces = MediaType.APPLICATION_JSON_VALUE
   )
   String test();
 
 
-  @RequestMapping(
-          value = "/sample",
-          method = RequestMethod.GET,
-          produces = MediaType.ALL_VALUE,
-          consumes = MediaType.APPLICATION_JSON_VALUE
-  )
-  List<Sample> findAllEntities();
-
-  @RequestMapping(
-          value = "/sample/{identifier}",
-          method = RequestMethod.GET,
-          produces = MediaType.ALL_VALUE,
-          consumes = MediaType.APPLICATION_JSON_VALUE)
-  Sample getEntity(@PathVariable("identifier") final String identifier);
-
-  @RequestMapping(
-          value = "/sample",
-          method = RequestMethod.POST,
-          produces = MediaType.APPLICATION_JSON_VALUE,
-          consumes = MediaType.APPLICATION_JSON_VALUE
-  )
-  @ThrowsException(status = HttpStatus.I_AM_A_TEAPOT, exception = IamATeapotException.class)
-  void createEntity(final Sample sample);
 }

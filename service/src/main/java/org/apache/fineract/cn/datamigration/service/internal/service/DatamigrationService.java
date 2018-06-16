@@ -338,7 +338,6 @@ public class DatamigrationService {
 
              this.userManagement.authenticate();
              this.customerManager.createCustomer(customer);
-
              }
         }catch(Exception e){
            System.out.println(e.getMessage()+" "+e.getCause());
