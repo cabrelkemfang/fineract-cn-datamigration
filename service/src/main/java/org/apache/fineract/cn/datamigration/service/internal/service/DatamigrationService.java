@@ -22,10 +22,7 @@ import org.apache.fineract.cn.customer.api.v1.client.CustomerManager;
 import org.apache.fineract.cn.customer.api.v1.domain.Address;
 import org.apache.fineract.cn.customer.api.v1.domain.ContactDetail;
 import org.apache.fineract.cn.customer.api.v1.domain.Customer;
-
 import org.apache.fineract.cn.customer.catalog.api.v1.domain.Value;
-
-
 import org.apache.fineract.cn.datamigration.service.connector.UserManagement;
 import org.apache.fineract.cn.datamigration.service.ServiceConstants;
 import org.apache.fineract.cn.lang.DateOfBirth;

@@ -26,7 +26,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
-@SuppressWarnings("unused")
+//@SuppressWarnings("unused")
 @FeignClient(value="datamigration-v1", path="/datamigration/v1", configuration = CustomFeignClientsConfiguration.class)
 public interface DatamigrationManager {
 
