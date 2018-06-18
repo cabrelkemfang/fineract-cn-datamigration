@@ -46,13 +46,4 @@ public interface DatamigrationManager {
   ResponseEntity<String> customersFormUpload(@RequestParam("file") MultipartFile file) ;
 
 
-  @RequestMapping(
-          value = "/test",
-          method = RequestMethod.GET,
-          consumes = MediaType.ALL_VALUE,
-          produces = MediaType.APPLICATION_JSON_VALUE
-  )
-  String test();
-
-
 }

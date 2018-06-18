@@ -35,21 +35,18 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 
-//@SuppressWarnings("unused")
 @RestController
 @RequestMapping("/")
 public class DatamigrationRestController {
 
-  //private final Logger logger;
+
   private final CommandGateway commandGateway;
   private final DatamigrationService datamigrationService;
 
   @Autowired
-  public DatamigrationRestController(//@Qualifier(ServiceConstants.LOGGER_NAME) final Logger logger,
-                                     final CommandGateway commandGateway,
-                                     final DatamigrationService datamigrationService) {
+  public DatamigrationRestController( final CommandGateway commandGateway,
+                                      final DatamigrationService datamigrationService) {
     super();
-   // this.logger = logger;
     this.commandGateway = commandGateway;
     this.datamigrationService = datamigrationService;
   }
@@ -100,16 +97,5 @@ public class DatamigrationRestController {
 
   }
 
-
-  //testing purpose
-  @RequestMapping(
-            value = "/test",
-            method = RequestMethod.GET,
-            consumes = MediaType.ALL_VALUE,
-            produces = MediaType.APPLICATION_JSON_VALUE
-  )
-  public String test(){
-      return "Hello test is working";
-    }
 
 }
