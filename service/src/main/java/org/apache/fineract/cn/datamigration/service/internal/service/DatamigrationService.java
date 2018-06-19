@@ -26,7 +26,10 @@ import org.apache.fineract.cn.customer.catalog.api.v1.domain.Value;
 import org.apache.fineract.cn.datamigration.service.connector.UserManagement;
 import org.apache.fineract.cn.datamigration.service.ServiceConstants;
 import org.apache.fineract.cn.lang.DateOfBirth;
+import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Font;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.xssf.usermodel.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -36,7 +39,9 @@ import org.springframework.web.multipart.MultipartException;
 import org.springframework.web.multipart.MultipartFile;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
 import java.util.stream.IntStream;
 
@@ -229,118 +234,595 @@ public class DatamigrationService {
   }
 
   public void customersFormUpload(MultipartFile file){
-     if (!file.getContentType().equals("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")) {
-        throw new MultipartException("Only excel files accepted!");
-        } else {
-        try{
-           XSSFWorkbook customers = new XSSFWorkbook(file.getInputStream());
-           XSSFSheet worksheet = customers.getSheetAt(0);
-           XSSFRow entry;
-           Integer noOfEntries=1;
+    if (!file.getContentType().equals("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")) {
+      throw new MultipartException("Only excel files accepted!");
+    }
+    try {
 
-           //getLastRowNum and getPhysicalNumberOfRows showing false values sometimes.
-           while(worksheet.getRow(noOfEntries)!=null){
-              noOfEntries++;
-           }
-           // logger.info(noOfEntries.toString());
-          for(int rowIndex=1;rowIndex<noOfEntries;rowIndex++){
-             entry=worksheet.getRow(rowIndex);
+      XSSFWorkbook workbook = new XSSFWorkbook(file.getInputStream());
+      Sheet firstSheet = workbook.getSheetAt(0);
+      int offset = 0;
+      int currentPosition = 0;
 
-             String identifier =entry.getCell(1).getStringCellValue();
-             String type =entry.getCell(2).getStringCellValue();
-             String givenName =entry.getCell(3).getStringCellValue();
-             String middleName =entry.getCell(4).getStringCellValue();
-             String surname =entry.getCell(5).getStringCellValue();
-             //Birtday
-             Integer year =((Double)entry.getCell(6).getNumericCellValue()).intValue();
-             Integer month = ((Double)entry.getCell(7).getNumericCellValue()).intValue();
-             Integer day =((Double)entry.getCell(8).getNumericCellValue()).intValue();
+      for (Row nextRow : firstSheet) {
+        int column = 0;
+        Iterator<Cell> cellIterator = nextRow.cellIterator();
 
-             Boolean member =entry.getCell(9).getBooleanCellValue();
-             String accountBeneficiary =entry.getCell(10).getStringCellValue();
-             String referenceCustomer =entry.getCell(11).getStringCellValue();
-             String assignedOffice =entry.getCell(12).getStringCellValue();
-             String assignedEmployee =entry.getCell(13).getStringCellValue();
-             //address
-             String street =entry.getCell(14).getStringCellValue();
-             String city =entry.getCell(15).getStringCellValue();
-             String region =entry.getCell(16).getStringCellValue();
-             String postalCode =entry.getCell(17).getStringCellValue();
-             String countryCode =entry.getCell(18).getStringCellValue();
-             String country =entry.getCell(19).getStringCellValue();
-             //contactDetail
-             String typecontactDetail =entry.getCell(20).getStringCellValue();
-             String group =entry.getCell(21).getStringCellValue();
-             String value =entry.getCell(22).getStringCellValue();
-             Integer preferenceLevel =((Double)entry.getCell(23).getNumericCellValue()).intValue();
-             Boolean validated =entry.getCell(24).getBooleanCellValue();
+        if ((currentPosition++ > offset)) {
 
-             String currentState =entry.getCell(25).getStringCellValue();
-             String applicationDate =entry.getCell(26).getStringCellValue();
-             //value
-             String catalogIdentifier =entry.getCell(27).getStringCellValue();
-             String fieldIdentifier =entry.getCell(28).getStringCellValue();
-             String value2 =entry.getCell(29).getStringCellValue();
+          String identifier = null;
+          String type = null;
+          String givenName = null;
+          String middleName = null;
+          String surname = null;
 
-             String createdBy =entry.getCell(30).getStringCellValue();
-             String createdOn =entry.getCell(31).getStringCellValue();
-             String lastModifiedBy =entry.getCell(32).getStringCellValue();
-             String lastModifiedOn =entry.getCell(33).getStringCellValue();
+          String year = null;
+          String month = null;
+          String day = null;
 
-             DateOfBirth dateOfBirth = new DateOfBirth();
-             dateOfBirth.setYear(year);
-             dateOfBirth.setMonth(month);
-             dateOfBirth.setDay(day);
+          String member=null;
+          String accountBeneficiary = null;
+          String referenceCustomer = null;
+          String assignedOffice = null;
+          String assignedEmployee = null;
 
-             Address address = new Address();
-             address.setStreet(street);
-             address.setCity(city);
-             address.setRegion(region);
-             address.setPostalCode(postalCode);
-             address.setCountryCode(countryCode);
-             address.setCountry(country);
+          String street = null;
+          String city = null;
+          String region = null;
+          String postalCode = null;
+          String countryCode = null;
+          String country = null;
 
-             ContactDetail contactDetail=new ContactDetail();
-             contactDetail.setType(typecontactDetail);
-             contactDetail.setGroup(group);
-             contactDetail.setValue(value);
-             contactDetail.setPreferenceLevel(preferenceLevel);
-             contactDetail.setValidated(validated);
+          String typecontactDetail = null;
+          String group = null;
+          String value = null;
+          String preferenceLevel = null;
+          String validated = null;
 
-             Value value1=new Value();
-             value1.setCatalogIdentifier(catalogIdentifier);
-             value1.setFieldIdentifier(fieldIdentifier);
-             value1.setValue(value2);
+          String currentState = null;
+          String applicationDate = null;
 
-             Customer customer = new Customer();
-             customer.setIdentifier(identifier);
-             customer.setType(type);
-             customer.setGivenName(givenName);
-             customer.setMiddleName(middleName);
-             customer.setSurname(surname);
-             customer.setDateOfBirth(dateOfBirth);
-             customer.setMember(member);
-             customer.setAccountBeneficiary(accountBeneficiary);
-             customer.setReferenceCustomer(referenceCustomer);
-             customer.setAssignedOffice(assignedOffice);
-             customer.setAssignedEmployee(assignedEmployee);
-             customer.setAddress(address);
-             customer.setContactDetails(Collections.singletonList(contactDetail));
-             customer.setCurrentState(currentState);
-             customer.setApplicationDate(applicationDate);
-             customer.setCustomValues((List<Value>) value1);
-             customer.setCreatedBy(createdBy);
-             customer.setCreatedOn(createdOn);
-             customer.setLastModifiedBy(lastModifiedBy);
-             customer.setLastModifiedOn(lastModifiedOn);
+          String catalogIdentifier = null;
+          String fieldIdentifier = null;
+          String value2 = null;
 
-             this.userManagement.authenticate();
-             this.customerManager.createCustomer(customer);
-             }
-        }catch(Exception e){
-           System.out.println(e.getMessage()+" "+e.getCause());
-           throw new MultipartException("Constraints Violated");
+          String createdBy = null;
+          String createdOn = null;
+          String lastModifiedBy = null;
+          String lastModifiedOn = null;
+
+
+          while ((cellIterator.hasNext())) {
+
+            XSSFCell cell = (XSSFCell) cellIterator.next();
+
+            switch (cell.getCellType()) { // stop if blank field found
+              case Cell.CELL_TYPE_BLANK:
+                break;
+            }
+
+            if (column == 0) {
+              switch (cell.getCellType()) {
+                case Cell.CELL_TYPE_STRING:
+                  identifier = cell.getStringCellValue();
+                  break;
+                case Cell.CELL_TYPE_NUMERIC:
+                  identifier = Integer.toString((int) cell.getNumericCellValue());
+                  break;
+
+                case Cell.CELL_TYPE_BOOLEAN:
+                  identifier = String.valueOf(cell.getBooleanCellValue());
+                  break;
+              }
+            }
+            if (column == 1) {
+              switch (cell.getCellType()) {
+                case Cell.CELL_TYPE_STRING:
+                  type = cell.getStringCellValue();
+                  break;
+
+                case Cell.CELL_TYPE_NUMERIC:
+                  type = Integer.toString((int) cell.getNumericCellValue());
+                  break;
+
+                case Cell.CELL_TYPE_BOOLEAN:
+                  type = String.valueOf(cell.getBooleanCellValue());
+                  break;
+              }
+            }
+            if (column == 2) {
+              switch (cell.getCellType()) {
+                case Cell.CELL_TYPE_STRING:
+                  givenName = cell.getStringCellValue();
+                  break;
+                case Cell.CELL_TYPE_NUMERIC:
+                  givenName = Integer.toString((int) cell.getNumericCellValue());
+                  break;
+                case Cell.CELL_TYPE_BOOLEAN:
+                  givenName = String.valueOf(cell.getBooleanCellValue());
+                  break;
+              }
+            }
+            if (column == 3) {
+              switch (cell.getCellType()) {
+                case Cell.CELL_TYPE_STRING:
+                  middleName = cell.getStringCellValue();
+                  break;
+                case Cell.CELL_TYPE_NUMERIC:
+                  middleName = Integer.toString((int) cell.getNumericCellValue());
+                  break;
+
+                case Cell.CELL_TYPE_BOOLEAN:
+                  middleName = String.valueOf(cell.getBooleanCellValue());
+                  break;
+              }
+            }
+            if (column == 5) {
+              switch (cell.getCellType()) {
+                case Cell.CELL_TYPE_STRING:
+                  surname = cell.getStringCellValue();
+                  break;
+                case Cell.CELL_TYPE_NUMERIC:
+                  surname = Integer.toString((int) cell.getNumericCellValue());
+                  break;
+
+                case Cell.CELL_TYPE_BOOLEAN:
+                  surname = String.valueOf(cell.getBooleanCellValue());
+                  break;
+              }
+            }
+            if (column == 6) {
+              switch (cell.getCellType()) {
+                case Cell.CELL_TYPE_STRING:
+                  year = cell.getStringCellValue();
+                  break;
+                case Cell.CELL_TYPE_NUMERIC:
+                  year = Integer.toString((int) cell.getNumericCellValue());
+                  break;
+
+                case Cell.CELL_TYPE_BOOLEAN:
+                  year = String.valueOf(cell.getBooleanCellValue());
+                  break;
+              }
+            }
+            if (column == 7) {
+              switch (cell.getCellType()) {
+                case Cell.CELL_TYPE_STRING:
+                  month = cell.getStringCellValue();
+                  break;
+                case Cell.CELL_TYPE_NUMERIC:
+                  month = Integer.toString((int) cell.getNumericCellValue());
+                  break;
+
+                case Cell.CELL_TYPE_BOOLEAN:
+                  month = String.valueOf(cell.getBooleanCellValue());
+                  break;
+              }
+            }
+            if (column == 8) {
+              switch (cell.getCellType()) {
+                case Cell.CELL_TYPE_STRING:
+                  day = cell.getStringCellValue();
+                  break;
+                case Cell.CELL_TYPE_NUMERIC:
+                  day = Integer.toString((int) cell.getNumericCellValue());
+                  break;
+
+                case Cell.CELL_TYPE_BOOLEAN:
+                  day = String.valueOf(cell.getBooleanCellValue());
+                  break;
+              }
+            }
+            if (column == 9) {
+              switch (cell.getCellType()) {
+                case Cell.CELL_TYPE_STRING:
+                  member = cell.getStringCellValue();
+                  break;
+                case Cell.CELL_TYPE_NUMERIC:
+                  member = Integer.toString((int) cell.getNumericCellValue());
+                  break;
+
+                case Cell.CELL_TYPE_BOOLEAN:
+                  member = String.valueOf(cell.getBooleanCellValue());
+                  break;
+              }
+            }
+            if (column == 10){
+              switch (cell.getCellType()) {
+                case Cell.CELL_TYPE_STRING:
+                  accountBeneficiary = cell.getStringCellValue();
+                  break;
+                case Cell.CELL_TYPE_NUMERIC:
+                  accountBeneficiary = Integer.toString((int) cell.getNumericCellValue());
+                  break;
+
+                case Cell.CELL_TYPE_BOOLEAN:
+                  accountBeneficiary = String.valueOf(cell.getBooleanCellValue());
+                  break;
+              }
+            }
+            if (column == 11){
+              switch (cell.getCellType()) {
+                case Cell.CELL_TYPE_STRING:
+                  referenceCustomer = cell.getStringCellValue();
+                  break;
+                case Cell.CELL_TYPE_NUMERIC:
+                  referenceCustomer = Integer.toString((int) cell.getNumericCellValue());
+                  break;
+                case Cell.CELL_TYPE_BOOLEAN:
+                  referenceCustomer = String.valueOf(cell.getBooleanCellValue());
+                  break;
+              }
+            }
+            if (column == 12){
+              switch (cell.getCellType()) {
+                case Cell.CELL_TYPE_STRING:
+                  assignedOffice = cell.getStringCellValue();
+                  break;
+                case Cell.CELL_TYPE_NUMERIC:
+                  assignedOffice = Integer.toString((int) cell.getNumericCellValue());
+                  break;
+                case Cell.CELL_TYPE_BOOLEAN:
+                  assignedOffice = String.valueOf(cell.getBooleanCellValue());
+                  break;
+              }
+            }
+            if (column == 13){
+              switch (cell.getCellType()) {
+                case Cell.CELL_TYPE_STRING:
+                  assignedEmployee = cell.getStringCellValue();
+                  break;
+                case Cell.CELL_TYPE_NUMERIC:
+                  assignedEmployee = Integer.toString((int) cell.getNumericCellValue());
+                  break;
+
+                case Cell.CELL_TYPE_BOOLEAN:
+                  assignedEmployee = String.valueOf(cell.getBooleanCellValue());
+                  break;
+              }
+            }
+            if (column == 14){
+              switch (cell.getCellType()) {
+                case Cell.CELL_TYPE_STRING:
+                  street = cell.getStringCellValue();
+                  break;
+                case Cell.CELL_TYPE_NUMERIC:
+                  street = Integer.toString((int) cell.getNumericCellValue());
+                  break;
+
+                case Cell.CELL_TYPE_BOOLEAN:
+                  street = String.valueOf(cell.getBooleanCellValue());
+                  break;
+              }
+            }
+            if (column == 15){
+              switch (cell.getCellType()) {
+                case Cell.CELL_TYPE_STRING:
+                  city = cell.getStringCellValue();
+                  break;
+                case Cell.CELL_TYPE_NUMERIC:
+                  city = Integer.toString((int) cell.getNumericCellValue());
+                  break;
+
+                case Cell.CELL_TYPE_BOOLEAN:
+                  city = String.valueOf(cell.getBooleanCellValue());
+                  break;
+              }
+            }
+            if (column == 16){
+              switch (cell.getCellType()) {
+                case Cell.CELL_TYPE_STRING:
+                  region = cell.getStringCellValue();
+                  break;
+                case Cell.CELL_TYPE_NUMERIC:
+                  region = Integer.toString((int) cell.getNumericCellValue());
+                  break;
+
+                case Cell.CELL_TYPE_BOOLEAN:
+                  region = String.valueOf(cell.getBooleanCellValue());
+                  break;
+              }
+            }
+            if (column == 17){
+              switch (cell.getCellType()) {
+                case Cell.CELL_TYPE_STRING:
+                  postalCode = cell.getStringCellValue();
+                  break;
+                case Cell.CELL_TYPE_NUMERIC:
+                  postalCode = Integer.toString((int) cell.getNumericCellValue());
+                  break;
+
+                case Cell.CELL_TYPE_BOOLEAN:
+                  postalCode = String.valueOf(cell.getBooleanCellValue());
+                  break;
+              }
+            }
+            if (column == 18){
+              switch (cell.getCellType()) {
+                case Cell.CELL_TYPE_STRING:
+                  countryCode = cell.getStringCellValue();
+                  break;
+                case Cell.CELL_TYPE_NUMERIC:
+                  countryCode = Integer.toString((int) cell.getNumericCellValue());
+                  break;
+
+                case Cell.CELL_TYPE_BOOLEAN:
+                  countryCode = String.valueOf(cell.getBooleanCellValue());
+                  break;
+              }
+            }
+            if (column == 19){
+              switch (cell.getCellType()) {
+                case Cell.CELL_TYPE_STRING:
+                  country = cell.getStringCellValue();
+                  break;
+                case Cell.CELL_TYPE_NUMERIC:
+                  country = Integer.toString((int) cell.getNumericCellValue());
+                  break;
+
+                case Cell.CELL_TYPE_BOOLEAN:
+                  country = String.valueOf(cell.getBooleanCellValue());
+                  break;
+              }
+            }
+            if (column == 20){
+              switch (cell.getCellType()) {
+                case Cell.CELL_TYPE_STRING:
+                  typecontactDetail = cell.getStringCellValue();
+                  break;
+                case Cell.CELL_TYPE_NUMERIC:
+                  typecontactDetail = Integer.toString((int) cell.getNumericCellValue());
+                  break;
+
+                case Cell.CELL_TYPE_BOOLEAN:
+                  typecontactDetail = String.valueOf(cell.getBooleanCellValue());
+                  break;
+              }
+            }
+            if (column == 21){
+              switch (cell.getCellType()) {
+                case Cell.CELL_TYPE_STRING:
+                  group = cell.getStringCellValue();
+                  break;
+                case Cell.CELL_TYPE_NUMERIC:
+                  group = Integer.toString((int) cell.getNumericCellValue());
+                  break;
+
+                case Cell.CELL_TYPE_BOOLEAN:
+                  group = String.valueOf(cell.getBooleanCellValue());
+                  break;
+              }
+            }
+            if (column == 22){
+              switch (cell.getCellType()) {
+                case Cell.CELL_TYPE_STRING:
+                  value = cell.getStringCellValue();
+                  break;
+                case Cell.CELL_TYPE_NUMERIC:
+                  value = Integer.toString((int) cell.getNumericCellValue());
+                  break;
+
+                case Cell.CELL_TYPE_BOOLEAN:
+                  value = String.valueOf(cell.getBooleanCellValue());
+                  break;
+              }
+            }
+            if (column == 23){
+              switch (cell.getCellType()) {
+                case Cell.CELL_TYPE_STRING:
+                  preferenceLevel = cell.getStringCellValue();
+                  break;
+                case Cell.CELL_TYPE_NUMERIC:
+                  preferenceLevel = Integer.toString((int) cell.getNumericCellValue());
+                  break;
+
+                case Cell.CELL_TYPE_BOOLEAN:
+                  preferenceLevel = String.valueOf(cell.getBooleanCellValue());
+                  break;
+              }
+            }
+            if (column == 24){
+              switch (cell.getCellType()) {
+                case Cell.CELL_TYPE_STRING:
+                  validated = cell.getStringCellValue();
+                  break;
+                case Cell.CELL_TYPE_NUMERIC:
+                  //validated = Integer.toString((int) cell.getNumericCellValue());
+                  break;
+                case Cell.CELL_TYPE_BOOLEAN:
+                  validated = String.valueOf(cell.getBooleanCellValue());
+                  break;
+              }
+            }
+            if (column == 25){
+              switch (cell.getCellType()) {
+                case Cell.CELL_TYPE_STRING:
+                  currentState = cell.getStringCellValue();
+                  break;
+                case Cell.CELL_TYPE_NUMERIC:
+                  currentState = Integer.toString((int) cell.getNumericCellValue());
+                  break;
+                case Cell.CELL_TYPE_BOOLEAN:
+                  currentState = String.valueOf(cell.getBooleanCellValue());
+                  break;
+              }
+            }
+            if (column == 26){
+              switch (cell.getCellType()) {
+                case Cell.CELL_TYPE_STRING:
+                  applicationDate = cell.getStringCellValue();
+                  break;
+                case Cell.CELL_TYPE_NUMERIC:
+                  applicationDate = Integer.toString((int) cell.getNumericCellValue());
+                  break;
+
+                case Cell.CELL_TYPE_BOOLEAN:
+                  applicationDate = String.valueOf(cell.getBooleanCellValue());
+                  break;
+              }
+            }
+            if (column == 27){
+              switch (cell.getCellType()) {
+                case Cell.CELL_TYPE_STRING:
+                  catalogIdentifier = cell.getStringCellValue();
+                  break;
+                case Cell.CELL_TYPE_NUMERIC:
+                  catalogIdentifier = Integer.toString((int) cell.getNumericCellValue());
+                  break;
+
+                case Cell.CELL_TYPE_BOOLEAN:
+                  catalogIdentifier = String.valueOf(cell.getBooleanCellValue());
+                  break;
+              }
+            }
+            if (column == 28){
+              switch (cell.getCellType()) {
+                case Cell.CELL_TYPE_STRING:
+                  fieldIdentifier = cell.getStringCellValue();
+                  break;
+                case Cell.CELL_TYPE_NUMERIC:
+                  fieldIdentifier = Integer.toString((int) cell.getNumericCellValue());
+                  break;
+
+                case Cell.CELL_TYPE_BOOLEAN:
+                  fieldIdentifier = String.valueOf(cell.getBooleanCellValue());
+                  break;
+              }
+            }
+            if (column == 29){
+              switch (cell.getCellType()) {
+                case Cell.CELL_TYPE_STRING:
+                  value2 = cell.getStringCellValue();
+                  break;
+                case Cell.CELL_TYPE_NUMERIC:
+                  value2 = Integer.toString((int) cell.getNumericCellValue());
+                  break;
+
+                case Cell.CELL_TYPE_BOOLEAN:
+                  value2 = String.valueOf(cell.getBooleanCellValue());
+                  break;
+              }
+            }
+            if (column == 30){
+              switch (cell.getCellType()) {
+                case Cell.CELL_TYPE_STRING:
+                  createdBy = cell.getStringCellValue();
+                  break;
+                case Cell.CELL_TYPE_NUMERIC:
+                  createdBy = Integer.toString((int) cell.getNumericCellValue());
+                  break;
+                case Cell.CELL_TYPE_BOOLEAN:
+                  createdBy = String.valueOf(cell.getBooleanCellValue());
+                  break;
+              }
+            }
+            if (column == 30){
+              switch (cell.getCellType()) {
+                case Cell.CELL_TYPE_STRING:
+                  createdOn = cell.getStringCellValue();
+                  break;
+                case Cell.CELL_TYPE_NUMERIC:
+                  createdOn = Integer.toString((int) cell.getNumericCellValue());
+                  break;
+                case Cell.CELL_TYPE_BOOLEAN:
+                  createdOn = String.valueOf(cell.getBooleanCellValue());
+                  break;
+              }
+            }
+            if (column == 31){
+              switch (cell.getCellType()) {
+                case Cell.CELL_TYPE_STRING:
+                  lastModifiedBy = cell.getStringCellValue();
+                  break;
+                case Cell.CELL_TYPE_NUMERIC:
+                  lastModifiedBy = Integer.toString((int) cell.getNumericCellValue());
+                  break;
+
+                case Cell.CELL_TYPE_BOOLEAN:
+                  lastModifiedBy = String.valueOf(cell.getBooleanCellValue());
+                  break;
+              }
+            }
+            if (column == 32) {
+              switch (cell.getCellType()) {
+                case Cell.CELL_TYPE_STRING:
+                  lastModifiedOn = cell.getStringCellValue();
+                  break;
+                case Cell.CELL_TYPE_NUMERIC:
+                  lastModifiedOn = Integer.toString((int) cell.getNumericCellValue());
+                  break;
+
+                case Cell.CELL_TYPE_BOOLEAN:
+                  lastModifiedOn = String.valueOf(cell.getBooleanCellValue());
+                  break;
+              }
+            }
+
+            column++;
+          }
+          System.out.println(" "+identifier+" "+type+" "+givenName+ " "+middleName +" " +surname+" "+year+" "+ month+" "+day+" "+ member+" "+accountBeneficiary
+                                     +" "+referenceCustomer+" "+assignedOffice+" "+assignedEmployee+" "+street+" "+city+" "+region+" " +
+                                     " "+postalCode+" "+countryCode+" "+country+" "+typecontactDetail+" "+group+" " +
+                                     ""+value+" "+preferenceLevel+" "+validated+" "+currentState+" " +
+                                     ""+applicationDate+" "+catalogIdentifier+" "+fieldIdentifier+" "+value2+" " +
+                                     ""+createdBy+" "+createdOn+" "+lastModifiedBy+" "+lastModifiedOn );
+
+          DateOfBirth dateOfBirth = new DateOfBirth();
+          dateOfBirth.setYear(Integer.parseInt(year));
+          dateOfBirth.setMonth(Integer.parseInt(month));
+          dateOfBirth.setDay(Integer.parseInt(day));
+
+          Address address = new Address();
+          address.setStreet(street);
+          address.setCity(city);
+          address.setRegion(region);
+          address.setPostalCode(postalCode);
+          address.setCountryCode(countryCode);
+          address.setCountry(country);
+
+          ContactDetail contactDetail=new ContactDetail();
+          contactDetail.setType(typecontactDetail);
+          contactDetail.setGroup(group);
+          contactDetail.setValue(value);
+          contactDetail.setPreferenceLevel(Integer.parseInt(preferenceLevel));
+          contactDetail.setValidated(Boolean.parseBoolean(validated));
+
+          Value value1=new Value();
+          value1.setCatalogIdentifier(catalogIdentifier);
+          value1.setFieldIdentifier(fieldIdentifier);
+          value1.setValue(value2);
+
+          Customer customer = new Customer();
+          customer.setIdentifier(identifier);
+          customer.setType(type);
+          customer.setGivenName(givenName);
+          customer.setMiddleName(middleName);
+          customer.setSurname(surname);
+          customer.setDateOfBirth(dateOfBirth);
+          customer.setMember(Boolean.parseBoolean(member));
+          customer.setAccountBeneficiary(accountBeneficiary);
+          customer.setReferenceCustomer(referenceCustomer);
+          customer.setAssignedOffice(assignedOffice);
+          customer.setAssignedEmployee(assignedEmployee);
+          customer.setAddress(address);
+          customer.setContactDetails(Collections.singletonList(contactDetail));
+          customer.setCurrentState(currentState);
+          customer.setApplicationDate(applicationDate);
+          customer.setCustomValues((List<Value>) value1);
+          customer.setCreatedBy(createdBy);
+          customer.setCreatedOn(createdOn);
+          customer.setLastModifiedBy(lastModifiedBy);
+          customer.setLastModifiedOn(lastModifiedOn);
+
+          this.userManagement.authenticate();
+          this.customerManager.createCustomer(customer);
+
         }
-     }
+
+      }
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
   }
 }
+
