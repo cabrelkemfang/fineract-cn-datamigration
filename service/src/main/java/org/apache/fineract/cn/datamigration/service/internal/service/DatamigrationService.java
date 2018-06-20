@@ -760,12 +760,6 @@ public class DatamigrationService {
 
             column++;
           }
-          System.out.println(" "+identifier+" "+type+" "+givenName+ " "+middleName +" " +surname+" "+year+" "+ month+" "+day+" "+ member+" "+accountBeneficiary
-                                     +" "+referenceCustomer+" "+assignedOffice+" "+assignedEmployee+" "+street+" "+city+" "+region+" " +
-                                     " "+postalCode+" "+countryCode+" "+country+" "+typecontactDetail+" "+group+" " +
-                                     ""+value+" "+preferenceLevel+" "+validated+" "+currentState+" " +
-                                     ""+applicationDate+" "+catalogIdentifier+" "+fieldIdentifier+" "+value2+" " +
-                                     ""+createdBy+" "+createdOn+" "+lastModifiedBy+" "+lastModifiedOn );
 
           DateOfBirth dateOfBirth = new DateOfBirth();
           dateOfBirth.setYear(Integer.parseInt(year));
@@ -808,7 +802,7 @@ public class DatamigrationService {
           customer.setContactDetails(Collections.singletonList(contactDetail));
           customer.setCurrentState(currentState);
           customer.setApplicationDate(applicationDate);
-          customer.setCustomValues((List<Value>) value1);
+         // customer.setCustomValues(Collections.singletonList(value1));
           customer.setCreatedBy(createdBy);
           customer.setCreatedOn(createdOn);
           customer.setLastModifiedBy(lastModifiedBy);
