@@ -771,7 +771,8 @@ public class DatamigrationService {
                               ""+createdBy+" "+createdOn+" "+lastModifiedBy+" "+lastModifiedOn
 
           );
-          DateOfBirth dateOfBirth = new DateOfBirth();
+
+         /* DateOfBirth dateOfBirth = new DateOfBirth();
           dateOfBirth.setYear(Integer.parseInt(year));
           dateOfBirth.setMonth(Integer.parseInt(month));
           dateOfBirth.setDay(Integer.parseInt(day));
@@ -817,6 +818,56 @@ public class DatamigrationService {
           customer.setCreatedOn(createdOn);
           customer.setLastModifiedBy(lastModifiedBy);
           customer.setLastModifiedOn(lastModifiedOn);
+          */
+
+         // deburging purpose
+
+          DateOfBirth dateOfBirth = new DateOfBirth();
+          dateOfBirth.setYear(12);
+          dateOfBirth.setMonth(8);
+          dateOfBirth.setDay(1993);
+
+          Address address = new Address();
+          address.setStreet("Ub juction");
+          address.setCity("Muyuka");
+          address.setRegion("SWR");
+          address.setPostalCode("2018");
+          address.setCountryCode("CM");
+          address.setCountry("Cameroon");
+
+          ContactDetail contactDetail=new ContactDetail();
+          contactDetail.setType("MOBILE");
+          contactDetail.setGroup("PRIVATE");
+          contactDetail.setValue("652486630");
+          contactDetail.setPreferenceLevel(1);
+          contactDetail.setValidated(false);
+
+          Value value1=new Value();
+          value1.setCatalogIdentifier("id2");
+          value1.setFieldIdentifier("id3");
+          value1.setValue("pending");
+
+          Customer customer = new Customer();
+          customer.setIdentifier("id");
+          customer.setType("PERSON");
+          customer.setGivenName("ghislain");
+          customer.setMiddleName("cabrel");
+          customer.setSurname("gabi");
+          customer.setDateOfBirth(dateOfBirth);
+          customer.setMember(true);
+          customer.setAccountBeneficiary("pouse");
+          customer.setReferenceCustomer("mate");
+          customer.setAssignedOffice("ck7");
+          customer.setAssignedEmployee("Godwin");
+          customer.setAddress(address);
+          customer.setContactDetails(Collections.singletonList(contactDetail));
+          customer.setCurrentState("PENDING");
+          customer.setApplicationDate("2017-07-19");
+          customer.setCustomValues(Collections.singletonList(value1));
+          customer.setCreatedBy("2017-07-19");
+          customer.setCreatedOn("2017-07-19");
+          customer.setLastModifiedBy("2017-07-19");
+          customer.setLastModifiedOn("2017-07-19");
 
           this.userManagement.authenticate();
           this.customerManager.createCustomer(customer);
