@@ -212,11 +212,11 @@ public class DatamigrationService {
      cell31.setCellStyle(headerCellStyle);
 
      XSSFCell cell32= rowHeader.createCell(startColIndex+31);
-     cell32.setCellValue("LastModified By");
+     cell32.setCellValue("Last Modified By");
      cell32.setCellStyle(headerCellStyle);
 
      XSSFCell cell33= rowHeader.createCell(startColIndex+32);
-     cell33.setCellValue("LastModified On");
+     cell33.setCellValue("Last Modified On");
      cell33.setCellStyle(headerCellStyle);
 
      IntStream.range(0, 33).forEach((columnIndex) -> worksheet.autoSizeColumn(columnIndex));
@@ -301,6 +301,8 @@ public class DatamigrationService {
                 break;
             }
 
+
+
             if (column == 0) {
               switch (cell.getCellType()) {
                 case Cell.CELL_TYPE_STRING:
@@ -357,7 +359,7 @@ public class DatamigrationService {
                   break;
               }
             }
-            if (column == 5) {
+            if (column == 4) {
               switch (cell.getCellType()) {
                 case Cell.CELL_TYPE_STRING:
                   surname = cell.getStringCellValue();
@@ -371,7 +373,7 @@ public class DatamigrationService {
                   break;
               }
             }
-            if (column == 6) {
+            if (column == 5) {
               switch (cell.getCellType()) {
                 case Cell.CELL_TYPE_STRING:
                   year = cell.getStringCellValue();
@@ -385,7 +387,7 @@ public class DatamigrationService {
                   break;
               }
             }
-            if (column == 7) {
+            if (column == 6) {
               switch (cell.getCellType()) {
                 case Cell.CELL_TYPE_STRING:
                   month = cell.getStringCellValue();
@@ -399,7 +401,7 @@ public class DatamigrationService {
                   break;
               }
             }
-            if (column == 8) {
+            if (column == 7) {
               switch (cell.getCellType()) {
                 case Cell.CELL_TYPE_STRING:
                   day = cell.getStringCellValue();
@@ -413,7 +415,7 @@ public class DatamigrationService {
                   break;
               }
             }
-            if (column == 9) {
+            if (column == 8) {
               switch (cell.getCellType()) {
                 case Cell.CELL_TYPE_STRING:
                   member = cell.getStringCellValue();
@@ -427,7 +429,7 @@ public class DatamigrationService {
                   break;
               }
             }
-            if (column == 10){
+            if (column == 9){
               switch (cell.getCellType()) {
                 case Cell.CELL_TYPE_STRING:
                   accountBeneficiary = cell.getStringCellValue();
@@ -441,7 +443,7 @@ public class DatamigrationService {
                   break;
               }
             }
-            if (column == 11){
+            if (column == 10){
               switch (cell.getCellType()) {
                 case Cell.CELL_TYPE_STRING:
                   referenceCustomer = cell.getStringCellValue();
@@ -454,7 +456,7 @@ public class DatamigrationService {
                   break;
               }
             }
-            if (column == 12){
+            if (column == 11){
               switch (cell.getCellType()) {
                 case Cell.CELL_TYPE_STRING:
                   assignedOffice = cell.getStringCellValue();
@@ -467,7 +469,7 @@ public class DatamigrationService {
                   break;
               }
             }
-            if (column == 13){
+            if (column == 12){
               switch (cell.getCellType()) {
                 case Cell.CELL_TYPE_STRING:
                   assignedEmployee = cell.getStringCellValue();
@@ -481,7 +483,7 @@ public class DatamigrationService {
                   break;
               }
             }
-            if (column == 14){
+            if (column == 13){
               switch (cell.getCellType()) {
                 case Cell.CELL_TYPE_STRING:
                   street = cell.getStringCellValue();
@@ -495,7 +497,7 @@ public class DatamigrationService {
                   break;
               }
             }
-            if (column == 15){
+            if (column == 14){
               switch (cell.getCellType()) {
                 case Cell.CELL_TYPE_STRING:
                   city = cell.getStringCellValue();
@@ -509,7 +511,7 @@ public class DatamigrationService {
                   break;
               }
             }
-            if (column == 16){
+            if (column == 15){
               switch (cell.getCellType()) {
                 case Cell.CELL_TYPE_STRING:
                   region = cell.getStringCellValue();
@@ -523,7 +525,7 @@ public class DatamigrationService {
                   break;
               }
             }
-            if (column == 17){
+            if (column == 16){
               switch (cell.getCellType()) {
                 case Cell.CELL_TYPE_STRING:
                   postalCode = cell.getStringCellValue();
@@ -537,7 +539,7 @@ public class DatamigrationService {
                   break;
               }
             }
-            if (column == 18){
+            if (column == 17){
               switch (cell.getCellType()) {
                 case Cell.CELL_TYPE_STRING:
                   countryCode = cell.getStringCellValue();
@@ -551,7 +553,7 @@ public class DatamigrationService {
                   break;
               }
             }
-            if (column == 19){
+            if (column == 18){
               switch (cell.getCellType()) {
                 case Cell.CELL_TYPE_STRING:
                   country = cell.getStringCellValue();
@@ -565,7 +567,7 @@ public class DatamigrationService {
                   break;
               }
             }
-            if (column == 20){
+            if (column == 19){
               switch (cell.getCellType()) {
                 case Cell.CELL_TYPE_STRING:
                   typecontactDetail = cell.getStringCellValue();
@@ -579,7 +581,7 @@ public class DatamigrationService {
                   break;
               }
             }
-            if (column == 21){
+            if (column == 20){
               switch (cell.getCellType()) {
                 case Cell.CELL_TYPE_STRING:
                   group = cell.getStringCellValue();
@@ -593,7 +595,7 @@ public class DatamigrationService {
                   break;
               }
             }
-            if (column == 22){
+            if (column == 21){
               switch (cell.getCellType()) {
                 case Cell.CELL_TYPE_STRING:
                   value = cell.getStringCellValue();
@@ -607,7 +609,7 @@ public class DatamigrationService {
                   break;
               }
             }
-            if (column == 23){
+            if (column == 22){
               switch (cell.getCellType()) {
                 case Cell.CELL_TYPE_STRING:
                   preferenceLevel = cell.getStringCellValue();
@@ -621,20 +623,20 @@ public class DatamigrationService {
                   break;
               }
             }
-            if (column == 24){
+            if (column == 23){
               switch (cell.getCellType()) {
                 case Cell.CELL_TYPE_STRING:
                   validated = cell.getStringCellValue();
                   break;
                 case Cell.CELL_TYPE_NUMERIC:
-                  //validated = Integer.toString((int) cell.getNumericCellValue());
+                  validated = Integer.toString((int) cell.getNumericCellValue());
                   break;
                 case Cell.CELL_TYPE_BOOLEAN:
                   validated = String.valueOf(cell.getBooleanCellValue());
                   break;
               }
             }
-            if (column == 25){
+            if (column == 24){
               switch (cell.getCellType()) {
                 case Cell.CELL_TYPE_STRING:
                   currentState = cell.getStringCellValue();
@@ -647,7 +649,7 @@ public class DatamigrationService {
                   break;
               }
             }
-            if (column == 26){
+            if (column == 25){
               switch (cell.getCellType()) {
                 case Cell.CELL_TYPE_STRING:
                   applicationDate = cell.getStringCellValue();
@@ -661,7 +663,7 @@ public class DatamigrationService {
                   break;
               }
             }
-            if (column == 27){
+            if (column == 26){
               switch (cell.getCellType()) {
                 case Cell.CELL_TYPE_STRING:
                   catalogIdentifier = cell.getStringCellValue();
@@ -675,7 +677,7 @@ public class DatamigrationService {
                   break;
               }
             }
-            if (column == 28){
+            if (column == 27){
               switch (cell.getCellType()) {
                 case Cell.CELL_TYPE_STRING:
                   fieldIdentifier = cell.getStringCellValue();
@@ -689,7 +691,7 @@ public class DatamigrationService {
                   break;
               }
             }
-            if (column == 29){
+            if (column == 28){
               switch (cell.getCellType()) {
                 case Cell.CELL_TYPE_STRING:
                   value2 = cell.getStringCellValue();
@@ -703,7 +705,7 @@ public class DatamigrationService {
                   break;
               }
             }
-            if (column == 30){
+            if (column == 29){
               switch (cell.getCellType()) {
                 case Cell.CELL_TYPE_STRING:
                   createdBy = cell.getStringCellValue();
@@ -761,6 +763,14 @@ public class DatamigrationService {
             column++;
           }
 
+          logger.info(" "+identifier+" "+type+" "+givenName+ " "+middleName +" " +surname+" "+year+" "+ month+" "+day+" "+ member+" "+accountBeneficiary
+                              +" "+referenceCustomer+" "+assignedOffice+" "+assignedEmployee+" "+street+" "+city+" "+region+" " +
+                              " "+postalCode+" "+countryCode+" "+country+" "+typecontactDetail+" "+group+" " +
+                              ""+value+" "+preferenceLevel+" "+validated+" "+currentState+" " +
+                              ""+applicationDate+" "+catalogIdentifier+" "+fieldIdentifier+" "+value2+" " +
+                              ""+createdBy+" "+createdOn+" "+lastModifiedBy+" "+lastModifiedOn
+
+          );
           DateOfBirth dateOfBirth = new DateOfBirth();
           dateOfBirth.setYear(Integer.parseInt(year));
           dateOfBirth.setMonth(Integer.parseInt(month));
@@ -802,7 +812,7 @@ public class DatamigrationService {
           customer.setContactDetails(Collections.singletonList(contactDetail));
           customer.setCurrentState(currentState);
           customer.setApplicationDate(applicationDate);
-         // customer.setCustomValues(Collections.singletonList(value1));
+          customer.setCustomValues(Collections.singletonList(value1));
           customer.setCreatedBy(createdBy);
           customer.setCreatedOn(createdOn);
           customer.setLastModifiedBy(lastModifiedBy);
