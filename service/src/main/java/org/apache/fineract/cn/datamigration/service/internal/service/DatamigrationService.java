@@ -40,6 +40,8 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
@@ -823,51 +825,54 @@ public class DatamigrationService {
          // deburging purpose
 
           DateOfBirth dateOfBirth = new DateOfBirth();
-          dateOfBirth.setYear(12);
-          dateOfBirth.setMonth(8);
-          dateOfBirth.setDay(1993);
+          dateOfBirth.setYear(Integer.valueOf(2000));
+          dateOfBirth.setMonth(Integer.valueOf(6));
+          dateOfBirth.setDay(Integer.valueOf(6));
 
           Address address = new Address();
-          address.setStreet("Ub juction");
-          address.setCity("Muyuka");
+          address.setStreet("Hospital");
+          address.setCity("Buea");
           address.setRegion("SWR");
-          address.setPostalCode("2018");
+          address.setPostalCode("8050");
           address.setCountryCode("CM");
           address.setCountry("Cameroon");
 
-          ContactDetail contactDetail=new ContactDetail();
-          contactDetail.setType("MOBILE");
-          contactDetail.setGroup("PRIVATE");
-          contactDetail.setValue("652486630");
-          contactDetail.setPreferenceLevel(1);
-          contactDetail.setValidated(false);
+          ContactDetail contactDetailOne = new ContactDetail();
+          contactDetailOne.setType(ContactDetail.Type.MOBILE.name());
+          contactDetailOne.setGroup(ContactDetail.Group.PRIVATE.name());
+          contactDetailOne.setValue("675486632");
+          contactDetailOne.setPreferenceLevel(Integer.valueOf(1));
+          contactDetailOne.setValidated(Boolean.FALSE);
 
-          Value value1=new Value();
-          value1.setCatalogIdentifier("id2");
-          value1.setFieldIdentifier("id3");
-          value1.setValue("pending");
+          ContactDetail contactDetailTwo = new ContactDetail();
+          contactDetailTwo.setType(ContactDetail.Type.PHONE.name());
+          contactDetailTwo.setGroup(ContactDetail.Group.BUSINESS.name());
+          contactDetailTwo.setValue("278362018");
+          contactDetailTwo.setPreferenceLevel(Integer.valueOf(2));
+          contactDetailTwo.setValidated(Boolean.FALSE);
 
-          Customer customer = new Customer();
+          List<ContactDetail> contactDetails = new ArrayList<>();
+          contactDetails.add(contactDetailOne);
+          contactDetails.add(contactDetailTwo);
+
+          Customer customer= new Customer();
           customer.setIdentifier("id");
-          customer.setType("PERSON");
+          customer.setType(Customer.Type.PERSON.name());
           customer.setGivenName("ghislain");
           customer.setMiddleName("cabrel");
-          customer.setSurname("gabi");
+          customer.setSurname("hel");
           customer.setDateOfBirth(dateOfBirth);
-          customer.setMember(true);
-          customer.setAccountBeneficiary("pouse");
-          customer.setReferenceCustomer("mate");
-          customer.setAssignedOffice("ck7");
+          customer.setMember(Boolean.TRUE);
+          customer.setAssignedOffice("ViB");
           customer.setAssignedEmployee("Godwin");
           customer.setAddress(address);
-          customer.setContactDetails(Collections.singletonList(contactDetail));
-          customer.setCurrentState("PENDING");
-          customer.setApplicationDate("2017-07-19");
-          customer.setCustomValues(Collections.singletonList(value1));
-          customer.setCreatedBy("2017-07-19");
-          customer.setCreatedOn("2017-07-19");
-          customer.setLastModifiedBy("2017-07-19");
-          customer.setLastModifiedOn("2017-07-19");
+          customer.setContactDetails(contactDetails);
+          customer.setCurrentState(Customer.State.PENDING.name());
+          customer.setAccountBeneficiary("Spouse");
+          customer.setReferenceCustomer("mate");
+          customer.setApplicationDate(LocalDate.ofYearDay(2017, 200).toString());
+          customer.setLastModifiedBy("ck7");
+          customer.setLastModifiedOn(LocalDate.ofYearDay(2018, 4).toString());
 
           this.userManagement.authenticate();
           this.customerManager.createCustomer(customer);
