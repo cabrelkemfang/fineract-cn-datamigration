@@ -26,10 +26,7 @@ import org.apache.fineract.cn.customer.catalog.api.v1.domain.Value;
 import org.apache.fineract.cn.datamigration.service.connector.UserManagement;
 import org.apache.fineract.cn.datamigration.service.ServiceConstants;
 import org.apache.fineract.cn.lang.DateOfBirth;
-import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.Font;
-import org.apache.poi.ss.usermodel.Row;
-import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -40,6 +37,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -249,9 +247,7 @@ public class DatamigrationService {
       for (Row nextRow : firstSheet) {
         int column = 0;
         Iterator<Cell> cellIterator = nextRow.cellIterator();
-
         if ((currentPosition++ > offset)) {
-
           String identifier = null;
           String type = null;
           String givenName = null;
@@ -262,7 +258,7 @@ public class DatamigrationService {
           String month = null;
           String day = null;
 
-          String member=null;
+          Boolean member=false;
           String accountBeneficiary = null;
           String referenceCustomer = null;
           String assignedOffice = null;
@@ -279,7 +275,7 @@ public class DatamigrationService {
           String group = null;
           String value = null;
           String preferenceLevel = null;
-          String validated = null;
+          Boolean validated = false;
 
           String currentState = null;
           String applicationDate = null;
@@ -294,6 +290,9 @@ public class DatamigrationService {
           String lastModifiedOn = null;
 
 
+          SimpleDateFormat date=new SimpleDateFormat("yyyy-MM-dd");
+
+
           while ((cellIterator.hasNext())) {
 
             XSSFCell cell = (XSSFCell) cellIterator.next();
@@ -304,14 +303,19 @@ public class DatamigrationService {
             }
 
 
-
             if (column == 0) {
               switch (cell.getCellType()) {
                 case Cell.CELL_TYPE_STRING:
                   identifier = cell.getStringCellValue();
                   break;
+
                 case Cell.CELL_TYPE_NUMERIC:
-                  identifier = Integer.toString((int) cell.getNumericCellValue());
+                  if (DateUtil.isCellDateFormatted(cell)) {
+
+                    identifier =date.format(cell.getDateCellValue());
+                  } else {
+                    identifier=Integer.toString((int) cell.getNumericCellValue());
+                  }
                   break;
 
                 case Cell.CELL_TYPE_BOOLEAN:
@@ -326,7 +330,12 @@ public class DatamigrationService {
                   break;
 
                 case Cell.CELL_TYPE_NUMERIC:
-                  type = Integer.toString((int) cell.getNumericCellValue());
+                  if (DateUtil.isCellDateFormatted(cell)) {
+
+                    type =date.format(cell.getDateCellValue());
+                  } else {
+                    type=Integer.toString((int) cell.getNumericCellValue());
+                  }
                   break;
 
                 case Cell.CELL_TYPE_BOOLEAN:
@@ -339,9 +348,16 @@ public class DatamigrationService {
                 case Cell.CELL_TYPE_STRING:
                   givenName = cell.getStringCellValue();
                   break;
+
                 case Cell.CELL_TYPE_NUMERIC:
-                  givenName = Integer.toString((int) cell.getNumericCellValue());
+                  if (DateUtil.isCellDateFormatted(cell)) {
+
+                    givenName =date.format(cell.getDateCellValue());
+                  } else {
+                    givenName =Integer.toString((int) cell.getNumericCellValue());
+                  }
                   break;
+
                 case Cell.CELL_TYPE_BOOLEAN:
                   givenName = String.valueOf(cell.getBooleanCellValue());
                   break;
@@ -352,8 +368,14 @@ public class DatamigrationService {
                 case Cell.CELL_TYPE_STRING:
                   middleName = cell.getStringCellValue();
                   break;
+
                 case Cell.CELL_TYPE_NUMERIC:
-                  middleName = Integer.toString((int) cell.getNumericCellValue());
+                  if (DateUtil.isCellDateFormatted(cell)) {
+
+                    middleName =date.format(cell.getDateCellValue());
+                  } else {
+                    middleName=Integer.toString((int) cell.getNumericCellValue());
+                  }
                   break;
 
                 case Cell.CELL_TYPE_BOOLEAN:
@@ -366,8 +388,13 @@ public class DatamigrationService {
                 case Cell.CELL_TYPE_STRING:
                   surname = cell.getStringCellValue();
                   break;
+
                 case Cell.CELL_TYPE_NUMERIC:
-                  surname = Integer.toString((int) cell.getNumericCellValue());
+                  if (DateUtil.isCellDateFormatted(cell)) {
+                    surname =date.format(cell.getDateCellValue());
+                  } else {
+                    surname=Integer.toString((int) cell.getNumericCellValue());
+                  }
                   break;
 
                 case Cell.CELL_TYPE_BOOLEAN:
@@ -380,8 +407,14 @@ public class DatamigrationService {
                 case Cell.CELL_TYPE_STRING:
                   year = cell.getStringCellValue();
                   break;
+
                 case Cell.CELL_TYPE_NUMERIC:
-                  year = Integer.toString((int) cell.getNumericCellValue());
+                  if (DateUtil.isCellDateFormatted(cell)) {
+
+                    year =date.format(cell.getDateCellValue());
+                  } else {
+                    year=Integer.toString((int) cell.getNumericCellValue());
+                  }
                   break;
 
                 case Cell.CELL_TYPE_BOOLEAN:
@@ -394,8 +427,14 @@ public class DatamigrationService {
                 case Cell.CELL_TYPE_STRING:
                   month = cell.getStringCellValue();
                   break;
+
                 case Cell.CELL_TYPE_NUMERIC:
-                  month = Integer.toString((int) cell.getNumericCellValue());
+                  if (DateUtil.isCellDateFormatted(cell)) {
+
+                    month =date.format(cell.getDateCellValue());
+                  } else {
+                    month=Integer.toString((int) cell.getNumericCellValue());
+                  }
                   break;
 
                 case Cell.CELL_TYPE_BOOLEAN:
@@ -409,7 +448,12 @@ public class DatamigrationService {
                   day = cell.getStringCellValue();
                   break;
                 case Cell.CELL_TYPE_NUMERIC:
-                  day = Integer.toString((int) cell.getNumericCellValue());
+                  if (DateUtil.isCellDateFormatted(cell)) {
+
+                    day =date.format(cell.getDateCellValue());
+                  } else {
+                    day=Integer.toString((int) cell.getNumericCellValue());
+                  }
                   break;
 
                 case Cell.CELL_TYPE_BOOLEAN:
@@ -419,15 +463,9 @@ public class DatamigrationService {
             }
             if (column == 8) {
               switch (cell.getCellType()) {
-                case Cell.CELL_TYPE_STRING:
-                  member = cell.getStringCellValue();
-                  break;
-                case Cell.CELL_TYPE_NUMERIC:
-                  member = Integer.toString((int) cell.getNumericCellValue());
-                  break;
 
                 case Cell.CELL_TYPE_BOOLEAN:
-                  member = String.valueOf(cell.getBooleanCellValue());
+                  member = cell.getBooleanCellValue();
                   break;
               }
             }
@@ -436,8 +474,14 @@ public class DatamigrationService {
                 case Cell.CELL_TYPE_STRING:
                   accountBeneficiary = cell.getStringCellValue();
                   break;
+
                 case Cell.CELL_TYPE_NUMERIC:
-                  accountBeneficiary = Integer.toString((int) cell.getNumericCellValue());
+                  if (DateUtil.isCellDateFormatted(cell)) {
+
+                    accountBeneficiary =date.format(cell.getDateCellValue());
+                  } else {
+                    accountBeneficiary=Integer.toString((int) cell.getNumericCellValue());
+                  }
                   break;
 
                 case Cell.CELL_TYPE_BOOLEAN:
@@ -450,9 +494,16 @@ public class DatamigrationService {
                 case Cell.CELL_TYPE_STRING:
                   referenceCustomer = cell.getStringCellValue();
                   break;
+
                 case Cell.CELL_TYPE_NUMERIC:
-                  referenceCustomer = Integer.toString((int) cell.getNumericCellValue());
+                  if (DateUtil.isCellDateFormatted(cell)) {
+
+                    referenceCustomer =date.format(cell.getDateCellValue());
+                  } else {
+                    referenceCustomer=Integer.toString((int) cell.getNumericCellValue());
+                  }
                   break;
+
                 case Cell.CELL_TYPE_BOOLEAN:
                   referenceCustomer = String.valueOf(cell.getBooleanCellValue());
                   break;
@@ -463,9 +514,16 @@ public class DatamigrationService {
                 case Cell.CELL_TYPE_STRING:
                   assignedOffice = cell.getStringCellValue();
                   break;
+
                 case Cell.CELL_TYPE_NUMERIC:
-                  assignedOffice = Integer.toString((int) cell.getNumericCellValue());
+                  if (DateUtil.isCellDateFormatted(cell)) {
+
+                    assignedOffice =date.format(cell.getDateCellValue());
+                  } else {
+                    assignedOffice=Integer.toString((int) cell.getNumericCellValue());
+                  }
                   break;
+
                 case Cell.CELL_TYPE_BOOLEAN:
                   assignedOffice = String.valueOf(cell.getBooleanCellValue());
                   break;
@@ -476,8 +534,14 @@ public class DatamigrationService {
                 case Cell.CELL_TYPE_STRING:
                   assignedEmployee = cell.getStringCellValue();
                   break;
+
                 case Cell.CELL_TYPE_NUMERIC:
-                  assignedEmployee = Integer.toString((int) cell.getNumericCellValue());
+                  if (DateUtil.isCellDateFormatted(cell)) {
+
+                    assignedEmployee =date.format(cell.getDateCellValue());
+                  } else {
+                    assignedEmployee=Integer.toString((int) cell.getNumericCellValue());
+                  }
                   break;
 
                 case Cell.CELL_TYPE_BOOLEAN:
@@ -490,8 +554,14 @@ public class DatamigrationService {
                 case Cell.CELL_TYPE_STRING:
                   street = cell.getStringCellValue();
                   break;
+
                 case Cell.CELL_TYPE_NUMERIC:
-                  street = Integer.toString((int) cell.getNumericCellValue());
+                  if (DateUtil.isCellDateFormatted(cell)) {
+
+                    street =date.format(cell.getDateCellValue());
+                  } else {
+                    street=Integer.toString((int) cell.getNumericCellValue());
+                  }
                   break;
 
                 case Cell.CELL_TYPE_BOOLEAN:
@@ -504,8 +574,14 @@ public class DatamigrationService {
                 case Cell.CELL_TYPE_STRING:
                   city = cell.getStringCellValue();
                   break;
+
                 case Cell.CELL_TYPE_NUMERIC:
-                  city = Integer.toString((int) cell.getNumericCellValue());
+                  if (DateUtil.isCellDateFormatted(cell)) {
+
+                    city =date.format(cell.getDateCellValue());
+                  } else {
+                    city=Integer.toString((int) cell.getNumericCellValue());
+                  }
                   break;
 
                 case Cell.CELL_TYPE_BOOLEAN:
@@ -518,8 +594,14 @@ public class DatamigrationService {
                 case Cell.CELL_TYPE_STRING:
                   region = cell.getStringCellValue();
                   break;
+
                 case Cell.CELL_TYPE_NUMERIC:
-                  region = Integer.toString((int) cell.getNumericCellValue());
+                  if (DateUtil.isCellDateFormatted(cell)) {
+
+                    region =date.format(cell.getDateCellValue());
+                  } else {
+                    region=Integer.toString((int) cell.getNumericCellValue());
+                  }
                   break;
 
                 case Cell.CELL_TYPE_BOOLEAN:
@@ -533,7 +615,12 @@ public class DatamigrationService {
                   postalCode = cell.getStringCellValue();
                   break;
                 case Cell.CELL_TYPE_NUMERIC:
-                  postalCode = Integer.toString((int) cell.getNumericCellValue());
+                  if (DateUtil.isCellDateFormatted(cell)) {
+
+                    postalCode =date.format(cell.getDateCellValue());
+                  } else {
+                    postalCode=Integer.toString((int) cell.getNumericCellValue());
+                  }
                   break;
 
                 case Cell.CELL_TYPE_BOOLEAN:
@@ -546,8 +633,14 @@ public class DatamigrationService {
                 case Cell.CELL_TYPE_STRING:
                   countryCode = cell.getStringCellValue();
                   break;
+
                 case Cell.CELL_TYPE_NUMERIC:
-                  countryCode = Integer.toString((int) cell.getNumericCellValue());
+                  if (DateUtil.isCellDateFormatted(cell)) {
+
+                    countryCode =date.format(cell.getDateCellValue());
+                  } else {
+                    countryCode=Integer.toString((int) cell.getNumericCellValue());
+                  }
                   break;
 
                 case Cell.CELL_TYPE_BOOLEAN:
@@ -560,8 +653,14 @@ public class DatamigrationService {
                 case Cell.CELL_TYPE_STRING:
                   country = cell.getStringCellValue();
                   break;
+
                 case Cell.CELL_TYPE_NUMERIC:
-                  country = Integer.toString((int) cell.getNumericCellValue());
+                  if (DateUtil.isCellDateFormatted(cell)) {
+
+                    country =date.format(cell.getDateCellValue());
+                  } else {
+                    country=Integer.toString((int) cell.getNumericCellValue());
+                  }
                   break;
 
                 case Cell.CELL_TYPE_BOOLEAN:
@@ -574,8 +673,14 @@ public class DatamigrationService {
                 case Cell.CELL_TYPE_STRING:
                   typecontactDetail = cell.getStringCellValue();
                   break;
+
                 case Cell.CELL_TYPE_NUMERIC:
-                  typecontactDetail = Integer.toString((int) cell.getNumericCellValue());
+                  if (DateUtil.isCellDateFormatted(cell)) {
+
+                    typecontactDetail =date.format(cell.getDateCellValue());
+                  } else {
+                    typecontactDetail=Integer.toString((int) cell.getNumericCellValue());
+                  }
                   break;
 
                 case Cell.CELL_TYPE_BOOLEAN:
@@ -588,8 +693,14 @@ public class DatamigrationService {
                 case Cell.CELL_TYPE_STRING:
                   group = cell.getStringCellValue();
                   break;
+
                 case Cell.CELL_TYPE_NUMERIC:
-                  group = Integer.toString((int) cell.getNumericCellValue());
+                  if (DateUtil.isCellDateFormatted(cell)) {
+
+                    group =date.format(cell.getDateCellValue());
+                  } else {
+                    group=Integer.toString((int) cell.getNumericCellValue());
+                  }
                   break;
 
                 case Cell.CELL_TYPE_BOOLEAN:
@@ -602,8 +713,14 @@ public class DatamigrationService {
                 case Cell.CELL_TYPE_STRING:
                   value = cell.getStringCellValue();
                   break;
+
                 case Cell.CELL_TYPE_NUMERIC:
-                  value = Integer.toString((int) cell.getNumericCellValue());
+                  if (DateUtil.isCellDateFormatted(cell)) {
+
+                    value =date.format(cell.getDateCellValue());
+                  } else {
+                    value=Integer.toString((int) cell.getNumericCellValue());
+                  }
                   break;
 
                 case Cell.CELL_TYPE_BOOLEAN:
@@ -616,8 +733,14 @@ public class DatamigrationService {
                 case Cell.CELL_TYPE_STRING:
                   preferenceLevel = cell.getStringCellValue();
                   break;
+
                 case Cell.CELL_TYPE_NUMERIC:
-                  preferenceLevel = Integer.toString((int) cell.getNumericCellValue());
+                  if (DateUtil.isCellDateFormatted(cell)) {
+
+                    preferenceLevel =date.format(cell.getDateCellValue());
+                  } else {
+                    preferenceLevel=Integer.toString((int) cell.getNumericCellValue());
+                  }
                   break;
 
                 case Cell.CELL_TYPE_BOOLEAN:
@@ -627,14 +750,9 @@ public class DatamigrationService {
             }
             if (column == 23){
               switch (cell.getCellType()) {
-                case Cell.CELL_TYPE_STRING:
-                  validated = cell.getStringCellValue();
-                  break;
-                case Cell.CELL_TYPE_NUMERIC:
-                  validated = Integer.toString((int) cell.getNumericCellValue());
-                  break;
+
                 case Cell.CELL_TYPE_BOOLEAN:
-                  validated = String.valueOf(cell.getBooleanCellValue());
+                  validated = cell.getBooleanCellValue();
                   break;
               }
             }
@@ -643,9 +761,16 @@ public class DatamigrationService {
                 case Cell.CELL_TYPE_STRING:
                   currentState = cell.getStringCellValue();
                   break;
+
                 case Cell.CELL_TYPE_NUMERIC:
-                  currentState = Integer.toString((int) cell.getNumericCellValue());
+                  if (DateUtil.isCellDateFormatted(cell)) {
+
+                    currentState =date.format(cell.getDateCellValue());
+                  } else {
+                    currentState=Integer.toString((int) cell.getNumericCellValue());
+                  }
                   break;
+
                 case Cell.CELL_TYPE_BOOLEAN:
                   currentState = String.valueOf(cell.getBooleanCellValue());
                   break;
@@ -656,8 +781,14 @@ public class DatamigrationService {
                 case Cell.CELL_TYPE_STRING:
                   applicationDate = cell.getStringCellValue();
                   break;
+
                 case Cell.CELL_TYPE_NUMERIC:
-                  applicationDate = Integer.toString((int) cell.getNumericCellValue());
+                  if (DateUtil.isCellDateFormatted(cell)) {
+
+                    applicationDate =date.format(cell.getDateCellValue());
+                  } else {
+                    applicationDate=Integer.toString((int) cell.getNumericCellValue());
+                  }
                   break;
 
                 case Cell.CELL_TYPE_BOOLEAN:
@@ -670,8 +801,14 @@ public class DatamigrationService {
                 case Cell.CELL_TYPE_STRING:
                   catalogIdentifier = cell.getStringCellValue();
                   break;
+
                 case Cell.CELL_TYPE_NUMERIC:
-                  catalogIdentifier = Integer.toString((int) cell.getNumericCellValue());
+                  if (DateUtil.isCellDateFormatted(cell)) {
+
+                    catalogIdentifier =date.format(cell.getDateCellValue());
+                  } else {
+                    catalogIdentifier=Integer.toString((int) cell.getNumericCellValue());
+                  }
                   break;
 
                 case Cell.CELL_TYPE_BOOLEAN:
@@ -684,8 +821,14 @@ public class DatamigrationService {
                 case Cell.CELL_TYPE_STRING:
                   fieldIdentifier = cell.getStringCellValue();
                   break;
+
                 case Cell.CELL_TYPE_NUMERIC:
-                  fieldIdentifier = Integer.toString((int) cell.getNumericCellValue());
+                  if (DateUtil.isCellDateFormatted(cell)) {
+
+                    fieldIdentifier =date.format(cell.getDateCellValue());
+                  } else {
+                    fieldIdentifier=Integer.toString((int) cell.getNumericCellValue());
+                  }
                   break;
 
                 case Cell.CELL_TYPE_BOOLEAN:
@@ -698,8 +841,14 @@ public class DatamigrationService {
                 case Cell.CELL_TYPE_STRING:
                   value2 = cell.getStringCellValue();
                   break;
+
                 case Cell.CELL_TYPE_NUMERIC:
-                  value2 = Integer.toString((int) cell.getNumericCellValue());
+                  if (DateUtil.isCellDateFormatted(cell)) {
+
+                    value2 =date.format(cell.getDateCellValue());
+                  } else {
+                    value2=Integer.toString((int) cell.getNumericCellValue());
+                  }
                   break;
 
                 case Cell.CELL_TYPE_BOOLEAN:
@@ -712,9 +861,16 @@ public class DatamigrationService {
                 case Cell.CELL_TYPE_STRING:
                   createdBy = cell.getStringCellValue();
                   break;
+
                 case Cell.CELL_TYPE_NUMERIC:
-                  createdBy = Integer.toString((int) cell.getNumericCellValue());
+                  if (DateUtil.isCellDateFormatted(cell)) {
+
+                    createdBy =date.format(cell.getDateCellValue());
+                  } else {
+                    createdBy=Integer.toString((int) cell.getNumericCellValue());
+                  }
                   break;
+
                 case Cell.CELL_TYPE_BOOLEAN:
                   createdBy = String.valueOf(cell.getBooleanCellValue());
                   break;
@@ -726,7 +882,12 @@ public class DatamigrationService {
                   createdOn = cell.getStringCellValue();
                   break;
                 case Cell.CELL_TYPE_NUMERIC:
-                  createdOn = Integer.toString((int) cell.getNumericCellValue());
+                  if (DateUtil.isCellDateFormatted(cell)) {
+
+                    createdOn =date.format(cell.getDateCellValue());
+                  } else {
+                    createdOn=Integer.toString((int) cell.getNumericCellValue());
+                  }
                   break;
                 case Cell.CELL_TYPE_BOOLEAN:
                   createdOn = String.valueOf(cell.getBooleanCellValue());
@@ -739,7 +900,12 @@ public class DatamigrationService {
                   lastModifiedBy = cell.getStringCellValue();
                   break;
                 case Cell.CELL_TYPE_NUMERIC:
-                  lastModifiedBy = Integer.toString((int) cell.getNumericCellValue());
+                  if (DateUtil.isCellDateFormatted(cell)) {
+
+                    lastModifiedBy =date.format(cell.getDateCellValue());
+                  } else {
+                    lastModifiedBy=Integer.toString((int) cell.getNumericCellValue());
+                  }
                   break;
 
                 case Cell.CELL_TYPE_BOOLEAN:
@@ -748,17 +914,26 @@ public class DatamigrationService {
               }
             }
             if (column == 32) {
+
               switch (cell.getCellType()) {
+
                 case Cell.CELL_TYPE_STRING:
                   lastModifiedOn = cell.getStringCellValue();
                   break;
+
                 case Cell.CELL_TYPE_NUMERIC:
-                  lastModifiedOn = Integer.toString((int) cell.getNumericCellValue());
+                  if (DateUtil.isCellDateFormatted(cell)) {
+
+                    lastModifiedOn = date.format(cell.getDateCellValue());
+                  } else {
+                    lastModifiedOn = Integer.toString((int) cell.getNumericCellValue());
+                  }
                   break;
 
                 case Cell.CELL_TYPE_BOOLEAN:
                   lastModifiedOn = String.valueOf(cell.getBooleanCellValue());
                   break;
+
               }
             }
 
@@ -825,54 +1000,58 @@ public class DatamigrationService {
          // deburging purpose
 
           DateOfBirth dateOfBirth = new DateOfBirth();
-          dateOfBirth.setYear(Integer.valueOf(2000));
-          dateOfBirth.setMonth(Integer.valueOf(6));
-          dateOfBirth.setDay(Integer.valueOf(6));
+          dateOfBirth.setYear(Integer.valueOf(year));
+          dateOfBirth.setMonth(Integer.valueOf(month));
+          dateOfBirth.setDay(Integer.valueOf(day));
 
           Address address = new Address();
-          address.setStreet("Hospital");
-          address.setCity("Buea");
-          address.setRegion("SWR");
-          address.setPostalCode("8050");
-          address.setCountryCode("CM");
-          address.setCountry("Cameroon");
+          address.setStreet(street);
+          address.setCity(city);
+          address.setRegion(region);
+          address.setPostalCode(postalCode);
+          address.setCountryCode(countryCode);
+          address.setCountry(country);
 
-          ContactDetail contactDetailOne = new ContactDetail();
-          contactDetailOne.setType(ContactDetail.Type.MOBILE.name());
-          contactDetailOne.setGroup(ContactDetail.Group.PRIVATE.name());
-          contactDetailOne.setValue("675486632");
-          contactDetailOne.setPreferenceLevel(Integer.valueOf(1));
-          contactDetailOne.setValidated(Boolean.FALSE);
-
-          ContactDetail contactDetailTwo = new ContactDetail();
-          contactDetailTwo.setType(ContactDetail.Type.PHONE.name());
-          contactDetailTwo.setGroup(ContactDetail.Group.BUSINESS.name());
-          contactDetailTwo.setValue("278362018");
-          contactDetailTwo.setPreferenceLevel(Integer.valueOf(2));
-          contactDetailTwo.setValidated(Boolean.FALSE);
+          ContactDetail contactDetail = new ContactDetail();
+          contactDetail.setType(typecontactDetail);
+          contactDetail.setGroup(group);
+          contactDetail.setValue(value);
+          contactDetail.setPreferenceLevel(Integer.valueOf(preferenceLevel));
+          contactDetail.setValidated(validated);
 
           List<ContactDetail> contactDetails = new ArrayList<>();
-          contactDetails.add(contactDetailOne);
-          contactDetails.add(contactDetailTwo);
+          contactDetails.add(contactDetail);
+
+          Value value1=new Value();
+          value1.setCatalogIdentifier(catalogIdentifier);
+          value1.setFieldIdentifier(fieldIdentifier);
+          value1.setValue(value2);
+
+          List<Value> values = new ArrayList<>();
+          values.add(value1);
 
           Customer customer= new Customer();
-          customer.setIdentifier("id");
-          customer.setType(Customer.Type.PERSON.name());
-          customer.setGivenName("ghislain");
-          customer.setMiddleName("cabrel");
-          customer.setSurname("hel");
+          customer.setIdentifier(identifier);
+          customer.setType(type);
+          customer.setGivenName(givenName);
+          customer.setMiddleName(middleName);
+          customer.setSurname(surname);
           customer.setDateOfBirth(dateOfBirth);
-          customer.setMember(Boolean.TRUE);
-          customer.setAssignedOffice("ViB");
-          customer.setAssignedEmployee("Godwin");
+          customer.setMember(member);
+          customer.setAccountBeneficiary(accountBeneficiary);
+          customer.setReferenceCustomer(referenceCustomer);
+          customer.setAssignedOffice(assignedOffice);
+          customer.setAssignedEmployee(assignedEmployee);
           customer.setAddress(address);
           customer.setContactDetails(contactDetails);
-          customer.setCurrentState(Customer.State.PENDING.name());
-          customer.setAccountBeneficiary("Spouse");
-          customer.setReferenceCustomer("mate");
-          customer.setApplicationDate(LocalDate.ofYearDay(2017, 200).toString());
-          customer.setLastModifiedBy("ck7");
-          customer.setLastModifiedOn(LocalDate.ofYearDay(2018, 4).toString());
+          customer.setCurrentState(currentState);
+          customer.setApplicationDate(applicationDate);
+
+          customer.setCustomValues(values);
+          customer.setCreatedBy(createdBy);
+          customer.setCreatedOn(createdOn);
+          customer.setLastModifiedBy(lastModifiedBy);
+          customer.setLastModifiedOn(lastModifiedOn);
 
           this.userManagement.authenticate();
           this.customerManager.createCustomer(customer);

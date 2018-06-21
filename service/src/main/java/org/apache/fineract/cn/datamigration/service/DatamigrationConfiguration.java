@@ -65,6 +65,8 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter
 @EnableJpaRepositories({
     "org.apache.fineract.cn.datamigration.service.internal.repository"
 })
+
+
 @RibbonClient(name = "datamigration-v1")
 public class DatamigrationConfiguration extends WebMvcConfigurerAdapter {
 
