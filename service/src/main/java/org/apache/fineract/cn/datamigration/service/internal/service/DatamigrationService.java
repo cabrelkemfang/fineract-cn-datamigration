@@ -998,7 +998,7 @@ public class DatamigrationService {
           */
 
          // deburging purpose
-
+/*
           DateOfBirth dateOfBirth = new DateOfBirth();
           dateOfBirth.setYear(Integer.valueOf(year));
           dateOfBirth.setMonth(Integer.valueOf(month));
@@ -1047,11 +1047,63 @@ public class DatamigrationService {
           customer.setCurrentState(currentState);
           customer.setApplicationDate(applicationDate);
 
-          customer.setCustomValues(values);
+          //customer.setCustomValues(values);
           customer.setCreatedBy(createdBy);
           customer.setCreatedOn(createdOn);
           customer.setLastModifiedBy(lastModifiedBy);
           customer.setLastModifiedOn(lastModifiedOn);
+*/
+          DateOfBirth dateOfBirth = new DateOfBirth();
+          dateOfBirth.setYear(Integer.valueOf(2000));
+          dateOfBirth.setMonth(Integer.valueOf(6));
+          dateOfBirth.setDay(Integer.valueOf(6));
+
+          Address address = new Address();
+          address.setStreet("Hospital");
+          address.setCity("Muyuka");
+          address.setRegion("SWR");
+          address.setPostalCode("8050");
+          address.setCountryCode("CM");
+          address.setCountry("Cameroon");
+
+          ContactDetail contactDetailOne = new ContactDetail();
+          contactDetailOne.setType(ContactDetail.Type.MOBILE.name());
+          contactDetailOne.setGroup(ContactDetail.Group.PRIVATE.name());
+          contactDetailOne.setValue("677777777");
+          contactDetailOne.setPreferenceLevel(Integer.valueOf(1));
+          contactDetailOne.setValidated(Boolean.FALSE);
+
+          ContactDetail contactDetailTwo = new ContactDetail();
+          contactDetailTwo.setType(ContactDetail.Type.PHONE.name());
+          contactDetailTwo.setGroup(ContactDetail.Group.BUSINESS.name());
+          contactDetailTwo.setValue("233363640");
+          contactDetailTwo.setPreferenceLevel(Integer.valueOf(2));
+          contactDetailTwo.setValidated(Boolean.FALSE);
+
+          List<ContactDetail> contactDetails = new ArrayList<>();
+          contactDetails.add(contactDetailOne);
+          contactDetails.add(contactDetailTwo);
+
+          Customer customer= new Customer();
+          customer.setIdentifier("id");
+          customer.setType(Customer.Type.PERSON.name());
+          customer.setGivenName("Kima");
+          customer.setMiddleName("Bessem");
+          customer.setSurname("Ray");
+          customer.setDateOfBirth(dateOfBirth);
+          customer.setMember(Boolean.TRUE);
+          customer.setAssignedOffice("Oweh ViB");
+          customer.setAssignedEmployee("Che Godwin");
+          customer.setAddress(address);
+          customer.setContactDetails(contactDetails);
+          customer.setCurrentState(Customer.State.PENDING.name());
+          customer.setAccountBeneficiary("Spouse");
+          customer.setReferenceCustomer("mate");
+          customer.setApplicationDate(LocalDate.ofYearDay(2017, 200).toString());
+          customer.setLastModifiedBy("Nakuve");
+          customer.setLastModifiedOn(LocalDate.ofYearDay(2018, 4).toString());
+
+
 
           this.userManagement.authenticate();
           this.customerManager.createCustomer(customer);
