@@ -34,6 +34,9 @@ import org.slf4j.Logger;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartException;
 import org.springframework.web.multipart.MultipartFile;
+
+import javax.servlet.ServletOutputStream;
+import javax.servlet.http.HttpServletResponse;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -63,7 +66,7 @@ public class DatamigrationService {
      this.userManagement = userManagement;
   }
 
-  public final ByteArrayInputStream customersFormDownload(){
+  public static void customersFormDownload(HttpServletResponse response){
 
      ByteArrayOutputStream outByteStream = new ByteArrayOutputStream();
      XSSFWorkbook workbook = new XSSFWorkbook();
@@ -221,15 +224,28 @@ public class DatamigrationService {
 
      IntStream.range(0, 33).forEach((columnIndex) -> worksheet.autoSizeColumn(columnIndex));
 
-     try {
+     /*try {
         worksheet.getWorkbook().write(outByteStream);
         // Flush the stream
         outByteStream.flush();
      } catch (Exception e) {
         System.out.println("Unable to write report to the output stream");
-     }
+     }*/
 
-     return new ByteArrayInputStream(outByteStream.toByteArray());
+    response.setHeader("Content-Disposition", "inline; filename=customer.xlsx");
+    response.setContentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
+    try {
+      // Retrieve the output stream
+      ServletOutputStream outputStream = response.getOutputStream();
+      // Write to the output stream
+      worksheet.getWorkbook().write(outputStream);
+      // Flush the stream
+      outputStream.flush();
+    } catch (Exception e) {
+      //logger.info("Unable to write report to the output stream");
+    }
+
+    // return new ByteArrayInputStream(outByteStream.toByteArray());
 
   }
 
@@ -288,15 +304,10 @@ public class DatamigrationService {
           String createdOn = null;
           String lastModifiedBy = null;
           String lastModifiedOn = null;
-
-
           SimpleDateFormat date=new SimpleDateFormat("yyyy-MM-dd");
 
-
           while ((cellIterator.hasNext())) {
-
             XSSFCell cell = (XSSFCell) cellIterator.next();
-
             switch (cell.getCellType()) { // stop if blank field found
               case Cell.CELL_TYPE_BLANK:
                 break;
@@ -998,24 +1009,24 @@ public class DatamigrationService {
           */
 
          // deburging purpose
-/*
+
           DateOfBirth dateOfBirth = new DateOfBirth();
           dateOfBirth.setYear(Integer.valueOf(year));
           dateOfBirth.setMonth(Integer.valueOf(month));
           dateOfBirth.setDay(Integer.valueOf(day));
 
           Address address = new Address();
-          address.setStreet(street);
-          address.setCity(city);
-          address.setRegion(region);
-          address.setPostalCode(postalCode);
-          address.setCountryCode(countryCode);
-          address.setCountry(country);
+          address.setStreet(String.valueOf(street));
+          address.setCity(String.valueOf(city));
+          address.setRegion(String.valueOf(region));
+          address.setPostalCode(String.valueOf(postalCode));
+          address.setCountryCode(String.valueOf(countryCode));
+          address.setCountry(String.valueOf(country));
 
           ContactDetail contactDetail = new ContactDetail();
-          contactDetail.setType(typecontactDetail);
-          contactDetail.setGroup(group);
-          contactDetail.setValue(value);
+          contactDetail.setType(String.valueOf(typecontactDetail));
+          contactDetail.setGroup(String.valueOf(group));
+          contactDetail.setValue(String.valueOf(value));
           contactDetail.setPreferenceLevel(Integer.valueOf(preferenceLevel));
           contactDetail.setValidated(validated);
 
@@ -1031,11 +1042,11 @@ public class DatamigrationService {
           values.add(value1);
 
           Customer customer= new Customer();
-          customer.setIdentifier(identifier);
-          customer.setType(type);
-          customer.setGivenName(givenName);
-          customer.setMiddleName(middleName);
-          customer.setSurname(surname);
+          customer.setIdentifier(String.valueOf(identifier));
+          customer.setType(String.valueOf(type));
+          customer.setGivenName(String.valueOf(givenName));
+          customer.setMiddleName(String.valueOf(middleName));
+          customer.setSurname(String.valueOf(surname));
           customer.setDateOfBirth(dateOfBirth);
           customer.setMember(member);
           customer.setAccountBeneficiary(accountBeneficiary);
@@ -1045,65 +1056,13 @@ public class DatamigrationService {
           customer.setAddress(address);
           customer.setContactDetails(contactDetails);
           customer.setCurrentState(currentState);
-          customer.setApplicationDate(applicationDate);
+          customer.setApplicationDate(String.valueOf(applicationDate));
 
           //customer.setCustomValues(values);
-          customer.setCreatedBy(createdBy);
-          customer.setCreatedOn(createdOn);
-          customer.setLastModifiedBy(lastModifiedBy);
-          customer.setLastModifiedOn(lastModifiedOn);
-*/
-          DateOfBirth dateOfBirth = new DateOfBirth();
-          dateOfBirth.setYear(Integer.valueOf(2000));
-          dateOfBirth.setMonth(Integer.valueOf(6));
-          dateOfBirth.setDay(Integer.valueOf(6));
-
-          Address address = new Address();
-          address.setStreet("Hospital");
-          address.setCity("Muyuka");
-          address.setRegion("SWR");
-          address.setPostalCode("8050");
-          address.setCountryCode("CM");
-          address.setCountry("Cameroon");
-
-          ContactDetail contactDetailOne = new ContactDetail();
-          contactDetailOne.setType(ContactDetail.Type.MOBILE.name());
-          contactDetailOne.setGroup(ContactDetail.Group.PRIVATE.name());
-          contactDetailOne.setValue("677777777");
-          contactDetailOne.setPreferenceLevel(Integer.valueOf(1));
-          contactDetailOne.setValidated(Boolean.FALSE);
-
-          ContactDetail contactDetailTwo = new ContactDetail();
-          contactDetailTwo.setType(ContactDetail.Type.PHONE.name());
-          contactDetailTwo.setGroup(ContactDetail.Group.BUSINESS.name());
-          contactDetailTwo.setValue("233363640");
-          contactDetailTwo.setPreferenceLevel(Integer.valueOf(2));
-          contactDetailTwo.setValidated(Boolean.FALSE);
-
-          List<ContactDetail> contactDetails = new ArrayList<>();
-          contactDetails.add(contactDetailOne);
-          contactDetails.add(contactDetailTwo);
-
-          Customer customer= new Customer();
-          customer.setIdentifier("id");
-          customer.setType(Customer.Type.PERSON.name());
-          customer.setGivenName("Kima");
-          customer.setMiddleName("Bessem");
-          customer.setSurname("Ray");
-          customer.setDateOfBirth(dateOfBirth);
-          customer.setMember(Boolean.TRUE);
-          customer.setAssignedOffice("Oweh ViB");
-          customer.setAssignedEmployee("Che Godwin");
-          customer.setAddress(address);
-          customer.setContactDetails(contactDetails);
-          customer.setCurrentState(Customer.State.PENDING.name());
-          customer.setAccountBeneficiary("Spouse");
-          customer.setReferenceCustomer("mate");
-          customer.setApplicationDate(LocalDate.ofYearDay(2017, 200).toString());
-          customer.setLastModifiedBy("Nakuve");
-          customer.setLastModifiedOn(LocalDate.ofYearDay(2018, 4).toString());
-
-
+          customer.setCreatedBy(String.valueOf(createdBy));
+          customer.setCreatedOn(String.valueOf(createdOn));
+          customer.setLastModifiedBy(String.valueOf(lastModifiedBy));
+          customer.setLastModifiedOn(String.valueOf(lastModifiedOn));
 
           this.userManagement.authenticate();
           this.customerManager.createCustomer(customer);

@@ -32,6 +32,8 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+
+import javax.servlet.http.HttpServletResponse;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 
@@ -70,9 +72,9 @@ public class DatamigrationRestController {
           method = RequestMethod.GET,
           consumes = MediaType.ALL_VALUE
   )
-  public ResponseEntity  download() throws ClassNotFoundException {
+  public  void  download(HttpServletResponse response) throws ClassNotFoundException {
 
-      ByteArrayInputStream bis = datamigrationService.customersFormDownload();
+      /*ByteArrayInputStream bis = datamigrationService.customersFormDownload();
       HttpHeaders headers = new HttpHeaders();
       headers.setContentType(MediaType.parseMediaType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"));
       headers.add("Content-Disposition", "attachment; filename=customers.xlsx");
@@ -81,6 +83,9 @@ public class DatamigrationRestController {
               .headers(headers)
               .contentType(MediaType.parseMediaType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"))
               .body(new InputStreamResource(bis));
+              */
+   datamigrationService.customersFormDownload(response);
+
   }
 
 
