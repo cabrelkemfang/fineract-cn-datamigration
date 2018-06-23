@@ -23,10 +23,9 @@ import org.apache.fineract.cn.anubis.annotation.Permittable;
 import org.apache.fineract.cn.command.gateway.CommandGateway;
 import org.apache.fineract.cn.datamigration.api.v1.PermittableGroupIds;
 import org.apache.fineract.cn.datamigration.service.internal.command.InitializeServiceCommand;
-import org.apache.fineract.cn.datamigration.service.internal.service.DatamigrationService;
+import org.apache.fineract.cn.datamigration.service.internal.service.CustomerDatamigrationService;
+import org.apache.fineract.cn.datamigration.service.internal.service.OfficeDatamigrationService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.InputStreamResource;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -34,7 +33,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletResponse;
-import java.io.ByteArrayInputStream;
 import java.io.IOException;
 
 @RestController
@@ -43,14 +41,18 @@ public class DatamigrationRestController {
 
 
   private final CommandGateway commandGateway;
-  private final DatamigrationService datamigrationService;
+  private final CustomerDatamigrationService customerDatamigrationService;
+  private final OfficeDatamigrationService officeDatamigrationService;
+
 
   @Autowired
   public DatamigrationRestController( final CommandGateway commandGateway,
-                                      final DatamigrationService datamigrationService) {
+                                      final CustomerDatamigrationService customerDatamigrationService,
+                                      final OfficeDatamigrationService officeDatamigrationService) {
     super();
     this.commandGateway = commandGateway;
-    this.datamigrationService = datamigrationService;
+    this.customerDatamigrationService = customerDatamigrationService;
+    this.officeDatamigrationService = officeDatamigrationService;
   }
 
   @Permittable(value = AcceptedTokenType.SYSTEM)
@@ -74,9 +76,8 @@ public class DatamigrationRestController {
   )
   public  void  download(HttpServletResponse response) throws ClassNotFoundException {
 
-   datamigrationService.customersFormDownload(response);
+    customerDatamigrationService.customersSheetDownload(response);
   }
-
 
 
   @Permittable(value = AcceptedTokenType.TENANT, groupId = PermittableGroupIds.DATAMIGRATION_MANAGEMENT)
@@ -86,9 +87,33 @@ public class DatamigrationRestController {
             consumes = MediaType.MULTIPART_FORM_DATA_VALUE
   )
   public ResponseEntity<String> customersFormUpload(@RequestParam("file") MultipartFile file) throws IOException {
-        datamigrationService.customersFormUpload(file);
+    customerDatamigrationService.customersSheetUpload(file);
         return new ResponseEntity<>("Upload successuly", HttpStatus.OK);
 
+  }
+
+  //Office Datamigration
+
+  @Permittable(value = AcceptedTokenType.TENANT, groupId = PermittableGroupIds.DATAMIGRATION_MANAGEMENT)
+  @RequestMapping(
+          value = "/offices/download",
+          method = RequestMethod.GET,
+          consumes = MediaType.ALL_VALUE
+  )
+  public void officeSheetdownload(HttpServletResponse response) throws ClassNotFoundException {
+    officeDatamigrationService.officeSheetDownload(response);
+  }
+
+
+  @Permittable(value = AcceptedTokenType.TENANT, groupId = PermittableGroupIds.DATAMIGRATION_MANAGEMENT)
+  @RequestMapping(
+          value = "/offices",
+          method = RequestMethod.POST,
+          consumes = MediaType.MULTIPART_FORM_DATA_VALUE
+  )
+  public ResponseEntity<String> officeSheetUpload(@RequestParam("file") MultipartFile file) throws IOException {
+    officeDatamigrationService.officeSheetUpload(file);
+    return new ResponseEntity<>("Upload successuly", HttpStatus.OK);
   }
 
 

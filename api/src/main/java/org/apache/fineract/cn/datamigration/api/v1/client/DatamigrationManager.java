@@ -26,7 +26,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
-//@SuppressWarnings("unused")
+import javax.servlet.http.HttpServletResponse;
+
 @FeignClient(value="datamigration-v1", path="/datamigration/v1", configuration = CustomFeignClientsConfiguration.class)
 public interface DatamigrationManager {
 
@@ -35,7 +36,7 @@ public interface DatamigrationManager {
           method = RequestMethod.GET,
           consumes = MediaType.ALL_VALUE
   )
-  ResponseEntity download() ;
+  void download(HttpServletResponse response) ;
 
 
   @RequestMapping(
@@ -45,5 +46,20 @@ public interface DatamigrationManager {
   )
   ResponseEntity<String> customersFormUpload(@RequestParam("file") MultipartFile file) ;
 
+  //Office Datamigration
+  @RequestMapping(
+          value = "/offices/download",
+          method = RequestMethod.GET,
+          consumes = MediaType.ALL_VALUE
+  )
+   void officeSheetdownload(HttpServletResponse response) ;
+
+
+  @RequestMapping(
+          value = "/offices",
+          method = RequestMethod.POST,
+          consumes = MediaType.MULTIPART_FORM_DATA_VALUE
+  )
+   ResponseEntity<String> officeSheetUpload(@RequestParam("file") MultipartFile file) ;
 
 }

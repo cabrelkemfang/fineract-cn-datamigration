@@ -37,7 +37,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
-import java.io.ByteArrayOutputStream;
+
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -47,23 +47,23 @@ import java.util.stream.IntStream;
 
 
 @Service
-public class DatamigrationService {
+public class CustomerDatamigrationService {
   private final Logger logger;
   private final CustomerManager customerManager;
   private final UserManagement userManagement;
 
 
   @Autowired
-  public DatamigrationService(@Qualifier(ServiceConstants.LOGGER_NAME) final Logger logger,
-                                final CustomerManager customerManager,
-                                final UserManagement userManagement) {
+  public CustomerDatamigrationService(@Qualifier(ServiceConstants.LOGGER_NAME) final Logger logger,
+                                      final CustomerManager customerManager,
+                                      final UserManagement userManagement) {
      super();
      this.logger = logger;
      this.customerManager = customerManager;
      this.userManagement = userManagement;
   }
 
-  public static void customersFormDownload(HttpServletResponse response){
+  public static void customersSheetDownload(HttpServletResponse response){
      XSSFWorkbook workbook = new XSSFWorkbook();
      XSSFSheet worksheet = workbook.createSheet("customers");
 
@@ -231,7 +231,7 @@ public class DatamigrationService {
 
   }
 
-  public void customersFormUpload(MultipartFile file){
+  public void customersSheetUpload(MultipartFile file){
     if (!file.getContentType().equals("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")) {
       throw new MultipartException("Only excel files accepted!");
     }
