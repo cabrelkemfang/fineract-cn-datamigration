@@ -74,18 +74,7 @@ public class DatamigrationRestController {
   )
   public  void  download(HttpServletResponse response) throws ClassNotFoundException {
 
-      /*ByteArrayInputStream bis = datamigrationService.customersFormDownload();
-      HttpHeaders headers = new HttpHeaders();
-      headers.setContentType(MediaType.parseMediaType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"));
-      headers.add("Content-Disposition", "attachment; filename=customers.xlsx");
-      return ResponseEntity
-              .ok()
-              .headers(headers)
-              .contentType(MediaType.parseMediaType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"))
-              .body(new InputStreamResource(bis));
-              */
    datamigrationService.customersFormDownload(response);
-
   }
 
 

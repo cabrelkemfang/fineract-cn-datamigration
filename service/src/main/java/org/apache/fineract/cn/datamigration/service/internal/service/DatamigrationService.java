@@ -37,13 +37,10 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
-import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
-import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.stream.IntStream;
@@ -67,8 +64,6 @@ public class DatamigrationService {
   }
 
   public static void customersFormDownload(HttpServletResponse response){
-
-     ByteArrayOutputStream outByteStream = new ByteArrayOutputStream();
      XSSFWorkbook workbook = new XSSFWorkbook();
      XSSFSheet worksheet = workbook.createSheet("customers");
 
@@ -91,7 +86,6 @@ public class DatamigrationService {
      XSSFCell cell2 = rowHeader.createCell(startColIndex+1);
      cell2.setCellValue("Type");
      cell2.setCellStyle(headerCellStyle);
-
 
      XSSFCell cell3 = rowHeader.createCell(startColIndex+2);
      cell3.setCellValue("Given Name");
@@ -184,7 +178,6 @@ public class DatamigrationService {
      cell24.setCellValue("Validated");
      cell24.setCellStyle(headerCellStyle);
 
-
      XSSFCell cell25= rowHeader.createCell(startColIndex+24);
      cell25.setCellValue("Current State");
      cell25.setCellStyle(headerCellStyle);
@@ -224,14 +217,6 @@ public class DatamigrationService {
 
      IntStream.range(0, 33).forEach((columnIndex) -> worksheet.autoSizeColumn(columnIndex));
 
-     /*try {
-        worksheet.getWorkbook().write(outByteStream);
-        // Flush the stream
-        outByteStream.flush();
-     } catch (Exception e) {
-        System.out.println("Unable to write report to the output stream");
-     }*/
-
     response.setHeader("Content-Disposition", "inline; filename=customer.xlsx");
     response.setContentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
     try {
@@ -242,10 +227,7 @@ public class DatamigrationService {
       // Flush the stream
       outputStream.flush();
     } catch (Exception e) {
-      //logger.info("Unable to write report to the output stream");
     }
-
-    // return new ByteArrayInputStream(outByteStream.toByteArray());
 
   }
 
@@ -312,8 +294,6 @@ public class DatamigrationService {
               case Cell.CELL_TYPE_BLANK:
                 break;
             }
-
-
             if (column == 0) {
               switch (cell.getCellType()) {
                 case Cell.CELL_TYPE_STRING:
@@ -944,13 +924,12 @@ public class DatamigrationService {
                 case Cell.CELL_TYPE_BOOLEAN:
                   lastModifiedOn = String.valueOf(cell.getBooleanCellValue());
                   break;
-
               }
             }
 
             column++;
           }
-
+//deburging purpose
           logger.info(" "+identifier+" "+type+" "+givenName+ " "+middleName +" " +surname+" "+year+" "+ month+" "+day+" "+ member+" "+accountBeneficiary
                               +" "+referenceCustomer+" "+assignedOffice+" "+assignedEmployee+" "+street+" "+city+" "+region+" " +
                               " "+postalCode+" "+countryCode+" "+country+" "+typecontactDetail+" "+group+" " +
@@ -959,56 +938,6 @@ public class DatamigrationService {
                               ""+createdBy+" "+createdOn+" "+lastModifiedBy+" "+lastModifiedOn
 
           );
-
-         /* DateOfBirth dateOfBirth = new DateOfBirth();
-          dateOfBirth.setYear(Integer.parseInt(year));
-          dateOfBirth.setMonth(Integer.parseInt(month));
-          dateOfBirth.setDay(Integer.parseInt(day));
-
-          Address address = new Address();
-          address.setStreet(street);
-          address.setCity(city);
-          address.setRegion(region);
-          address.setPostalCode(postalCode);
-          address.setCountryCode(countryCode);
-          address.setCountry(country);
-
-          ContactDetail contactDetail=new ContactDetail();
-          contactDetail.setType(typecontactDetail);
-          contactDetail.setGroup(group);
-          contactDetail.setValue(value);
-          contactDetail.setPreferenceLevel(Integer.parseInt(preferenceLevel));
-          contactDetail.setValidated(Boolean.parseBoolean(validated));
-
-          Value value1=new Value();
-          value1.setCatalogIdentifier(catalogIdentifier);
-          value1.setFieldIdentifier(fieldIdentifier);
-          value1.setValue(value2);
-
-          Customer customer = new Customer();
-          customer.setIdentifier(identifier);
-          customer.setType(type);
-          customer.setGivenName(givenName);
-          customer.setMiddleName(middleName);
-          customer.setSurname(surname);
-          customer.setDateOfBirth(dateOfBirth);
-          customer.setMember(Boolean.parseBoolean(member));
-          customer.setAccountBeneficiary(accountBeneficiary);
-          customer.setReferenceCustomer(referenceCustomer);
-          customer.setAssignedOffice(assignedOffice);
-          customer.setAssignedEmployee(assignedEmployee);
-          customer.setAddress(address);
-          customer.setContactDetails(Collections.singletonList(contactDetail));
-          customer.setCurrentState(currentState);
-          customer.setApplicationDate(applicationDate);
-          customer.setCustomValues(Collections.singletonList(value1));
-          customer.setCreatedBy(createdBy);
-          customer.setCreatedOn(createdOn);
-          customer.setLastModifiedBy(lastModifiedBy);
-          customer.setLastModifiedOn(lastModifiedOn);
-          */
-
-         // deburging purpose
 
           DateOfBirth dateOfBirth = new DateOfBirth();
           dateOfBirth.setYear(Integer.valueOf(year));
@@ -1066,7 +995,6 @@ public class DatamigrationService {
 
           this.userManagement.authenticate();
           this.customerManager.createCustomer(customer);
-
         }
 
       }
