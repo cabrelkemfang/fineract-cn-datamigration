@@ -24,6 +24,7 @@ import org.apache.fineract.cn.command.gateway.CommandGateway;
 import org.apache.fineract.cn.datamigration.api.v1.PermittableGroupIds;
 import org.apache.fineract.cn.datamigration.service.internal.command.InitializeServiceCommand;
 import org.apache.fineract.cn.datamigration.service.internal.service.CustomerDatamigrationService;
+import org.apache.fineract.cn.datamigration.service.internal.service.EmployeeDatamigration;
 import org.apache.fineract.cn.datamigration.service.internal.service.OfficeDatamigrationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -43,16 +44,19 @@ public class DatamigrationRestController {
   private final CommandGateway commandGateway;
   private final CustomerDatamigrationService customerDatamigrationService;
   private final OfficeDatamigrationService officeDatamigrationService;
+  private final EmployeeDatamigration employeeDatamigration;
 
 
   @Autowired
   public DatamigrationRestController( final CommandGateway commandGateway,
                                       final CustomerDatamigrationService customerDatamigrationService,
-                                      final OfficeDatamigrationService officeDatamigrationService) {
+                                      final OfficeDatamigrationService officeDatamigrationService,
+                                      final EmployeeDatamigration employeeDatamigration) {
     super();
     this.commandGateway = commandGateway;
     this.customerDatamigrationService = customerDatamigrationService;
     this.officeDatamigrationService = officeDatamigrationService;
+    this.employeeDatamigration = employeeDatamigration;
   }
 
   @Permittable(value = AcceptedTokenType.SYSTEM)
@@ -113,6 +117,30 @@ public class DatamigrationRestController {
   )
   public ResponseEntity<String> officeSheetUpload(@RequestParam("file") MultipartFile file) throws IOException {
     officeDatamigrationService.officeSheetUpload(file);
+    return new ResponseEntity<>("Upload successuly", HttpStatus.OK);
+  }
+
+  //Employee Datamigration
+  @Permittable(value = AcceptedTokenType.TENANT, groupId = PermittableGroupIds.DATAMIGRATION_MANAGEMENT)
+  @RequestMapping(
+          value = "/employees/download",
+          method = RequestMethod.GET,
+          consumes = MediaType.ALL_VALUE
+  )
+  public void employeeSheetdownload(HttpServletResponse response) throws ClassNotFoundException {
+    employeeDatamigration.employeeSheetDownload(response);
+  }
+
+
+  @Permittable(value = AcceptedTokenType.TENANT, groupId = PermittableGroupIds.DATAMIGRATION_MANAGEMENT)
+  @RequestMapping(
+          value = "/employees",
+          method = RequestMethod.POST,
+          produces = MediaType.ALL_VALUE,
+          consumes = MediaType.APPLICATION_JSON_VALUE
+  )
+  public ResponseEntity<String> employeeSheetUpload(@RequestParam("file") MultipartFile file) throws IOException {
+    employeeDatamigration.employeeSheetUpload(file);
     return new ResponseEntity<>("Upload successuly", HttpStatus.OK);
   }
 

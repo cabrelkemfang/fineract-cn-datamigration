@@ -20,6 +20,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Iterator;
+import java.util.stream.IntStream;
 
 @Service
 public class OfficeDatamigrationService {
@@ -53,51 +54,51 @@ public class OfficeDatamigrationService {
     rowHeader.setHeight((short) 500);
 
     XSSFCell cell1 = rowHeader.createCell(startColIndex+0);
-    cell1.setCellValue("identifier");
+    cell1.setCellValue("Identifier");
     cell1.setCellStyle(headerCellStyle);
 
     XSSFCell cell2 = rowHeader.createCell(startColIndex+1);
-    cell2.setCellValue("parentIdentifier");
+    cell2.setCellValue("Parent Identifier");
     cell2.setCellStyle(headerCellStyle);
 
     XSSFCell cell3 = rowHeader.createCell(startColIndex+2);
-    cell3.setCellValue("name");
+    cell3.setCellValue("Name");
     cell3.setCellStyle(headerCellStyle);
 
     XSSFCell cell4 = rowHeader.createCell(startColIndex+3);
-    cell4.setCellValue("description");
+    cell4.setCellValue("Description");
     cell4.setCellStyle(headerCellStyle);
 
 //address
     XSSFCell cell5= rowHeader.createCell(startColIndex+4);
-    cell5.setCellValue("street");
+    cell5.setCellValue("Street");
     cell5.setCellStyle(headerCellStyle);
 
     XSSFCell cell6= rowHeader.createCell(startColIndex+5);
-    cell6.setCellValue("city");
+    cell6.setCellValue("City");
     cell6.setCellStyle(headerCellStyle);
 
     XSSFCell cell7= rowHeader.createCell(startColIndex+6);
-    cell7.setCellValue("region");
+    cell7.setCellValue("Region");
     cell7.setCellStyle(headerCellStyle);
 
     XSSFCell cell8= rowHeader.createCell(startColIndex+7);
-    cell8.setCellValue("postalCode");
+    cell8.setCellValue("Postal Code");
     cell8.setCellStyle(headerCellStyle);
 
     XSSFCell cell9= rowHeader.createCell(startColIndex+8);
-    cell9.setCellValue("countryCode");
+    cell9.setCellValue("Country Code");
     cell9.setCellStyle(headerCellStyle);
 
     XSSFCell cell10= rowHeader.createCell(startColIndex+9);
-    cell10.setCellValue("country");
+    cell10.setCellValue("Country");
     cell10.setCellStyle(headerCellStyle);
 
     XSSFCell cell11= rowHeader.createCell(startColIndex+10);
-    cell11.setCellValue("externalReferences");
+    cell11.setCellValue("External References");
     cell11.setCellStyle(headerCellStyle);
 
-
+    IntStream.range(0, 11).forEach((columnIndex) -> worksheet.autoSizeColumn(columnIndex));
     response.setHeader("Content-Disposition", "inline; filename=Offices.xlsx");
     response.setContentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
 
@@ -352,7 +353,6 @@ public class OfficeDatamigrationService {
             }
             if (column == 10) {
               switch (cell.getCellType()) {
-
                 case Cell.CELL_TYPE_BOOLEAN:
                   externalReferences = cell.getBooleanCellValue();
                   break;
