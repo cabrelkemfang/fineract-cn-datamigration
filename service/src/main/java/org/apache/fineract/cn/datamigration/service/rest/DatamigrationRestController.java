@@ -136,8 +136,7 @@ public class DatamigrationRestController {
   @RequestMapping(
           value = "/employees",
           method = RequestMethod.POST,
-          produces = MediaType.ALL_VALUE,
-          consumes = MediaType.APPLICATION_JSON_VALUE
+          consumes = MediaType.MULTIPART_FORM_DATA_VALUE
   )
   public ResponseEntity<String> employeeSheetUpload(@RequestParam("file") MultipartFile file) throws IOException {
     employeeDatamigration.employeeSheetUpload(file);
