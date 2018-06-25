@@ -28,6 +28,7 @@ import org.apache.fineract.cn.lang.config.EnableServiceException;
 import org.apache.fineract.cn.lang.config.EnableTenantContext;
 import org.apache.fineract.cn.mariadb.config.EnableMariaDB;
 import org.apache.fineract.cn.office.api.v1.client.OrganizationManager;
+import org.apache.fineract.cn.teller.api.v1.client.TellerManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
@@ -55,7 +56,8 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter
 @EnableFeignClients(clients = {
         CustomerManager.class,
         IdentityManager.class,
-        OrganizationManager.class
+        OrganizationManager.class,
+        TellerManager.class
 })
 @ComponentScan({
     "org.apache.fineract.cn.datamigration.service.rest",

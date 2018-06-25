@@ -42,7 +42,6 @@ public interface DatamigrationManager {
   )
   void download(HttpServletResponse response) ;
 
-
   @RequestMapping(
           value = "/customers",
           method = RequestMethod.POST,
@@ -74,12 +73,26 @@ public interface DatamigrationManager {
   )
    void employeeSheetdownload(HttpServletResponse response) ;
 
-
   @RequestMapping(
           value = "/employees",
           method = RequestMethod.POST,
           consumes = MediaType.MULTIPART_FORM_DATA_VALUE
   )
    ResponseEntity<String> employeeSheetUpload(@RequestParam("file") MultipartFile file);
+
+//tellers datmigration
+  @RequestMapping(
+          value = "/tellers/download",
+          method = RequestMethod.GET,
+          consumes = MediaType.ALL_VALUE
+  )
+   void tellerSheetDownload(HttpServletResponse response) ;
+
+  @RequestMapping(
+          value = "/tellers",
+          method = RequestMethod.POST,
+          consumes = MediaType.MULTIPART_FORM_DATA_VALUE
+  )
+  ResponseEntity<String> tellerSheetUpload(@RequestParam("file") MultipartFile file) ;
 
 }
