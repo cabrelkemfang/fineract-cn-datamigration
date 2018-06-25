@@ -57,73 +57,70 @@ public class TellerDatamigration {
     cell1.setCellValue("Office Identifier");
     cell1.setCellStyle(headerCellStyle);
 
-    XSSFCell cell2 = rowHeader.createCell(startColIndex+0);
+    XSSFCell cell2 = rowHeader.createCell(startColIndex+1);
     cell2.setCellValue("code");
     cell2.setCellStyle(headerCellStyle);
 
-    XSSFCell cell3 = rowHeader.createCell(startColIndex+1);
+    XSSFCell cell3 = rowHeader.createCell(startColIndex+2);
     cell3.setCellValue("password");
     cell3.setCellStyle(headerCellStyle);
 
-    XSSFCell cell4 = rowHeader.createCell(startColIndex+2);
+    XSSFCell cell4 = rowHeader.createCell(startColIndex+3);
     cell4.setCellValue("Cashdraw Limit");
     cell4.setCellStyle(headerCellStyle);
 
-    XSSFCell cell5 = rowHeader.createCell(startColIndex+3);
+    XSSFCell cell5 = rowHeader.createCell(startColIndex+4);
     cell5.setCellValue("Teller Account Identifier");
     cell5.setCellStyle(headerCellStyle);
 
-    XSSFCell cell6 = rowHeader.createCell(startColIndex+4);
+    XSSFCell cell6 = rowHeader.createCell(startColIndex+5);
     cell6.setCellValue("Vault Account Identifierault ");
     cell6.setCellStyle(headerCellStyle);
 
-    XSSFCell cell7 = rowHeader.createCell(startColIndex+5);
+    XSSFCell cell7 = rowHeader.createCell(startColIndex+6);
     cell7.setCellValue("Cheques Receivable Account ");
     cell7.setCellStyle(headerCellStyle);
 
-    XSSFCell cell8 = rowHeader.createCell(startColIndex+6);
+    XSSFCell cell8 = rowHeader.createCell(startColIndex+7);
     cell8.setCellValue("Cash Over Short Account ");
     cell8.setCellStyle(headerCellStyle);
 
-    XSSFCell cell9 = rowHeader.createCell(startColIndex+7);
+    XSSFCell cell9 = rowHeader.createCell(startColIndex+8);
     cell9.setCellValue("Denomination Required ");
     cell9.setCellStyle(headerCellStyle);
 
-    XSSFCell cell10= rowHeader.createCell(startColIndex+8);
+    XSSFCell cell10= rowHeader.createCell(startColIndex+9);
     cell10.setCellValue("Assigned Employee");
     cell10.setCellStyle(headerCellStyle);
 
-    XSSFCell cell11= rowHeader.createCell(startColIndex+9);
+    XSSFCell cell11= rowHeader.createCell(startColIndex+10);
     cell11.setCellValue("state");
     cell11.setCellStyle(headerCellStyle);
 
-    XSSFCell cell12= rowHeader.createCell(startColIndex+10);
+    XSSFCell cell12= rowHeader.createCell(startColIndex+11);
     cell12.setCellValue("Created By");
     cell12.setCellStyle(headerCellStyle);
 
-    XSSFCell cell13= rowHeader.createCell(startColIndex+11);
+    XSSFCell cell13= rowHeader.createCell(startColIndex+12);
     cell13.setCellValue("Created On");
     cell13.setCellStyle(headerCellStyle);
 
-    XSSFCell cell14= rowHeader.createCell(startColIndex+12);
+    XSSFCell cell14= rowHeader.createCell(startColIndex+13);
     cell14.setCellValue("Last Modified By");
     cell14.setCellStyle(headerCellStyle);
 
-    XSSFCell cell15= rowHeader.createCell(startColIndex+13);
+    XSSFCell cell15= rowHeader.createCell(startColIndex+14);
     cell15.setCellValue("Last Modified On");
     cell15.setCellStyle(headerCellStyle);
 
-    XSSFCell cell16= rowHeader.createCell(startColIndex+14);
+    XSSFCell cell16= rowHeader.createCell(startColIndex+15);
     cell16.setCellValue("Last Opened By");
     cell16.setCellStyle(headerCellStyle);
 
-    XSSFCell cell17= rowHeader.createCell(startColIndex+15);
+    XSSFCell cell17= rowHeader.createCell(startColIndex+16);
     cell17.setCellValue("Last Opened On");
     cell17.setCellStyle(headerCellStyle);
-
-
-
-    IntStream.range(0, 16).forEach((columnIndex) -> worksheet.autoSizeColumn(columnIndex));
+    IntStream.range(0, 17).forEach((columnIndex) -> worksheet.autoSizeColumn(columnIndex));
 
     response.setHeader("Content-Disposition", "inline; filename=teller.xlsx");
     response.setContentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
@@ -190,7 +187,7 @@ public class TellerDatamigration {
 
                     officeIdentifier =date.format(cell.getDateCellValue());
                   } else {
-                    code=Integer.toString((int) cell.getNumericCellValue());
+                    officeIdentifier=Integer.toString((int) cell.getNumericCellValue());
                   }
                   break;
 
