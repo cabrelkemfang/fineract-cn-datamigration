@@ -41,6 +41,7 @@ public class OfficeDatamigrationService {
   public void officeSheetDownload(HttpServletResponse response){
     XSSFWorkbook workbook = new XSSFWorkbook();
     XSSFSheet worksheet = workbook.createSheet("Offices");
+    Datavalidator.validator(worksheet,"TRUE","FALSE",10);
 
     int startRowIndex = 0;
     int startColIndex = 0;
@@ -145,6 +146,7 @@ public class OfficeDatamigrationService {
           Boolean externalReferences = false;
 
           SimpleDateFormat date = new SimpleDateFormat("yyyy-MM-dd");
+
           while ((cellIterator.hasNext())) {
             XSSFCell cell = (XSSFCell) cellIterator.next();
             switch (cell.getCellType()) { // stop if blank field found
@@ -352,12 +354,11 @@ public class OfficeDatamigrationService {
             }
             if (column == 10) {
               switch (cell.getCellType()) {
-                case Cell.CELL_TYPE_BOOLEAN:
-                  externalReferences = cell.getBooleanCellValue();
+                case Cell.CELL_TYPE_STRING:
+                  externalReferences = Boolean.valueOf(cell.getStringCellValue());
                   break;
               }
             }
-
             column++;
           }
 

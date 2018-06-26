@@ -65,7 +65,13 @@ public class CustomerDatamigrationService {
 
   public static void customersSheetDownload(HttpServletResponse response){
      XSSFWorkbook workbook = new XSSFWorkbook();
-     XSSFSheet worksheet = workbook.createSheet("customers");
+     XSSFSheet worksheet = workbook.createSheet("Customers");
+
+    Datavalidator.validator(worksheet,"PERSON","BUSINESS",1);
+    Datavalidator.validatorState(worksheet,"PENDING","ACTIVE","LOCKED","CLOSED",24);
+
+    Datavalidator.validator(worksheet,"BUSINESS","PRIVATE",20);
+    Datavalidator.validatorType(worksheet,"EMAIL","PHONE","MOBILE",19);
 
      int startRowIndex = 0;
      int startColIndex = 0;
@@ -217,7 +223,7 @@ public class CustomerDatamigrationService {
 
      IntStream.range(0, 33).forEach((columnIndex) -> worksheet.autoSizeColumn(columnIndex));
 
-    response.setHeader("Content-Disposition", "inline; filename=customer.xlsx");
+    response.setHeader("Content-Disposition", "inline; filename=Customer.xlsx");
     response.setContentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
     try {
       // Retrieve the output stream
@@ -454,9 +460,8 @@ public class CustomerDatamigrationService {
             }
             if (column == 8) {
               switch (cell.getCellType()) {
-
-                case Cell.CELL_TYPE_BOOLEAN:
-                  member = cell.getBooleanCellValue();
+                case Cell.CELL_TYPE_STRING:
+                  member = Boolean.valueOf(cell.getStringCellValue());
                   break;
               }
             }
@@ -741,9 +746,8 @@ public class CustomerDatamigrationService {
             }
             if (column == 23){
               switch (cell.getCellType()) {
-
-                case Cell.CELL_TYPE_BOOLEAN:
-                  validated = cell.getBooleanCellValue();
+                case Cell.CELL_TYPE_STRING:
+                  validated = Boolean.valueOf(cell.getStringCellValue());
                   break;
               }
             }

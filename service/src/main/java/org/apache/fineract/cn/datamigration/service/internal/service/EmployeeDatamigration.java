@@ -42,6 +42,9 @@ public class EmployeeDatamigration {
     XSSFWorkbook workbook = new XSSFWorkbook();
     XSSFSheet worksheet = workbook.createSheet("Employees");
 
+    Datavalidator.validator(worksheet,"BUSINESS","PRIVATE",6);
+    Datavalidator.validatorType(worksheet,"EMAIL","PHONE","MOBILE",5);
+
     int startRowIndex = 0;
     int startColIndex = 0;
 

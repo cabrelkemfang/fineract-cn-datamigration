@@ -40,6 +40,8 @@ public class TellerDatamigration {
   public static void tellerSheetDownload(HttpServletResponse response){
     XSSFWorkbook workbook = new XSSFWorkbook();
     XSSFSheet worksheet = workbook.createSheet("Tellers");
+    Datavalidator.validator(worksheet,"TRUE","FALSE",8);
+    Datavalidator.validatorState(worksheet,"ACTIVE","CLOSED","OPEN","PAUSED",10);
 
     int startRowIndex = 0;
     int startColIndex = 0;
@@ -337,8 +339,8 @@ public class TellerDatamigration {
             }
             if (column == 8) {
               switch (cell.getCellType()) {
-                case Cell.CELL_TYPE_BOOLEAN:
-                  denominationRequired = cell.getBooleanCellValue();
+                case Cell.CELL_TYPE_STRING:
+                  denominationRequired = Boolean.valueOf(cell.getStringCellValue());
                   break;
               }
             }
