@@ -68,6 +68,8 @@ public class CustomerDatamigrationService {
      XSSFSheet worksheet = workbook.createSheet("Customers");
 
     Datavalidator.validator(worksheet,"PERSON","BUSINESS",1);
+    Datavalidator.validator(worksheet,"TRUE","FALSE",8);
+    Datavalidator.validator(worksheet,"TRUE","FALSE",23);
     Datavalidator.validatorState(worksheet,"PENDING","ACTIVE","LOCKED","CLOSED",24);
 
     Datavalidator.validator(worksheet,"BUSINESS","PRIVATE",20);
@@ -232,6 +234,7 @@ public class CustomerDatamigrationService {
       worksheet.getWorkbook().write(outputStream);
       // Flush the stream
       outputStream.flush();
+
     } catch (Exception e) {
     }
 
