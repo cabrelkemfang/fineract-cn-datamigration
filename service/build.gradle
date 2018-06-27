@@ -52,6 +52,7 @@ dependencies {
             [group: 'org.apache.fineract.cn.customer', name: 'api', version: project.version],
             [group: 'org.apache.fineract.cn.office', name: 'api', version: project.version],
             [group: 'org.apache.fineract.cn.teller', name: 'api', version: project.version],
+            [group: 'org.apache.fineract.cn.group', name: 'api', version: project.version],
             [group: 'org.apache.fineract.cn.identity', name: 'api', version: rootProject.version],
             [group: 'org.apache.fineract.cn.anubis', name: 'library', version: versions.frameworkanubis],
             [group: 'com.google.code.gson', name: 'gson'],

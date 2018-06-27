@@ -23,10 +23,7 @@ import org.apache.fineract.cn.anubis.annotation.Permittable;
 import org.apache.fineract.cn.command.gateway.CommandGateway;
 import org.apache.fineract.cn.datamigration.api.v1.PermittableGroupIds;
 import org.apache.fineract.cn.datamigration.service.internal.command.InitializeServiceCommand;
-import org.apache.fineract.cn.datamigration.service.internal.service.CustomerDatamigrationService;
-import org.apache.fineract.cn.datamigration.service.internal.service.EmployeeDatamigration;
-import org.apache.fineract.cn.datamigration.service.internal.service.OfficeDatamigrationService;
-import org.apache.fineract.cn.datamigration.service.internal.service.TellerDatamigration;
+import org.apache.fineract.cn.datamigration.service.internal.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -47,6 +44,7 @@ public class DatamigrationRestController {
   private final OfficeDatamigrationService officeDatamigrationService;
   private final EmployeeDatamigration employeeDatamigration;
   private final TellerDatamigration tellerDatamigration;
+  private final GroupDatamigration groupDatamigration;
 
 
   @Autowired
@@ -54,13 +52,15 @@ public class DatamigrationRestController {
                                       final CustomerDatamigrationService customerDatamigrationService,
                                       final OfficeDatamigrationService officeDatamigrationService,
                                       final EmployeeDatamigration employeeDatamigration,
-                                      final TellerDatamigration  tellerDatamigration) {
+                                      final TellerDatamigration  tellerDatamigration,
+                                      final GroupDatamigration  groupDatamigration) {
     super();
     this.commandGateway = commandGateway;
     this.customerDatamigrationService = customerDatamigrationService;
     this.officeDatamigrationService = officeDatamigrationService;
     this.employeeDatamigration = employeeDatamigration;
     this.tellerDatamigration = tellerDatamigration;
+    this.groupDatamigration = groupDatamigration;
   }
 
   @Permittable(value = AcceptedTokenType.SYSTEM)
@@ -170,5 +170,28 @@ public class DatamigrationRestController {
     return new ResponseEntity<>("Upload successuly", HttpStatus.OK);
   }
 
+
+  //Group Datamigration
+  @Permittable(value = AcceptedTokenType.TENANT, groupId = PermittableGroupIds.DATAMIGRATION_MANAGEMENT)
+  @RequestMapping(
+          value = "/group/download",
+          method = RequestMethod.GET,
+          consumes = MediaType.ALL_VALUE
+  )
+  public void groupSheetDownload(HttpServletResponse response) throws ClassNotFoundException {
+    groupDatamigration.groupSheetDownload(response);
+  }
+
+
+  @Permittable(value = AcceptedTokenType.TENANT, groupId = PermittableGroupIds.DATAMIGRATION_MANAGEMENT)
+  @RequestMapping(
+          value = "/group",
+          method = RequestMethod.POST,
+          consumes = MediaType.MULTIPART_FORM_DATA_VALUE
+  )
+  public ResponseEntity<String> groupSheetUpload(@RequestParam("file") MultipartFile file) throws IOException {
+    groupDatamigration.groupSheetUpload(file);
+    return new ResponseEntity<>("Upload successuly", HttpStatus.OK);
+  }
 
 }

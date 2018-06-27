@@ -95,4 +95,19 @@ public interface DatamigrationManager {
   )
   ResponseEntity<String> tellerSheetUpload(@RequestParam("file") MultipartFile file) ;
 
+  //group datmigration
+  @RequestMapping(
+          value = "/group/download",
+          method = RequestMethod.GET,
+          consumes = MediaType.ALL_VALUE
+  )
+  void groupSheetDownload(HttpServletResponse response) ;
+
+  @RequestMapping(
+          value = "/group",
+          method = RequestMethod.POST,
+          consumes = MediaType.MULTIPART_FORM_DATA_VALUE
+  )
+  ResponseEntity<String> groupSheetUpload(@RequestParam("file") MultipartFile file) ;
+
 }
