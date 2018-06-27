@@ -133,6 +133,7 @@ public class TellerDatamigration {
       worksheet.getWorkbook().write(outputStream);
       // Flush the stream
       outputStream.flush();
+      outputStream.close();
     } catch (Exception e) {
     }
 

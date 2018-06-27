@@ -235,6 +235,7 @@ public class CustomerDatamigrationService {
       // Flush the stream
       outputStream.flush();
 
+      outputStream.close();
     } catch (Exception e) {
     }
 

@@ -104,6 +104,7 @@ public class EmployeeDatamigration {
       worksheet.getWorkbook().write(outputStream);
       // Flush the stream
       outputStream.flush();
+      outputStream.close();
     } catch (Exception e) {
       System.out.println("Unable to write report to the output stream");
     }
