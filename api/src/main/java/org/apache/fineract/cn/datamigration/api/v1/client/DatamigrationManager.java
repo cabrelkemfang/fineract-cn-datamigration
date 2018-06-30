@@ -66,14 +66,14 @@ public interface DatamigrationManager {
 
 //Branch Datamigration
   @RequestMapping(
-          value = "/offices/download",
+          value = "/offices/branch/download",
           method = RequestMethod.GET,
           consumes = MediaType.ALL_VALUE
   )
    void branchSheetDownload(HttpServletResponse response) ;
 
   @RequestMapping(
-          value = "/offices",
+          value = "/offices/branch",
           method = RequestMethod.POST,
           consumes = MediaType.MULTIPART_FORM_DATA_VALUE
   )

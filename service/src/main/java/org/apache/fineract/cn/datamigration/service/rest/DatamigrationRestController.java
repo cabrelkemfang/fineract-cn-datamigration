@@ -124,7 +124,7 @@ public class DatamigrationRestController {
   //Branch Datamigration
   @Permittable(value = AcceptedTokenType.TENANT, groupId = PermittableGroupIds.DATAMIGRATION_MANAGEMENT)
   @RequestMapping(
-          value = "/offices/download",
+          value = "/offices/branch/download",
           method = RequestMethod.GET,
           consumes = MediaType.ALL_VALUE
   )
@@ -134,7 +134,7 @@ public class DatamigrationRestController {
 
   @Permittable(value = AcceptedTokenType.TENANT, groupId = PermittableGroupIds.DATAMIGRATION_MANAGEMENT)
   @RequestMapping(
-          value = "/offices",
+          value = "/offices/branch",
           method = RequestMethod.POST,
           consumes = MediaType.MULTIPART_FORM_DATA_VALUE
   )
