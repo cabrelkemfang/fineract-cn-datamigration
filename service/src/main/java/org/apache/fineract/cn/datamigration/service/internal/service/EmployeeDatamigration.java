@@ -118,217 +118,173 @@ public class EmployeeDatamigration {
 
       XSSFWorkbook workbook = new XSSFWorkbook(file.getInputStream());
       Sheet firstSheet = workbook.getSheetAt(0);
-      int offset = 0;
-      int currentPosition = 0;
+      int rowCount = firstSheet.getLastRowNum() + 1;
+      Row row;
+      String identifier =null ;
+      String givenName  =null;
+      String middleName  =null ;
+      String surname   =null;
+      String assignedOffice   =null;
+      String type   =null;
+      String group   =null;
+      String value   =null;
+      String preferenceLevel   =null;
 
-      for (Row nextRow : firstSheet) {
-        int column = 0;
-        Iterator<Cell> cellIterator = nextRow.cellIterator();
-        if ((currentPosition++ > offset)) {
-
-          String identifier = null;
-          String givenName = null;
-          String middleName = null;
-          String surname = null;
-          String assignedOffice = null;
-          String type = null;
-          String group = null;
-          String value = null;
-          String preferenceLevel = null;
-
-          SimpleDateFormat date=new SimpleDateFormat("yyyy-MM-dd");
-
-          while ((cellIterator.hasNext())) {
-            XSSFCell cell = (XSSFCell) cellIterator.next();
-            switch (cell.getCellType()) { // stop if blank field found
-              case Cell.CELL_TYPE_BLANK:
-                break;
-            }
-            if (column == 0) {
-              switch (cell.getCellType()) {
-                case Cell.CELL_TYPE_STRING:
-                  identifier = cell.getStringCellValue();
-                  break;
-
-                case Cell.CELL_TYPE_NUMERIC:
-                  if (DateUtil.isCellDateFormatted(cell)) {
-
-                    identifier =date.format(cell.getDateCellValue());
-                  } else {
-                    identifier=Integer.toString((int) cell.getNumericCellValue());
-                  }
-                  break;
-
-                case Cell.CELL_TYPE_BOOLEAN:
-                  identifier = String.valueOf(cell.getBooleanCellValue());
-                  break;
+      for (int rowIndex = 1; rowIndex < rowCount; rowIndex++) {
+        row = firstSheet.getRow(rowIndex);
+        if (row.getCell(0) == null) {
+          identifier = null;
+        } else {
+          switch (row.getCell(0) .getCellType()) {
+            case Cell.CELL_TYPE_STRING:
+              identifier = row.getCell(0).getStringCellValue();
+              break;
+            case Cell.CELL_TYPE_NUMERIC:
+              if (DateUtil.isCellDateFormatted(row.getCell(0))) {
+                identifier = String.valueOf( row.getCell(0).getStringCellValue());
+              } else {
+                identifier =  String.valueOf(row.getCell(0).getNumericCellValue());
               }
-            }
-            if (column == 1) {
-              switch (cell.getCellType()) {
-                case Cell.CELL_TYPE_STRING:
-                  givenName = cell.getStringCellValue();
-                  break;
-
-                case Cell.CELL_TYPE_NUMERIC:
-                  if (DateUtil.isCellDateFormatted(cell)) {
-
-                    givenName =date.format(cell.getDateCellValue());
-                  } else {
-                    givenName =Integer.toString((int) cell.getNumericCellValue());
-                  }
-                  break;
-
-                case Cell.CELL_TYPE_BOOLEAN:
-                  givenName = String.valueOf(cell.getBooleanCellValue());
-                  break;
-              }
-            }
-            if (column == 2) {
-              switch (cell.getCellType()) {
-                case Cell.CELL_TYPE_STRING:
-                  middleName = cell.getStringCellValue();
-                  break;
-
-                case Cell.CELL_TYPE_NUMERIC:
-                  if (DateUtil.isCellDateFormatted(cell)) {
-
-                    middleName =date.format(cell.getDateCellValue());
-                  } else {
-                    middleName=Integer.toString((int) cell.getNumericCellValue());
-                  }
-                  break;
-
-                case Cell.CELL_TYPE_BOOLEAN:
-                  middleName = String.valueOf(cell.getBooleanCellValue());
-                  break;
-              }
-            }
-            if (column == 3) {
-              switch (cell.getCellType()) {
-                case Cell.CELL_TYPE_STRING:
-                  surname = cell.getStringCellValue();
-                  break;
-
-                case Cell.CELL_TYPE_NUMERIC:
-                  if (DateUtil.isCellDateFormatted(cell)) {
-                    surname =date.format(cell.getDateCellValue());
-                  } else {
-                    surname=Integer.toString((int) cell.getNumericCellValue());
-                  }
-                  break;
-
-                case Cell.CELL_TYPE_BOOLEAN:
-                  surname = String.valueOf(cell.getBooleanCellValue());
-                  break;
-              }
-            }
-            if (column == 4){
-              switch (cell.getCellType()) {
-                case Cell.CELL_TYPE_STRING:
-                  assignedOffice = cell.getStringCellValue();
-                  break;
-
-                case Cell.CELL_TYPE_NUMERIC:
-                  if (DateUtil.isCellDateFormatted(cell)) {
-
-                    assignedOffice =date.format(cell.getDateCellValue());
-                  } else {
-                    assignedOffice=Integer.toString((int) cell.getNumericCellValue());
-                  }
-                  break;
-
-                case Cell.CELL_TYPE_BOOLEAN:
-                  assignedOffice = String.valueOf(cell.getBooleanCellValue());
-                  break;
-              }
-            }
-            if (column == 5) {
-              switch (cell.getCellType()) {
-                case Cell.CELL_TYPE_STRING:
-                  type = cell.getStringCellValue();
-                  break;
-
-                case Cell.CELL_TYPE_NUMERIC:
-                  if (DateUtil.isCellDateFormatted(cell)) {
-
-                    type =date.format(cell.getDateCellValue());
-                  } else {
-                    type=Integer.toString((int) cell.getNumericCellValue());
-                  }
-                  break;
-
-                case Cell.CELL_TYPE_BOOLEAN:
-                  type = String.valueOf(cell.getBooleanCellValue());
-                  break;
-              }
-            }
-            if (column == 6){
-              switch (cell.getCellType()) {
-                case Cell.CELL_TYPE_STRING:
-                  group = cell.getStringCellValue();
-                  break;
-
-                case Cell.CELL_TYPE_NUMERIC:
-                  if (DateUtil.isCellDateFormatted(cell)) {
-
-                    group =date.format(cell.getDateCellValue());
-                  } else {
-                    group=Integer.toString((int) cell.getNumericCellValue());
-                  }
-                  break;
-
-                case Cell.CELL_TYPE_BOOLEAN:
-                  group = String.valueOf(cell.getBooleanCellValue());
-                  break;
-              }
-            }
-            if (column == 7){
-              switch (cell.getCellType()) {
-                case Cell.CELL_TYPE_STRING:
-                  value = cell.getStringCellValue();
-                  break;
-
-                case Cell.CELL_TYPE_NUMERIC:
-                  if (DateUtil.isCellDateFormatted(cell)) {
-
-                    value =date.format(cell.getDateCellValue());
-                  } else {
-                    value=Integer.toString((int) cell.getNumericCellValue());
-                  }
-                  break;
-
-                case Cell.CELL_TYPE_BOOLEAN:
-                  value = String.valueOf(cell.getBooleanCellValue());
-                  break;
-              }
-            }
-            if (column == 8){
-              switch (cell.getCellType()) {
-                case Cell.CELL_TYPE_STRING:
-                  preferenceLevel = cell.getStringCellValue();
-                  break;
-
-                case Cell.CELL_TYPE_NUMERIC:
-                  if (DateUtil.isCellDateFormatted(cell)) {
-
-                    preferenceLevel =date.format(cell.getDateCellValue());
-                  } else {
-                    preferenceLevel=Integer.toString((int) cell.getNumericCellValue());
-                  }
-                  break;
-
-                case Cell.CELL_TYPE_BOOLEAN:
-                  preferenceLevel = String.valueOf(cell.getBooleanCellValue());
-                  break;
-              }
-            }
-
-            column++;
+              break;
           }
+        }
 
+        if (row.getCell(1) == null) {
+          givenName = null;
+        } else {
+          switch (row.getCell(1) .getCellType()) {
+            case Cell.CELL_TYPE_STRING:
+              givenName = row.getCell(1).getStringCellValue();
+              break;
+            case Cell.CELL_TYPE_NUMERIC:
+              if (DateUtil.isCellDateFormatted(row.getCell(1))) {
+                givenName =  String.valueOf(row.getCell(1).getStringCellValue());
+              } else {
+                givenName =  String.valueOf(((Double)row.getCell(1).getNumericCellValue()).intValue());
+              }
+              break;
+          }
+        }
 
-          ContactDetail contactDetail = new ContactDetail();
+        if (row.getCell(2) == null) {
+          middleName = null;
+        } else {
+          switch (row.getCell(2) .getCellType()) {
+            case Cell.CELL_TYPE_STRING:
+              middleName = row.getCell(2).getStringCellValue();
+              break;
+            case Cell.CELL_TYPE_NUMERIC:
+              if (DateUtil.isCellDateFormatted(row.getCell(2))) {
+                middleName =  String.valueOf(row.getCell(2).getStringCellValue());
+              } else {
+                middleName =   String.valueOf(((Double)row.getCell(2).getNumericCellValue()).intValue());
+              }
+              break;
+          }
+        }
+
+        if (row.getCell(3) == null) {
+          surname = null;
+        } else {
+          switch (row.getCell(3) .getCellType()) {
+            case Cell.CELL_TYPE_STRING:
+              surname = row.getCell(3).getStringCellValue();
+              break;
+            case Cell.CELL_TYPE_NUMERIC:
+              if (DateUtil.isCellDateFormatted(row.getCell(3))) {
+                surname =  String.valueOf(row.getCell(3).getStringCellValue());
+              } else {
+                surname =   String.valueOf(((Double)row.getCell(3).getNumericCellValue()).intValue());
+              }
+              break;
+          }
+        }
+
+        if (row.getCell(4) == null) {
+          assignedOffice = null;
+        } else {
+          switch (row.getCell(4) .getCellType()) {
+            case Cell.CELL_TYPE_STRING:
+              assignedOffice = row.getCell(4).getStringCellValue();
+              break;
+            case Cell.CELL_TYPE_NUMERIC:
+              if (DateUtil.isCellDateFormatted(row.getCell(4))) {
+                assignedOffice =  String.valueOf(row.getCell(4).getStringCellValue());
+              } else {
+                assignedOffice =  String.valueOf(((Double)row.getCell(4).getNumericCellValue()).intValue());
+              }
+              break;
+          }
+        }
+
+        if (row.getCell(5) == null) {
+          type = null;
+        } else {
+          switch (row.getCell(5) .getCellType()) {
+            case Cell.CELL_TYPE_STRING:
+              type = row.getCell(5).getStringCellValue();
+              break;
+            case Cell.CELL_TYPE_NUMERIC:
+              if (DateUtil.isCellDateFormatted(row.getCell(5))) {
+                type = String.valueOf( row.getCell(5).getStringCellValue());
+              } else {
+                type =   String.valueOf(((Double)row.getCell(5).getNumericCellValue()).intValue());
+              }
+              break;
+          }
+        }
+
+        if (row.getCell(6) == null) {
+          group = null;
+        } else {
+          switch (row.getCell(6) .getCellType()) {
+            case Cell.CELL_TYPE_STRING:
+              group = String.valueOf(row.getCell(6).getStringCellValue());
+              break;
+            case Cell.CELL_TYPE_NUMERIC:
+              if (DateUtil.isCellDateFormatted(row.getCell(6))) {
+                group =  String.valueOf(row.getCell(6).getStringCellValue());
+              } else {
+                group =  String.valueOf(((Double)row.getCell(6).getNumericCellValue()).intValue());
+              }
+              break;
+          }
+        }
+
+        if (row.getCell(7) == null) {
+          value = null;
+        } else {
+          switch (row.getCell(7) .getCellType()) {
+            case Cell.CELL_TYPE_STRING:
+              value = String.valueOf(row.getCell(7).getStringCellValue());
+              break;
+            case Cell.CELL_TYPE_NUMERIC:
+              if (DateUtil.isCellDateFormatted(row.getCell(7))) {
+                value =  String.valueOf(row.getCell(7).getStringCellValue());
+              } else {
+                value =  String.valueOf(((Double)row.getCell(7).getNumericCellValue()).intValue());
+              }
+              break;
+          }
+        }
+
+        if (row.getCell(8) == null) {
+          preferenceLevel = null;
+        } else {
+          switch (row.getCell(8) .getCellType()) {
+            case Cell.CELL_TYPE_STRING:
+              preferenceLevel = row.getCell(8).getStringCellValue();
+              break;
+            case Cell.CELL_TYPE_NUMERIC:
+              if (DateUtil.isCellDateFormatted(row.getCell(8))) {
+                preferenceLevel = String.valueOf( row.getCell(8).getStringCellValue());
+              } else {
+                preferenceLevel =  String.valueOf(((Double)row.getCell(8).getNumericCellValue()).intValue());
+              }
+              break;
+          }
+        }
+        ContactDetail contactDetail = new ContactDetail();
           contactDetail.setType(String.valueOf(type));
           contactDetail.setGroup(String.valueOf(group));
           contactDetail.setValue(String.valueOf(value));
@@ -342,13 +298,11 @@ public class EmployeeDatamigration {
           employee.setMiddleName(String.valueOf(middleName));
           employee.setSurname(String.valueOf(surname));
           employee.setAssignedOffice(assignedOffice);
-
           employee.setContactDetails(contactDetails);
           this.userManagement.authenticate();
           this.organizationManager.createEmployee(employee);
         }
 
-      }
     } catch (IOException e) {
       e.printStackTrace();
     }
