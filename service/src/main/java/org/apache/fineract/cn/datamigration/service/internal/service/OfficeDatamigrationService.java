@@ -125,245 +125,262 @@ public class OfficeDatamigrationService {
 
       XSSFWorkbook workbook = new XSSFWorkbook(file.getInputStream());
       Sheet firstSheet = workbook.getSheetAt(0);
-      int offset = 0;
-      int currentPosition = 0;
+      int rowCount = firstSheet.getLastRowNum() + 1;
+      Row row;
 
-      for (Row nextRow : firstSheet) {
-        int column = 0;
-        Iterator<Cell> cellIterator = nextRow.cellIterator();
-        if ((currentPosition++ > offset)) {
-          String identifier = null;
-          String parentIdentifier = null;
-          String name = null;
-          String description = null;
+      String identifier =null ;
+      String parentIdentifier  =null ;
+      String name  =null;
+      String description  =null ;
+      String street   =null;
+      String city   =null;
+      String region   =null;
+      String postalCode   =null;
+      String countryCode   =null;
+      String country   =null;
+      boolean externalReferences=false;
 
-          String street = null;
-          String city = null;
-          String region = null;
-          String postalCode = null;
-          String countryCode = null;
-          String country = null;
 
-          Boolean externalReferences = false;
+      for (int rowIndex = 1; rowIndex < rowCount; rowIndex++) {
 
-          SimpleDateFormat date = new SimpleDateFormat("yyyy-MM-dd");
+        row = firstSheet.getRow(rowIndex);
 
-          while ((cellIterator.hasNext())) {
-            XSSFCell cell = (XSSFCell) cellIterator.next();
-            switch (cell.getCellType()) { // stop if blank field found
-              case Cell.CELL_TYPE_BLANK:
-                break;
-            }
-            if (column == 0) {
-              switch (cell.getCellType()) {
-                case Cell.CELL_TYPE_STRING:
-                  identifier = cell.getStringCellValue();
-                  break;
+        if (row.getCell(0) == null) {
+          identifier = null;
+        } else {
+          switch (row.getCell(0) .getCellType()) {
 
-                case Cell.CELL_TYPE_NUMERIC:
-                  if (DateUtil.isCellDateFormatted(cell)) {
+            case Cell.CELL_TYPE_STRING:
+              identifier = row.getCell(0).getStringCellValue();
+              break;
 
-                    identifier = date.format(cell.getDateCellValue());
-                  } else {
-                    identifier = Integer.toString((int) cell.getNumericCellValue());
-                  }
-                  break;
+            case Cell.CELL_TYPE_NUMERIC:
+              if (DateUtil.isCellDateFormatted(row.getCell(0))) {
 
-                case Cell.CELL_TYPE_BOOLEAN:
-                  identifier = String.valueOf(cell.getBooleanCellValue());
-                  break;
+                identifier = String.valueOf( row.getCell(0).getStringCellValue());
+              } else {
+                identifier =  String.valueOf(row.getCell(0).getNumericCellValue());
               }
-            }
-            if (column == 1) {
-              switch (cell.getCellType()) {
-                case Cell.CELL_TYPE_STRING:
-                  parentIdentifier = cell.getStringCellValue();
-                  break;
+              break;
 
-                case Cell.CELL_TYPE_NUMERIC:
-                  if (DateUtil.isCellDateFormatted(cell)) {
+          }
+        }
 
-                    parentIdentifier = date.format(cell.getDateCellValue());
-                  } else {
-                    parentIdentifier = Integer.toString((int) cell.getNumericCellValue());
-                  }
-                  break;
+        if (row.getCell(1) == null) {
+          parentIdentifier = null;
+        } else {
+          switch (row.getCell(1) .getCellType()) {
 
-                case Cell.CELL_TYPE_BOOLEAN:
-                  parentIdentifier = String.valueOf(cell.getBooleanCellValue());
-                  break;
+            case Cell.CELL_TYPE_STRING:
+              parentIdentifier = row.getCell(1).getStringCellValue();
+              break;
+
+            case Cell.CELL_TYPE_NUMERIC:
+              if (DateUtil.isCellDateFormatted(row.getCell(1))) {
+
+                parentIdentifier =  String.valueOf(row.getCell(1).getStringCellValue());
+              } else {
+                parentIdentifier =   String.valueOf(((Double)row.getCell(1).getNumericCellValue()).intValue());
               }
-            }
-            if (column == 2) {
-              switch (cell.getCellType()) {
-                case Cell.CELL_TYPE_STRING:
-                  name = cell.getStringCellValue();
-                  break;
+              break;
+          }
+        }
 
-                case Cell.CELL_TYPE_NUMERIC:
-                  if (DateUtil.isCellDateFormatted(cell)) {
+        if (row.getCell(2) == null) {
+          name = null;
+        } else {
+          switch (row.getCell(2) .getCellType()) {
 
-                    name = date.format(cell.getDateCellValue());
-                  } else {
-                    name = Integer.toString((int) cell.getNumericCellValue());
-                  }
-                  break;
+            case Cell.CELL_TYPE_STRING:
+              name = row.getCell(2).getStringCellValue();
+              break;
 
-                case Cell.CELL_TYPE_BOOLEAN:
-                  name = String.valueOf(cell.getBooleanCellValue());
-                  break;
+            case Cell.CELL_TYPE_NUMERIC:
+              if (DateUtil.isCellDateFormatted(row.getCell(2))) {
+
+                name =  String.valueOf(row.getCell(2).getStringCellValue());
+              } else {
+                name =  String.valueOf(((Double)row.getCell(2).getNumericCellValue()).intValue());
               }
-            }
-            if (column == 3) {
-              switch (cell.getCellType()) {
-                case Cell.CELL_TYPE_STRING:
-                  description = cell.getStringCellValue();
-                  break;
+              break;
 
-                case Cell.CELL_TYPE_NUMERIC:
-                  if (DateUtil.isCellDateFormatted(cell)) {
-
-                    description = date.format(cell.getDateCellValue());
-                  } else {
-                    description = Integer.toString((int) cell.getNumericCellValue());
-                  }
-                  break;
-
-                case Cell.CELL_TYPE_BOOLEAN:
-                  description = String.valueOf(cell.getBooleanCellValue());
-                  break;
-              }
-            }
-            if (column == 4) {
-              switch (cell.getCellType()) {
-                case Cell.CELL_TYPE_STRING:
-                  street = cell.getStringCellValue();
-                  break;
-
-                case Cell.CELL_TYPE_NUMERIC:
-                  if (DateUtil.isCellDateFormatted(cell)) {
-
-                    street = date.format(cell.getDateCellValue());
-                  } else {
-                    street = Integer.toString((int) cell.getNumericCellValue());
-                  }
-                  break;
-
-                case Cell.CELL_TYPE_BOOLEAN:
-                  street = String.valueOf(cell.getBooleanCellValue());
-                  break;
-              }
-            }
-            if (column == 5) {
-              switch (cell.getCellType()) {
-                case Cell.CELL_TYPE_STRING:
-                  city = cell.getStringCellValue();
-                  break;
-
-                case Cell.CELL_TYPE_NUMERIC:
-                  if (DateUtil.isCellDateFormatted(cell)) {
-
-                    city = date.format(cell.getDateCellValue());
-                  } else {
-                    city = Integer.toString((int) cell.getNumericCellValue());
-                  }
-                  break;
-
-                case Cell.CELL_TYPE_BOOLEAN:
-                  city = String.valueOf(cell.getBooleanCellValue());
-                  break;
-              }
-            }
-            if (column == 6) {
-              switch (cell.getCellType()) {
-                case Cell.CELL_TYPE_STRING:
-                  region = cell.getStringCellValue();
-                  break;
-
-                case Cell.CELL_TYPE_NUMERIC:
-                  if (DateUtil.isCellDateFormatted(cell)) {
-
-                    region = date.format(cell.getDateCellValue());
-                  } else {
-                    region = Integer.toString((int) cell.getNumericCellValue());
-                  }
-                  break;
-
-                case Cell.CELL_TYPE_BOOLEAN:
-                  region = String.valueOf(cell.getBooleanCellValue());
-                  break;
-              }
-            }
-            if (column == 7) {
-              switch (cell.getCellType()) {
-                case Cell.CELL_TYPE_STRING:
-                  postalCode = cell.getStringCellValue();
-                  break;
-                case Cell.CELL_TYPE_NUMERIC:
-                  if (DateUtil.isCellDateFormatted(cell)) {
-
-                    postalCode = date.format(cell.getDateCellValue());
-                  } else {
-                    postalCode = Integer.toString((int) cell.getNumericCellValue());
-                  }
-                  break;
-
-                case Cell.CELL_TYPE_BOOLEAN:
-                  postalCode = String.valueOf(cell.getBooleanCellValue());
-                  break;
-              }
-            }
-            if (column == 8) {
-              switch (cell.getCellType()) {
-                case Cell.CELL_TYPE_STRING:
-                  countryCode = cell.getStringCellValue();
-                  break;
-
-                case Cell.CELL_TYPE_NUMERIC:
-                  if (DateUtil.isCellDateFormatted(cell)) {
-
-                    countryCode = date.format(cell.getDateCellValue());
-                  } else {
-                    countryCode = Integer.toString((int) cell.getNumericCellValue());
-                  }
-                  break;
-
-                case Cell.CELL_TYPE_BOOLEAN:
-                  countryCode = String.valueOf(cell.getBooleanCellValue());
-                  break;
-              }
-            }
-            if (column == 9) {
-              switch (cell.getCellType()) {
-                case Cell.CELL_TYPE_STRING:
-                  country = cell.getStringCellValue();
-                  break;
-
-                case Cell.CELL_TYPE_NUMERIC:
-                  if (DateUtil.isCellDateFormatted(cell)) {
-
-                    country = date.format(cell.getDateCellValue());
-                  } else {
-                    country = Integer.toString((int) cell.getNumericCellValue());
-                  }
-                  break;
-
-                case Cell.CELL_TYPE_BOOLEAN:
-                  country = String.valueOf(cell.getBooleanCellValue());
-                  break;
-              }
-            }
-            if (column == 10) {
-              switch (cell.getCellType()) {
-                case Cell.CELL_TYPE_STRING:
-                  externalReferences = Boolean.valueOf(cell.getStringCellValue());
-                  break;
-              }
-            }
-            column++;
           }
 
-          Address address = new Address();
+        }
+
+        if (row.getCell(3) == null) {
+          description = null;
+        } else {
+          switch (row.getCell(3) .getCellType()) {
+
+            case Cell.CELL_TYPE_STRING:
+              description = row.getCell(3).getStringCellValue();
+              break;
+
+            case Cell.CELL_TYPE_NUMERIC:
+              if (DateUtil.isCellDateFormatted(row.getCell(3))) {
+
+                description =  String.valueOf(row.getCell(3).getStringCellValue());
+              } else {
+                description =   String.valueOf(((Double)row.getCell(3).getNumericCellValue()).intValue());
+              }
+              break;
+          }
+        }
+
+        if (row.getCell(4) == null) {
+          street = null;
+        } else {
+          switch (row.getCell(4) .getCellType()) {
+
+            case Cell.CELL_TYPE_STRING:
+              street = row.getCell(4).getStringCellValue();
+              break;
+
+            case Cell.CELL_TYPE_NUMERIC:
+              if (DateUtil.isCellDateFormatted(row.getCell(4))) {
+
+                street =  String.valueOf(row.getCell(4).getStringCellValue());
+              } else {
+                street =   String.valueOf(((Double)row.getCell(4).getNumericCellValue()).intValue());
+              }
+              break;
+
+          }
+
+        }
+
+        if (row.getCell(5) == null) {
+          city = null;
+        } else {
+          switch (row.getCell(5) .getCellType()) {
+
+            case Cell.CELL_TYPE_STRING:
+              city = row.getCell(5).getStringCellValue();
+              break;
+
+            case Cell.CELL_TYPE_NUMERIC:
+              if (DateUtil.isCellDateFormatted(row.getCell(5))) {
+
+                city =  String.valueOf(row.getCell(5).getStringCellValue());
+              } else {
+                city =  String.valueOf(((Double)row.getCell(5).getNumericCellValue()).intValue());
+              }
+              break;
+
+          }
+
+        }
+
+        if (row.getCell(6) == null) {
+          region = null;
+        } else {
+          switch (row.getCell(6) .getCellType()) {
+
+            case Cell.CELL_TYPE_STRING:
+              region = row.getCell(6).getStringCellValue();
+              break;
+
+            case Cell.CELL_TYPE_NUMERIC:
+              if (DateUtil.isCellDateFormatted(row.getCell(6))) {
+
+                region = String.valueOf( row.getCell(6).getStringCellValue());
+              } else {
+                region =   String.valueOf(((Double)row.getCell(6).getNumericCellValue()).intValue());
+              }
+              break;
+
+          }
+
+        }
+
+        if (row.getCell(7) == null) {
+          postalCode = null;
+        } else {
+          switch (row.getCell(7) .getCellType()) {
+
+            case Cell.CELL_TYPE_STRING:
+              postalCode = String.valueOf(row.getCell(7).getStringCellValue());
+              break;
+
+            case Cell.CELL_TYPE_NUMERIC:
+              if (DateUtil.isCellDateFormatted(row.getCell(7))) {
+
+                postalCode =  String.valueOf(row.getCell(7).getStringCellValue());
+              } else {
+                postalCode =  String.valueOf(((Double)row.getCell(7).getNumericCellValue()).intValue());
+              }
+              break;
+
+          }
+
+        }
+
+        if (row.getCell(8) == null) {
+          countryCode = null;
+        } else {
+          switch (row.getCell(8) .getCellType()) {
+
+            case Cell.CELL_TYPE_STRING:
+              countryCode = String.valueOf(row.getCell(8).getStringCellValue());
+              break;
+
+            case Cell.CELL_TYPE_NUMERIC:
+              if (DateUtil.isCellDateFormatted(row.getCell(8))) {
+
+                countryCode =  String.valueOf(row.getCell(8).getStringCellValue());
+              } else {
+                countryCode =  String.valueOf(((Double)row.getCell(8).getNumericCellValue()).intValue());
+              }
+              break;
+
+          }
+
+        }
+
+        if (row.getCell(9) == null) {
+          country = null;
+        } else {
+          switch (row.getCell(9) .getCellType()) {
+
+            case Cell.CELL_TYPE_STRING:
+              country = row.getCell(9).getStringCellValue();
+              break;
+
+            case Cell.CELL_TYPE_NUMERIC:
+              if (DateUtil.isCellDateFormatted(row.getCell(9))) {
+
+                country = String.valueOf( row.getCell(9).getStringCellValue());
+              } else {
+                country =  String.valueOf(((Double)row.getCell(9).getNumericCellValue()).intValue());
+              }
+              break;
+
+          }
+
+        }
+
+        if (row.getCell(10) == null) {
+          externalReferences = false;
+        } else {
+          switch (row.getCell(10) .getCellType()) {
+
+            case Cell.CELL_TYPE_NUMERIC:
+
+              if(((Double)row.getCell(10).getNumericCellValue()).intValue()==0){
+                externalReferences = Boolean.parseBoolean("false");
+              }else{
+                externalReferences = Boolean.parseBoolean("true");
+              }
+
+              break;
+
+          }
+
+        }
+
+
+        Address address = new Address();
           address.setStreet(String.valueOf(street));
           address.setCity(String.valueOf(city));
           address.setRegion(String.valueOf(region));
@@ -382,7 +399,6 @@ public class OfficeDatamigrationService {
           this.userManagement.authenticate();
           this.organizationManager.createOffice(office);
         }
-      }
 
     } catch (IOException e) {
       e.printStackTrace();
