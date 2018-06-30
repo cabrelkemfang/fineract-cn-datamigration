@@ -38,19 +38,19 @@ import java.io.IOException;
 @RequestMapping("/")
 public class DatamigrationRestController {
 
-
   private final CommandGateway commandGateway;
   private final CustomerDatamigrationService customerDatamigrationService;
   private final OfficeDatamigrationService officeDatamigrationService;
+  private final OfficeBranchDatamigration officeBranchDatamigration;
   private final EmployeeDatamigration employeeDatamigration;
   private final TellerDatamigration tellerDatamigration;
   private final GroupDatamigration groupDatamigration;
-
 
   @Autowired
   public DatamigrationRestController( final CommandGateway commandGateway,
                                       final CustomerDatamigrationService customerDatamigrationService,
                                       final OfficeDatamigrationService officeDatamigrationService,
+                                      final OfficeBranchDatamigration officeBranchDatamigration,
                                       final EmployeeDatamigration employeeDatamigration,
                                       final TellerDatamigration  tellerDatamigration,
                                       final GroupDatamigration  groupDatamigration) {
@@ -58,6 +58,7 @@ public class DatamigrationRestController {
     this.commandGateway = commandGateway;
     this.customerDatamigrationService = customerDatamigrationService;
     this.officeDatamigrationService = officeDatamigrationService;
+    this.officeBranchDatamigration = officeBranchDatamigration;
     this.employeeDatamigration = employeeDatamigration;
     this.tellerDatamigration = tellerDatamigration;
     this.groupDatamigration = groupDatamigration;
@@ -75,7 +76,6 @@ public class DatamigrationRestController {
       return ResponseEntity.accepted().build();
   }
 
-
   @Permittable(value = AcceptedTokenType.TENANT, groupId = PermittableGroupIds.DATAMIGRATION_MANAGEMENT)
   @RequestMapping(
           value = "/customers/download",
@@ -86,7 +86,6 @@ public class DatamigrationRestController {
 
     customerDatamigrationService.customersSheetDownload(response);
   }
-
 
   @Permittable(value = AcceptedTokenType.TENANT, groupId = PermittableGroupIds.DATAMIGRATION_MANAGEMENT)
   @RequestMapping(
@@ -101,7 +100,6 @@ public class DatamigrationRestController {
   }
 
   //Office Datamigration
-
   @Permittable(value = AcceptedTokenType.TENANT, groupId = PermittableGroupIds.DATAMIGRATION_MANAGEMENT)
   @RequestMapping(
           value = "/offices/download",
@@ -112,7 +110,6 @@ public class DatamigrationRestController {
     officeDatamigrationService.officeSheetDownload(response);
   }
 
-
   @Permittable(value = AcceptedTokenType.TENANT, groupId = PermittableGroupIds.DATAMIGRATION_MANAGEMENT)
   @RequestMapping(
           value = "/offices",
@@ -121,6 +118,28 @@ public class DatamigrationRestController {
   )
   public ResponseEntity<String> officeSheetUpload(@RequestParam("file") MultipartFile file) throws IOException {
     officeDatamigrationService.officeSheetUpload(file);
+    return new ResponseEntity<>("Upload successuly", HttpStatus.OK);
+  }
+
+  //Branch Datamigration
+  @Permittable(value = AcceptedTokenType.TENANT, groupId = PermittableGroupIds.DATAMIGRATION_MANAGEMENT)
+  @RequestMapping(
+          value = "/offices/download",
+          method = RequestMethod.GET,
+          consumes = MediaType.ALL_VALUE
+  )
+  public void branchSheetDownload(HttpServletResponse response) throws ClassNotFoundException {
+    officeBranchDatamigration.branchSheetDownload(response);
+  }
+
+  @Permittable(value = AcceptedTokenType.TENANT, groupId = PermittableGroupIds.DATAMIGRATION_MANAGEMENT)
+  @RequestMapping(
+          value = "/offices",
+          method = RequestMethod.POST,
+          consumes = MediaType.MULTIPART_FORM_DATA_VALUE
+  )
+  public ResponseEntity<String> branchSheetUpload(@RequestParam("file") MultipartFile file) throws IOException {
+    officeBranchDatamigration.branchSheetUpload(file);
     return new ResponseEntity<>("Upload successuly", HttpStatus.OK);
   }
 
@@ -134,7 +153,6 @@ public class DatamigrationRestController {
   public void employeeSheetdownload(HttpServletResponse response) throws ClassNotFoundException {
     employeeDatamigration.employeeSheetDownload(response);
   }
-
 
   @Permittable(value = AcceptedTokenType.TENANT, groupId = PermittableGroupIds.DATAMIGRATION_MANAGEMENT)
   @RequestMapping(
@@ -158,7 +176,6 @@ public class DatamigrationRestController {
     tellerDatamigration.tellerSheetDownload(response);
   }
 
-
   @Permittable(value = AcceptedTokenType.TENANT, groupId = PermittableGroupIds.DATAMIGRATION_MANAGEMENT)
   @RequestMapping(
           value = "/tellers",
@@ -170,7 +187,6 @@ public class DatamigrationRestController {
     return new ResponseEntity<>("Upload successuly", HttpStatus.OK);
   }
 
-
   //Group Datamigration
   @Permittable(value = AcceptedTokenType.TENANT, groupId = PermittableGroupIds.DATAMIGRATION_MANAGEMENT)
   @RequestMapping(
@@ -181,7 +197,6 @@ public class DatamigrationRestController {
   public void groupSheetDownload(HttpServletResponse response) throws ClassNotFoundException {
     groupDatamigration.groupSheetDownload(response);
   }
-
 
   @Permittable(value = AcceptedTokenType.TENANT, groupId = PermittableGroupIds.DATAMIGRATION_MANAGEMENT)
   @RequestMapping(

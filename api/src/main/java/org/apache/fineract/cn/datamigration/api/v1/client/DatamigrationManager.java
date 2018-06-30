@@ -57,13 +57,27 @@ public interface DatamigrationManager {
   )
    void officeSheetdownload(HttpServletResponse response) ;
 
-
   @RequestMapping(
           value = "/offices",
           method = RequestMethod.POST,
           consumes = MediaType.MULTIPART_FORM_DATA_VALUE
   )
    ResponseEntity<String> officeSheetUpload(@RequestParam("file") MultipartFile file) ;
+
+//Branch Datamigration
+  @RequestMapping(
+          value = "/offices/download",
+          method = RequestMethod.GET,
+          consumes = MediaType.ALL_VALUE
+  )
+   void branchSheetDownload(HttpServletResponse response) ;
+
+  @RequestMapping(
+          value = "/offices",
+          method = RequestMethod.POST,
+          consumes = MediaType.MULTIPART_FORM_DATA_VALUE
+  )
+  ResponseEntity<String> branchSheetUpload(@RequestParam("file") MultipartFile file) ;
 
   //employee datamigration
   @RequestMapping(
