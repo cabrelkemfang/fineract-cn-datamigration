@@ -194,15 +194,7 @@ public class CustomerDatamigrationService {
      cell26.setCellValue("Application Date");
      cell26.setCellStyle(headerCellStyle);
 
-     XSSFCell cell27= rowHeader.createCell(startColIndex+26);
-     cell27.setCellValue("Last Modified By");
-     cell27.setCellStyle(headerCellStyle);
-
-     XSSFCell cell28= rowHeader.createCell(startColIndex+27);
-     cell28.setCellValue("Last Modified On");
-     cell28.setCellStyle(headerCellStyle);
-
-     IntStream.range(0, 28).forEach((columnIndex) -> worksheet.autoSizeColumn(columnIndex));
+     IntStream.range(0, 25).forEach((columnIndex) -> worksheet.autoSizeColumn(columnIndex));
     response.setHeader("Content-Disposition", "inline; filename=Customer.xlsx");
     response.setContentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
     try {
@@ -254,12 +246,12 @@ public class CustomerDatamigrationService {
       Boolean validated = false;
       String currentState = null;
       String applicationDate = null;
-      String lastModifiedBy = null;
-      String lastModifiedOn = null;
+
       SimpleDateFormat date=new SimpleDateFormat("yyyy-MM-dd");
 
       for (int rowIndex = 1; rowIndex < rowCount; rowIndex++) {
         row = firstSheet.getRow(rowIndex);
+
         if (row.getCell(0) == null) {
           identifier = null;
         } else {
@@ -272,7 +264,7 @@ public class CustomerDatamigrationService {
             case Cell.CELL_TYPE_NUMERIC:
               if (DateUtil.isCellDateFormatted(row.getCell(0))) {
 
-                identifier =  date.format(row.getCell(1).getDateCellValue());
+                identifier =  date.format(row.getCell(0).getDateCellValue());
               } else {
                 identifier =  String.valueOf(row.getCell(0).getNumericCellValue());
               }
@@ -424,6 +416,10 @@ public class CustomerDatamigrationService {
           member = false;
         } else {
           switch (row.getCell(8) .getCellType()) {
+
+            case Cell.CELL_TYPE_STRING:
+              member = Boolean.parseBoolean( String.valueOf(row.getCell(8).getStringCellValue()));
+              break;
 
             case Cell.CELL_TYPE_NUMERIC:
 
@@ -706,9 +702,11 @@ public class CustomerDatamigrationService {
           validated = false;
         } else {
           switch (row.getCell(23) .getCellType()) {
+            case Cell.CELL_TYPE_STRING:
+              validated = Boolean.parseBoolean( String.valueOf(row.getCell(23).getStringCellValue()));
+              break;
 
             case Cell.CELL_TYPE_NUMERIC:
-
               if(((Double)row.getCell(23).getNumericCellValue()).intValue()==0){
                 validated = Boolean.parseBoolean("false");
               }else{
@@ -756,43 +754,6 @@ public class CustomerDatamigrationService {
               break;
           }
         }
-        if (row.getCell(26) == null) {
-          lastModifiedBy = null;
-        } else {
-          switch (row.getCell(26) .getCellType()) {
-
-            case Cell.CELL_TYPE_STRING:
-              lastModifiedBy = row.getCell(26).getStringCellValue();
-              break;
-
-            case Cell.CELL_TYPE_NUMERIC:
-              if (DateUtil.isCellDateFormatted(row.getCell(26))) {
-
-                lastModifiedBy =  date.format(row.getCell(26).getDateCellValue());
-              } else {
-                lastModifiedBy =  String.valueOf(((Double)row.getCell(26).getNumericCellValue()).intValue());
-              }
-              break;
-          }
-        }
-        if (row.getCell(27) == null) {
-          lastModifiedOn = null;
-        } else {
-          switch (row.getCell(27) .getCellType()) {
-
-            case Cell.CELL_TYPE_STRING:
-              lastModifiedOn = row.getCell(27).getStringCellValue();
-              break;
-
-            case Cell.CELL_TYPE_NUMERIC:
-              if (DateUtil.isCellDateFormatted(row.getCell(27))) {
-                lastModifiedOn =  date.format(row.getCell(27).getDateCellValue());
-              } else {
-                lastModifiedOn =  String.valueOf(((Double)row.getCell(27).getNumericCellValue()).intValue());
-              }
-              break;
-          }
-        }
           DateOfBirth dateOfBirth = new DateOfBirth();
           dateOfBirth.setYear(Integer.valueOf(year));
           dateOfBirth.setMonth(Integer.valueOf(month));
@@ -832,8 +793,6 @@ public class CustomerDatamigrationService {
           customer.setContactDetails(contactDetails);
           customer.setCurrentState(currentState);
           customer.setApplicationDate(String.valueOf(applicationDate));
-          customer.setLastModifiedBy(String.valueOf(lastModifiedBy));
-          customer.setLastModifiedOn(String.valueOf(lastModifiedOn));
 
           this.userManagement.authenticate();
           this.customerManager.createCustomer(customer);

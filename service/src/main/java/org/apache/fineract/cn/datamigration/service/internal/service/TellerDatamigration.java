@@ -12,13 +12,11 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartException;
 import org.springframework.web.multipart.MultipartFile;
-
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
-import java.util.Iterator;
 import java.util.stream.IntStream;
 @Service
 public class TellerDatamigration {
@@ -96,33 +94,10 @@ public class TellerDatamigration {
     cell10.setCellStyle(headerCellStyle);
 
     XSSFCell cell11= rowHeader.createCell(startColIndex+10);
-    cell11.setCellValue("state");
+    cell11.setCellValue("State");
     cell11.setCellStyle(headerCellStyle);
 
-    XSSFCell cell12= rowHeader.createCell(startColIndex+11);
-    cell12.setCellValue("Created By");
-    cell12.setCellStyle(headerCellStyle);
-
-    XSSFCell cell13= rowHeader.createCell(startColIndex+12);
-    cell13.setCellValue("Created On");
-    cell13.setCellStyle(headerCellStyle);
-
-    XSSFCell cell14= rowHeader.createCell(startColIndex+13);
-    cell14.setCellValue("Last Modified By");
-    cell14.setCellStyle(headerCellStyle);
-
-    XSSFCell cell15= rowHeader.createCell(startColIndex+14);
-    cell15.setCellValue("Last Modified On");
-    cell15.setCellStyle(headerCellStyle);
-
-    XSSFCell cell16= rowHeader.createCell(startColIndex+15);
-    cell16.setCellValue("Last Opened By");
-    cell16.setCellStyle(headerCellStyle);
-
-    XSSFCell cell17= rowHeader.createCell(startColIndex+16);
-    cell17.setCellValue("Last Opened On");
-    cell17.setCellStyle(headerCellStyle);
-    IntStream.range(0, 17).forEach((columnIndex) -> worksheet.autoSizeColumn(columnIndex));
+    IntStream.range(0, 11).forEach((columnIndex) -> worksheet.autoSizeColumn(columnIndex));
 
     response.setHeader("Content-Disposition", "inline; filename=teller.xlsx");
     response.setContentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
@@ -144,394 +119,246 @@ public class TellerDatamigration {
       throw new MultipartException("Only excel files accepted!");
     }
     try {
-
       XSSFWorkbook workbook = new XSSFWorkbook(file.getInputStream());
       Sheet firstSheet = workbook.getSheetAt(0);
-      int offset = 0;
-      int currentPosition = 0;
+      int rowCount = firstSheet.getLastRowNum() + 1;
+      Row row;
+      String officeIdentifier = null;
+      String code = null;
+      String password = null;
+      String cashdrawLimit = null;
+      String tellerAccountIdentifier = null;
+      String vaultAccountIdentifier = null;
+      String chequesReceivableAccount = null;
+      String cashOverShortAccount = null;
+      Boolean denominationRequired = false;
+      String assignedEmployee = null;
+      String state = null;
 
-      for (Row nextRow : firstSheet) {
-        int column = 0;
-        Iterator<Cell> cellIterator = nextRow.cellIterator();
-        if ((currentPosition++ > offset)) {
-          String officeIdentifier = null;
-          String code = null;
-          String password = null;
-          String cashdrawLimit = null;
-          String tellerAccountIdentifier = null;
-          String vaultAccountIdentifier = null;
-          String chequesReceivableAccount = null;
-          String cashOverShortAccount = null;
-          Boolean denominationRequired = false;
-          String assignedEmployee = null;
-          String state = null;
-          String createdBy = null;
-          String createdOn = null;
-          String lastModifiedBy = null;
-          String lastModifiedOn = null;
-          String lastOpenedBy = null;
-          String lastOpenedOn = null;
-          SimpleDateFormat date=new SimpleDateFormat("yyyy-MM-dd");
+      SimpleDateFormat date=new SimpleDateFormat("yyyy-MM-dd");
 
-          while ((cellIterator.hasNext())) {
-            XSSFCell cell = (XSSFCell) cellIterator.next();
-            switch (cell.getCellType()) { // stop if blank field found
-              case Cell.CELL_TYPE_BLANK:
-                break;
-            }
-            if (column == 0) {
-              switch (cell.getCellType()) {
-                case Cell.CELL_TYPE_STRING:
-                  officeIdentifier = cell.getStringCellValue();
-                  break;
+      for (int rowIndex = 1; rowIndex < rowCount; rowIndex++) {
+        row = firstSheet.getRow(rowIndex);
+        if (row.getCell(0) == null) {
+          officeIdentifier = null;
+        } else {
+          switch (row.getCell(0) .getCellType()) {
 
-                case Cell.CELL_TYPE_NUMERIC:
-                  if (DateUtil.isCellDateFormatted(cell)) {
+            case Cell.CELL_TYPE_STRING:
+              officeIdentifier = row.getCell(0).getStringCellValue();
+              break;
 
-                    officeIdentifier =date.format(cell.getDateCellValue());
-                  } else {
-                    officeIdentifier=Integer.toString((int) cell.getNumericCellValue());
-                  }
-                  break;
+            case Cell.CELL_TYPE_NUMERIC:
+              if (DateUtil.isCellDateFormatted(row.getCell(0))) {
 
-                case Cell.CELL_TYPE_BOOLEAN:
-                  officeIdentifier = String.valueOf(cell.getBooleanCellValue());
-                  break;
+                officeIdentifier =  date.format(row.getCell(0).getDateCellValue());
+              } else {
+                officeIdentifier =  String.valueOf(row.getCell(0).getNumericCellValue());
               }
-            }
-            if (column == 1) {
-              switch (cell.getCellType()) {
-                case Cell.CELL_TYPE_STRING:
-                  code = cell.getStringCellValue();
-                  break;
-
-                case Cell.CELL_TYPE_NUMERIC:
-                  if (DateUtil.isCellDateFormatted(cell)) {
-
-                    code =date.format(cell.getDateCellValue());
-                  } else {
-                    code=Integer.toString((int) cell.getNumericCellValue());
-                  }
-                  break;
-
-                case Cell.CELL_TYPE_BOOLEAN:
-                  code = String.valueOf(cell.getBooleanCellValue());
-                  break;
-              }
-            }
-            if (column == 2) {
-              switch (cell.getCellType()) {
-                case Cell.CELL_TYPE_STRING:
-                  password = cell.getStringCellValue();
-                  break;
-
-                case Cell.CELL_TYPE_NUMERIC:
-                  if (DateUtil.isCellDateFormatted(cell)) {
-
-                    password =date.format(cell.getDateCellValue());
-                  } else {
-                    password=Integer.toString((int) cell.getNumericCellValue());
-                  }
-                  break;
-
-                case Cell.CELL_TYPE_BOOLEAN:
-                  password = String.valueOf(cell.getBooleanCellValue());
-                  break;
-              }
-            }
-            if (column == 3) {
-              switch (cell.getCellType()) {
-                case Cell.CELL_TYPE_STRING:
-                  cashdrawLimit = cell.getStringCellValue();
-                  break;
-
-                case Cell.CELL_TYPE_NUMERIC:
-                  if (DateUtil.isCellDateFormatted(cell)) {
-
-                    cashdrawLimit =date.format(cell.getDateCellValue());
-                  } else {
-                    cashdrawLimit =Integer.toString((int) cell.getNumericCellValue());
-                  }
-                  break;
-
-                case Cell.CELL_TYPE_BOOLEAN:
-                  cashdrawLimit = String.valueOf(cell.getBooleanCellValue());
-                  break;
-              }
-            }
-            if (column == 4) {
-              switch (cell.getCellType()) {
-                case Cell.CELL_TYPE_STRING:
-                  tellerAccountIdentifier = cell.getStringCellValue();
-                  break;
-
-                case Cell.CELL_TYPE_NUMERIC:
-                  if (DateUtil.isCellDateFormatted(cell)) {
-
-                    tellerAccountIdentifier =date.format(cell.getDateCellValue());
-                  } else {
-                    tellerAccountIdentifier=Integer.toString((int) cell.getNumericCellValue());
-                  }
-                  break;
-
-                case Cell.CELL_TYPE_BOOLEAN:
-                  tellerAccountIdentifier = String.valueOf(cell.getBooleanCellValue());
-                  break;
-              }
-            }
-            if (column == 5) {
-              switch (cell.getCellType()) {
-                case Cell.CELL_TYPE_STRING:
-                  vaultAccountIdentifier = cell.getStringCellValue();
-                  break;
-
-                case Cell.CELL_TYPE_NUMERIC:
-                  if (DateUtil.isCellDateFormatted(cell)) {
-                    vaultAccountIdentifier =date.format(cell.getDateCellValue());
-                  } else {
-                    vaultAccountIdentifier=Integer.toString((int) cell.getNumericCellValue());
-                  }
-                  break;
-
-                case Cell.CELL_TYPE_BOOLEAN:
-                  vaultAccountIdentifier = String.valueOf(cell.getBooleanCellValue());
-                  break;
-              }
-            }
-            if (column == 6) {
-              switch (cell.getCellType()) {
-                case Cell.CELL_TYPE_STRING:
-                  chequesReceivableAccount = cell.getStringCellValue();
-                  break;
-
-                case Cell.CELL_TYPE_NUMERIC:
-                  if (DateUtil.isCellDateFormatted(cell)) {
-
-                    chequesReceivableAccount =date.format(cell.getDateCellValue());
-                  } else {
-                    chequesReceivableAccount=Integer.toString((int) cell.getNumericCellValue());
-                  }
-                  break;
-
-                case Cell.CELL_TYPE_BOOLEAN:
-                  chequesReceivableAccount = String.valueOf(cell.getBooleanCellValue());
-                  break;
-              }
-            }
-            if (column == 7) {
-              switch (cell.getCellType()) {
-                case Cell.CELL_TYPE_STRING:
-                  cashOverShortAccount = cell.getStringCellValue();
-                  break;
-
-                case Cell.CELL_TYPE_NUMERIC:
-                  if (DateUtil.isCellDateFormatted(cell)) {
-
-                    cashOverShortAccount =date.format(cell.getDateCellValue());
-                  } else {
-                    cashOverShortAccount=Integer.toString((int) cell.getNumericCellValue());
-                  }
-                  break;
-
-                case Cell.CELL_TYPE_BOOLEAN:
-                  cashOverShortAccount = String.valueOf(cell.getBooleanCellValue());
-                  break;
-              }
-            }
-            if (column == 8) {
-              switch (cell.getCellType()) {
-                case Cell.CELL_TYPE_STRING:
-                  denominationRequired = Boolean.valueOf(cell.getStringCellValue());
-                  break;
-              }
-            }
-            if (column == 9) {
-              switch (cell.getCellType()) {
-                case Cell.CELL_TYPE_STRING:
-                  assignedEmployee = cell.getStringCellValue();
-                  break;
-
-                case Cell.CELL_TYPE_NUMERIC:
-                  if (DateUtil.isCellDateFormatted(cell)) {
-
-                    assignedEmployee =date.format(cell.getDateCellValue());
-                  } else {
-                    assignedEmployee=Integer.toString((int) cell.getNumericCellValue());
-                  }
-                  break;
-
-                case Cell.CELL_TYPE_BOOLEAN:
-                  assignedEmployee = String.valueOf(cell.getBooleanCellValue());
-                  break;
-              }
-            }
-            if (column == 10){
-              switch (cell.getCellType()) {
-                case Cell.CELL_TYPE_STRING:
-                  state = cell.getStringCellValue();
-                  break;
-
-                case Cell.CELL_TYPE_NUMERIC:
-                  if (DateUtil.isCellDateFormatted(cell)) {
-
-                    state =date.format(cell.getDateCellValue());
-                  } else {
-                    state=Integer.toString((int) cell.getNumericCellValue());
-                  }
-                  break;
-
-                case Cell.CELL_TYPE_BOOLEAN:
-                  state = String.valueOf(cell.getBooleanCellValue());
-                  break;
-              }
-            }
-            if (column == 11){
-              switch (cell.getCellType()) {
-                case Cell.CELL_TYPE_STRING:
-                  createdBy = cell.getStringCellValue();
-                  break;
-
-                case Cell.CELL_TYPE_NUMERIC:
-                  if (DateUtil.isCellDateFormatted(cell)) {
-
-                    createdBy =date.format(cell.getDateCellValue());
-                  } else {
-                    createdBy=Integer.toString((int) cell.getNumericCellValue());
-                  }
-                  break;
-
-                case Cell.CELL_TYPE_BOOLEAN:
-                  createdBy = String.valueOf(cell.getBooleanCellValue());
-                  break;
-              }
-            }
-            if (column == 12){
-              switch (cell.getCellType()) {
-                case Cell.CELL_TYPE_STRING:
-                  createdOn = cell.getStringCellValue();
-                  break;
-
-                case Cell.CELL_TYPE_NUMERIC:
-                  if (DateUtil.isCellDateFormatted(cell)) {
-
-                    createdOn =date.format(cell.getDateCellValue());
-                  } else {
-                    createdOn=Integer.toString((int) cell.getNumericCellValue());
-                  }
-                  break;
-
-                case Cell.CELL_TYPE_BOOLEAN:
-                  createdOn = String.valueOf(cell.getBooleanCellValue());
-                  break;
-              }
-            }
-            if (column == 13){
-              switch (cell.getCellType()) {
-                case Cell.CELL_TYPE_STRING:
-                  assignedEmployee = cell.getStringCellValue();
-                  break;
-
-                case Cell.CELL_TYPE_NUMERIC:
-                  if (DateUtil.isCellDateFormatted(cell)) {
-
-                    assignedEmployee =date.format(cell.getDateCellValue());
-                  } else {
-                    assignedEmployee=Integer.toString((int) cell.getNumericCellValue());
-                  }
-                  break;
-
-                case Cell.CELL_TYPE_BOOLEAN:
-                  assignedEmployee = String.valueOf(cell.getBooleanCellValue());
-                  break;
-              }
-            }
-            if (column == 14){
-              switch (cell.getCellType()) {
-                case Cell.CELL_TYPE_STRING:
-                  lastModifiedBy = cell.getStringCellValue();
-                  break;
-
-                case Cell.CELL_TYPE_NUMERIC:
-                  if (DateUtil.isCellDateFormatted(cell)) {
-
-                    lastModifiedBy =date.format(cell.getDateCellValue());
-                  } else {
-                    lastModifiedBy=Integer.toString((int) cell.getNumericCellValue());
-                  }
-                  break;
-
-                case Cell.CELL_TYPE_BOOLEAN:
-                  lastModifiedBy = String.valueOf(cell.getBooleanCellValue());
-                  break;
-              }
-            }
-            if (column == 15){
-              switch (cell.getCellType()) {
-                case Cell.CELL_TYPE_STRING:
-                  lastModifiedOn = cell.getStringCellValue();
-                  break;
-
-                case Cell.CELL_TYPE_NUMERIC:
-                  if (DateUtil.isCellDateFormatted(cell)) {
-
-                    lastModifiedOn =date.format(cell.getDateCellValue());
-                  } else {
-                    lastModifiedOn=Integer.toString((int) cell.getNumericCellValue());
-                  }
-                  break;
-
-                case Cell.CELL_TYPE_BOOLEAN:
-                  lastModifiedOn = String.valueOf(cell.getBooleanCellValue());
-                  break;
-              }
-            }
-            if (column == 16){
-              switch (cell.getCellType()) {
-                case Cell.CELL_TYPE_STRING:
-                  lastOpenedBy = cell.getStringCellValue();
-                  break;
-
-                case Cell.CELL_TYPE_NUMERIC:
-                  if (DateUtil.isCellDateFormatted(cell)) {
-
-                    lastOpenedBy =date.format(cell.getDateCellValue());
-                  } else {
-                    lastOpenedBy=Integer.toString((int) cell.getNumericCellValue());
-                  }
-                  break;
-
-                case Cell.CELL_TYPE_BOOLEAN:
-                  lastOpenedBy = String.valueOf(cell.getBooleanCellValue());
-                  break;
-              }
-            }
-            if (column == 17){
-              switch (cell.getCellType()) {
-                case Cell.CELL_TYPE_STRING:
-                  lastOpenedOn = cell.getStringCellValue();
-                  break;
-                case Cell.CELL_TYPE_NUMERIC:
-                  if (DateUtil.isCellDateFormatted(cell)) {
-
-                    lastOpenedOn =date.format(cell.getDateCellValue());
-                  } else {
-                    lastOpenedOn=Integer.toString((int) cell.getNumericCellValue());
-                  }
-                  break;
-
-                case Cell.CELL_TYPE_BOOLEAN:
-                  lastOpenedOn = String.valueOf(cell.getBooleanCellValue());
-                  break;
-              }
-            }
-            column++;
+              break;
           }
+        }
+
+        if (row.getCell(1) == null) {
+          code = null;
+        } else {
+          switch (row.getCell(1) .getCellType()) {
+
+            case Cell.CELL_TYPE_STRING:
+              code = row.getCell(1).getStringCellValue();
+              break;
+
+            case Cell.CELL_TYPE_NUMERIC:
+              if (DateUtil.isCellDateFormatted(row.getCell(1))) {
+
+                code =   date.format(row.getCell(1).getDateCellValue());
+              } else {
+                code =   String.valueOf(((Double)row.getCell(1).getNumericCellValue()).intValue());
+              }
+              break;
+          }
+        }
+
+        if (row.getCell(2) == null) {
+          password = null;
+        } else {
+          switch (row.getCell(2) .getCellType()) {
+
+            case Cell.CELL_TYPE_STRING:
+              password = row.getCell(2).getStringCellValue();
+              break;
+
+            case Cell.CELL_TYPE_NUMERIC:
+              if (DateUtil.isCellDateFormatted(row.getCell(2))) {
+
+                password =  date.format(row.getCell(2).getDateCellValue());
+              } else {
+                password =  String.valueOf(((Double)row.getCell(2).getNumericCellValue()).intValue());
+              }
+              break;
+          }
+        }
+
+        if (row.getCell(3) == null) {
+          cashdrawLimit = null;
+        } else {
+          switch (row.getCell(3) .getCellType()) {
+
+            case Cell.CELL_TYPE_STRING:
+              cashdrawLimit = row.getCell(3).getStringCellValue();
+              break;
+
+            case Cell.CELL_TYPE_NUMERIC:
+              if (DateUtil.isCellDateFormatted(row.getCell(3))) {
+
+                cashdrawLimit =   date.format(row.getCell(3).getDateCellValue());
+              } else {
+                cashdrawLimit =   String.valueOf(((Double)row.getCell(3).getNumericCellValue()).intValue());
+              }
+              break;
+          }
+        }
+
+        if (row.getCell(4) == null) {
+          tellerAccountIdentifier = null;
+        } else {
+          switch (row.getCell(4) .getCellType()) {
+
+            case Cell.CELL_TYPE_STRING:
+              tellerAccountIdentifier = row.getCell(4).getStringCellValue();
+              break;
+
+            case Cell.CELL_TYPE_NUMERIC:
+              if (DateUtil.isCellDateFormatted(row.getCell(4))) {
+
+                tellerAccountIdentifier =   date.format(row.getCell(4).getDateCellValue());
+              } else {
+                tellerAccountIdentifier =   String.valueOf(((Double)row.getCell(4).getNumericCellValue()).intValue());
+              }
+              break;
+          }
+        }
+
+        if (row.getCell(5) == null) {
+          vaultAccountIdentifier = null;
+        } else {
+          switch (row.getCell(5) .getCellType()) {
+
+            case Cell.CELL_TYPE_STRING:
+              vaultAccountIdentifier = row.getCell(5).getStringCellValue();
+              break;
+
+            case Cell.CELL_TYPE_NUMERIC:
+              if (DateUtil.isCellDateFormatted(row.getCell(5))) {
+
+                vaultAccountIdentifier =   date.format(row.getCell(5).getDateCellValue());
+              } else {
+                vaultAccountIdentifier =  String.valueOf(((Double)row.getCell(5).getNumericCellValue()).intValue());
+              }
+              break;
+          }
+        }
+
+        if (row.getCell(6) == null) {
+          chequesReceivableAccount = null;
+        } else {
+          switch (row.getCell(6) .getCellType()) {
+
+            case Cell.CELL_TYPE_STRING:
+              chequesReceivableAccount = row.getCell(6).getStringCellValue();
+              break;
+
+            case Cell.CELL_TYPE_NUMERIC:
+              if (DateUtil.isCellDateFormatted(row.getCell(6))) {
+
+                chequesReceivableAccount =  date.format(row.getCell(6).getDateCellValue());
+              } else {
+                chequesReceivableAccount =   String.valueOf(((Double)row.getCell(6).getNumericCellValue()).intValue());
+              }
+              break;
+          }
+        }
+
+        if (row.getCell(7) == null) {
+          cashOverShortAccount = null;
+        } else {
+          switch (row.getCell(7) .getCellType()) {
+
+            case Cell.CELL_TYPE_STRING:
+              cashOverShortAccount = String.valueOf(row.getCell(7).getStringCellValue());
+              break;
+
+            case Cell.CELL_TYPE_NUMERIC:
+              if (DateUtil.isCellDateFormatted(row.getCell(7))) {
+
+                cashOverShortAccount =  date.format(row.getCell(7).getDateCellValue());
+              } else {
+                cashOverShortAccount =  String.valueOf(((Double)row.getCell(7).getNumericCellValue()).intValue());
+              }
+              break;
+          }
+        }
+
+        if (row.getCell(8) == null) {
+          denominationRequired = false;
+        } else {
+          switch (row.getCell(8) .getCellType()) {
+
+            case Cell.CELL_TYPE_NUMERIC:
+
+              if(((Double)row.getCell(8).getNumericCellValue()).intValue()==0){
+                denominationRequired = Boolean.parseBoolean("false");
+              }else{
+                denominationRequired = Boolean.parseBoolean("true");
+              }
+              break;
+          }
+        }
+
+        if (row.getCell(9) == null) {
+          assignedEmployee = null;
+        } else {
+          switch (row.getCell(9) .getCellType()) {
+
+            case Cell.CELL_TYPE_STRING:
+              assignedEmployee = row.getCell(9).getStringCellValue();
+              break;
+
+            case Cell.CELL_TYPE_NUMERIC:
+              if (DateUtil.isCellDateFormatted(row.getCell(9))) {
+
+                assignedEmployee =  date.format(row.getCell(9).getDateCellValue());
+              } else {
+                assignedEmployee =  String.valueOf(((Double)row.getCell(9).getNumericCellValue()).intValue());
+              }
+              break;
+          }
+        }
+        if (row.getCell(10) == null) {
+          state = null;
+        } else {
+          switch (row.getCell(10) .getCellType()) {
+
+            case Cell.CELL_TYPE_STRING:
+              state = row.getCell(10).getStringCellValue();
+              break;
+
+            case Cell.CELL_TYPE_NUMERIC:
+              if (DateUtil.isCellDateFormatted(row.getCell(10))) {
+
+                state =  date.format(row.getCell(10).getDateCellValue());
+              } else {
+                state =  String.valueOf(((Double)row.getCell(10).getNumericCellValue()).intValue());
+              }
+              break;
+          }
+        }
+
           Teller teller= new Teller();
           teller.setCode(String.valueOf(code));
           teller.setPassword(String.valueOf(password));
           BigDecimal cashdraw = new BigDecimal(cashdrawLimit);
           teller.setCashdrawLimit(cashdraw);
-
           teller.setTellerAccountIdentifier(String.valueOf(tellerAccountIdentifier));
           teller.setVaultAccountIdentifier(String.valueOf(vaultAccountIdentifier));
           teller.setChequesReceivableAccount(chequesReceivableAccount);
@@ -539,18 +366,10 @@ public class TellerDatamigration {
           teller.setDenominationRequired(denominationRequired);
           teller.setAssignedEmployee(assignedEmployee);
           teller.setState(state);
-          teller.setCreatedBy(String.valueOf(createdBy));
-          teller.setCreatedOn(String.valueOf(createdOn));
-          teller.setLastModifiedBy(String.valueOf(lastModifiedBy));
-          teller.setLastModifiedOn(String.valueOf(lastModifiedOn));
-          teller.setLastOpenedBy(String.valueOf(lastOpenedBy));
-          teller.setLastOpenedOn(String.valueOf(lastOpenedOn));
 
           this.userManagement.authenticate();
           this.tellerManager.create(officeIdentifier,teller);
         }
-
-      }
     } catch (IOException e) {
       e.printStackTrace();
     }
