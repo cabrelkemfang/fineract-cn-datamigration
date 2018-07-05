@@ -90,7 +90,7 @@ public class OfficeDatamigrationService {
     cell9.setCellStyle(headerCellStyle);
 
     IntStream.range(0, 9).forEach((columnIndex) -> worksheet.autoSizeColumn(columnIndex));
-    response.setHeader("Content-Disposition", "inline; filename=Offices.xlsx");
+    response.setHeader("Content-Disposition", "attachment; filename=Offices.xlsx");
     response.setContentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
 
     try {
