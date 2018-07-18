@@ -133,13 +133,13 @@ public interface DatamigrationManager {
   )
    void ledgerSheetdownload(HttpServletResponse response) ;
 
-
   @RequestMapping(
           value = "/ledgers",
           method = RequestMethod.POST,
           consumes = MediaType.MULTIPART_FORM_DATA_VALUE
   )
    ResponseEntity<String> ledgerSheetUpload(@RequestParam("file") MultipartFile file) ;
+
 
   //SubLedgers Datamigration
   @RequestMapping(
@@ -149,11 +149,43 @@ public interface DatamigrationManager {
   )
   void subLedgerSheetdownload(HttpServletResponse response) ;
 
-
   @RequestMapping(
           value = "/subLedgers",
           method = RequestMethod.POST,
           consumes = MediaType.MULTIPART_FORM_DATA_VALUE
   )
   ResponseEntity<String> subLedgerSheetUpload(@RequestParam("file") MultipartFile file) ;
+
+
+  //Account Datamigration
+  @RequestMapping(
+          value = "/accounts/download",
+          method = RequestMethod.GET,
+          consumes = MediaType.ALL_VALUE
+  )
+ void accountSheetdownload(HttpServletResponse response) ;
+
+  @RequestMapping(
+          value = "/accounts",
+          method = RequestMethod.POST,
+          consumes = MediaType.MULTIPART_FORM_DATA_VALUE
+  )
+   ResponseEntity<String> accountSheetUpload(@RequestParam("file") MultipartFile file) ;
+
+
+  //User Datamigration
+  @RequestMapping(
+          value = "/uers/download",
+          method = RequestMethod.GET,
+          consumes = MediaType.ALL_VALUE
+  )
+   void userSheetdownload(HttpServletResponse response) ;
+
+  @RequestMapping(
+          value = "/users",
+          method = RequestMethod.POST,
+          consumes = MediaType.MULTIPART_FORM_DATA_VALUE
+  )
+   ResponseEntity<String> userSheetUpload(@RequestParam("file") MultipartFile file) ;
+
 }

@@ -61,7 +61,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter
         OrganizationManager.class,
         TellerManager.class,
         GroupManager.class,
-        LedgerManager.class
+        LedgerManager.class,
 })
 @ComponentScan({
     "org.apache.fineract.cn.datamigration.service.rest",

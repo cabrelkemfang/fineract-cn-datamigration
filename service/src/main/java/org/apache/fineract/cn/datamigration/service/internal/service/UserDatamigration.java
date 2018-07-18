@@ -1,9 +1,9 @@
 package org.apache.fineract.cn.datamigration.service.internal.service;
 
-import org.apache.fineract.cn.accounting.api.v1.client.LedgerManager;
-import org.apache.fineract.cn.accounting.api.v1.domain.Ledger;
 import org.apache.fineract.cn.datamigration.service.ServiceConstants;
 import org.apache.fineract.cn.datamigration.service.connector.UserManagement;
+import org.apache.fineract.cn.identity.api.v1.client.IdentityManager;
+import org.apache.fineract.cn.identity.api.v1.domain.UserWithPassword;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.*;
 import org.slf4j.Logger;
@@ -17,31 +17,29 @@ import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
-
 import java.util.stream.IntStream;
 
 @Service
-public class LedgerDatamigration {
+public class UserDatamigration {
+
   private final Logger logger;
-  private final LedgerManager ledgerManager;
+  private final IdentityManager identityManager;
   private final UserManagement userManagement;
 
   @Autowired
-  public LedgerDatamigration(@Qualifier(ServiceConstants.LOGGER_NAME) final Logger logger,
-                             final LedgerManager ledgerManager,
-                             final UserManagement userManagement) {
+  public UserDatamigration(@Qualifier(ServiceConstants.LOGGER_NAME) final Logger logger,
+                           final IdentityManager identityManager,
+                           final UserManagement userManagement) {
     super();
     this.logger = logger;
-    this.ledgerManager = ledgerManager;
+    this.identityManager = identityManager;
     this.userManagement = userManagement;
   }
 
-  public void ledgerSheetDownload(HttpServletResponse response){
+  public void userSheetDownload(HttpServletResponse response){
     XSSFWorkbook workbook = new XSSFWorkbook();
-    XSSFSheet worksheet = workbook.createSheet("Ledgers");
+    XSSFSheet worksheet = workbook.createSheet("Users");
 
-    Datavalidator.validatorLedger(worksheet,"ASSET","LIABILITY","EQUITY","REVENUE","EXPENSE",0);
-    Datavalidator.validator(worksheet,"TRUE","FALSE",4);
     int startRowIndex = 0;
     int startColIndex = 0;
 
@@ -54,28 +52,20 @@ public class LedgerDatamigration {
     rowHeader.setHeight((short) 500);
 
     XSSFCell cell1 = rowHeader.createCell(startColIndex+0);
-    cell1.setCellValue("Type");
+    cell1.setCellValue("identifier");
     cell1.setCellStyle(headerCellStyle);
 
     XSSFCell cell2 = rowHeader.createCell(startColIndex+1);
-    cell2.setCellValue("Identifier");
+    cell2.setCellValue("role");
     cell2.setCellStyle(headerCellStyle);
 
     XSSFCell cell3 = rowHeader.createCell(startColIndex+2);
-    cell3.setCellValue("Name");
+    cell3.setCellValue("password");
     cell3.setCellStyle(headerCellStyle);
 
-    XSSFCell cell4 = rowHeader.createCell(startColIndex+3);
-    cell4.setCellValue("Description");
-    cell4.setCellStyle(headerCellStyle);
 
-    XSSFCell cell5= rowHeader.createCell(startColIndex+4);
-    cell5.setCellValue("Show Accounts In Chart");
-    cell5.setCellStyle(headerCellStyle);
-
-
-    IntStream.range(0, 5).forEach((columnIndex) -> worksheet.autoSizeColumn(columnIndex));
-    response.setHeader("Content-Disposition", "inline; filename=Ledgers.xlsx");
+    IntStream.range(0, 3).forEach((columnIndex) -> worksheet.autoSizeColumn(columnIndex));
+    response.setHeader("Content-Disposition", "inline; filename=Users.xlsx");
     response.setContentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
 
     try {
@@ -92,7 +82,7 @@ public class LedgerDatamigration {
 
   }
 
-  public void ledgerSheetUpload(MultipartFile file){
+  public void userSheetUpload(MultipartFile file){
     if (!file.getContentType().equals("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")) {
       throw new MultipartException("Only excel files accepted!");
     }
@@ -101,122 +91,80 @@ public class LedgerDatamigration {
       Sheet firstSheet = workbook.getSheetAt(0);
       int rowCount = firstSheet.getLastRowNum() + 1;
       Row row;
-      String type = null;
       String identifier = null;
-      String name = null;
-      String description = null;
-      Boolean showAccountsInChart = false;
+      String role = null;
+      String password = null;
 
       SimpleDateFormat date=new SimpleDateFormat("yyyy-MM-dd");
 
       for (int rowIndex = 1; rowIndex < rowCount; rowIndex++) {
         row = firstSheet.getRow(rowIndex);
         if (row.getCell(0) == null) {
-          type = null;
+          identifier = null;
         } else {
           switch (row.getCell(0) .getCellType()) {
 
             case Cell.CELL_TYPE_STRING:
-              type = row.getCell(0).getStringCellValue();
+              identifier = row.getCell(0).getStringCellValue();
               break;
 
             case Cell.CELL_TYPE_NUMERIC:
               if (DateUtil.isCellDateFormatted(row.getCell(0))) {
 
-                type =  date.format(row.getCell(0).getDateCellValue());
+                identifier =  date.format(row.getCell(0).getDateCellValue());
               } else {
-                type =  String.valueOf(row.getCell(0).getNumericCellValue());
+                identifier =  String.valueOf(row.getCell(0).getNumericCellValue());
               }
               break;
           }
         }
 
         if (row.getCell(1) == null) {
-          identifier = null;
+          role = null;
         } else {
           switch (row.getCell(1) .getCellType()) {
 
             case Cell.CELL_TYPE_STRING:
-              identifier = row.getCell(1).getStringCellValue();
+              role = row.getCell(1).getStringCellValue();
               break;
 
             case Cell.CELL_TYPE_NUMERIC:
               if (DateUtil.isCellDateFormatted(row.getCell(1))) {
 
-                identifier =   date.format(row.getCell(1).getDateCellValue());
+                role =   date.format(row.getCell(1).getDateCellValue());
               } else {
-                identifier =   String.valueOf(((Double)row.getCell(1).getNumericCellValue()).intValue());
+                role =   String.valueOf(((Double)row.getCell(1).getNumericCellValue()).intValue());
               }
               break;
           }
         }
 
         if (row.getCell(2) == null) {
-          name = null;
+          password = null;
         } else {
           switch (row.getCell(2) .getCellType()) {
 
             case Cell.CELL_TYPE_STRING:
-              name = row.getCell(2).getStringCellValue();
+              password = row.getCell(2).getStringCellValue();
               break;
 
             case Cell.CELL_TYPE_NUMERIC:
               if (DateUtil.isCellDateFormatted(row.getCell(2))) {
 
-                name =  date.format(row.getCell(2).getDateCellValue());
+                password =  date.format(row.getCell(2).getDateCellValue());
               } else {
-                name =  String.valueOf(((Double)row.getCell(2).getNumericCellValue()).intValue());
+                password =  String.valueOf(((Double)row.getCell(2).getNumericCellValue()).intValue());
               }
               break;
           }
         }
 
-        if (row.getCell(3) == null) {
-          description = null;
-        } else {
-          switch (row.getCell(3) .getCellType()) {
-
-            case Cell.CELL_TYPE_STRING:
-              description = row.getCell(3).getStringCellValue();
-              break;
-
-            case Cell.CELL_TYPE_NUMERIC:
-              if (DateUtil.isCellDateFormatted(row.getCell(3))) {
-
-                description =   date.format(row.getCell(3).getDateCellValue());
-              } else {
-                description =   String.valueOf(((Double)row.getCell(3).getNumericCellValue()).intValue());
-              }
-              break;
-          }
-        }
-
-        if (row.getCell(4) == null) {
-          showAccountsInChart = false;
-        } else {
-          switch (row.getCell(4) .getCellType()) {
-
-            case Cell.CELL_TYPE_NUMERIC:
-
-              if(((Double)row.getCell(4).getNumericCellValue()).intValue()==0){
-                showAccountsInChart = Boolean.parseBoolean("false");
-              }else{
-                showAccountsInChart = Boolean.parseBoolean("true");
-              }
-              break;
-          }
-        }
-
-
-        Ledger ledger = new Ledger();
-        ledger.setType(String.valueOf(type));
-        ledger.setIdentifier(String.valueOf(identifier));
-        ledger.setName(String.valueOf(name));
-        ledger.setDescription(String.valueOf(description));
-        ledger.setShowAccountsInChart(showAccountsInChart);
-
+        UserWithPassword userWithPassword = new UserWithPassword();
+       userWithPassword.setIdentifier(String.valueOf(identifier));
+       userWithPassword.setRole(String.valueOf(role));
+       userWithPassword.setPassword(String.valueOf(password));
         this.userManagement.authenticate();
-        this.ledgerManager.createLedger(ledger);
+       this.identityManager.createUser(userWithPassword);
       }
     } catch (IOException e) {
       e.printStackTrace();
