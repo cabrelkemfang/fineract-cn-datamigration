@@ -18,6 +18,7 @@
  */
 package org.apache.fineract.cn.datamigration.service;
 
+import org.apache.fineract.cn.accounting.api.v1.client.LedgerManager;
 import org.apache.fineract.cn.anubis.config.EnableAnubis;
 import org.apache.fineract.cn.async.config.EnableAsync;
 import org.apache.fineract.cn.cassandra.config.EnableCassandra;
@@ -59,7 +60,8 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter
         IdentityManager.class,
         OrganizationManager.class,
         TellerManager.class,
-        GroupManager.class
+        GroupManager.class,
+        LedgerManager.class
 })
 @ComponentScan({
     "org.apache.fineract.cn.datamigration.service.rest",

@@ -45,6 +45,8 @@ public class DatamigrationRestController {
   private final EmployeeDatamigration employeeDatamigration;
   private final TellerDatamigration tellerDatamigration;
   private final GroupDatamigration groupDatamigration;
+  private final LedgerDatamigration ledgerDatamigration;
+  private final SubLedgerDatamigration subLedgerDatamigration ;
 
   @Autowired
   public DatamigrationRestController( final CommandGateway commandGateway,
@@ -53,7 +55,10 @@ public class DatamigrationRestController {
                                       final OfficeBranchDatamigration officeBranchDatamigration,
                                       final EmployeeDatamigration employeeDatamigration,
                                       final TellerDatamigration  tellerDatamigration,
-                                      final GroupDatamigration  groupDatamigration) {
+                                      final GroupDatamigration  groupDatamigration,
+                                      final LedgerDatamigration  ledgerDatamigration,
+                                      final SubLedgerDatamigration  subLedgerDatamigration
+                                      ) {
     super();
     this.commandGateway = commandGateway;
     this.customerDatamigrationService = customerDatamigrationService;
@@ -62,6 +67,8 @@ public class DatamigrationRestController {
     this.employeeDatamigration = employeeDatamigration;
     this.tellerDatamigration = tellerDatamigration;
     this.groupDatamigration = groupDatamigration;
+    this.ledgerDatamigration = ledgerDatamigration;
+    this.subLedgerDatamigration = subLedgerDatamigration;
   }
 
   @Permittable(value = AcceptedTokenType.SYSTEM)
@@ -208,5 +215,50 @@ public class DatamigrationRestController {
     groupDatamigration.groupSheetUpload(file);
     return new ResponseEntity<>("Upload successuly", HttpStatus.OK);
   }
+
+  //Ledgers Datamigration
+  @Permittable(value = AcceptedTokenType.TENANT, groupId = PermittableGroupIds.DATAMIGRATION_MANAGEMENT)
+  @RequestMapping(
+          value = "/ledgers/download",
+          method = RequestMethod.GET,
+          consumes = MediaType.ALL_VALUE
+  )
+  public void ledgerSheetdownload(HttpServletResponse response) throws ClassNotFoundException {
+    ledgerDatamigration.ledgerSheetDownload(response);
+  }
+
+  @Permittable(value = AcceptedTokenType.TENANT, groupId = PermittableGroupIds.DATAMIGRATION_MANAGEMENT)
+  @RequestMapping(
+          value = "/ledgers",
+          method = RequestMethod.POST,
+          consumes = MediaType.MULTIPART_FORM_DATA_VALUE
+  )
+  public ResponseEntity<String> ledgerSheetUpload(@RequestParam("file") MultipartFile file) throws IOException {
+    ledgerDatamigration.ledgerSheetUpload(file);
+    return new ResponseEntity<>("Upload successuly", HttpStatus.OK);
+  }
+
+  //SubLedgers Datamigration
+  @Permittable(value = AcceptedTokenType.TENANT, groupId = PermittableGroupIds.DATAMIGRATION_MANAGEMENT)
+  @RequestMapping(
+          value = "/subLedgers/download",
+          method = RequestMethod.GET,
+          consumes = MediaType.ALL_VALUE
+  )
+  public void SubLedgerSheetdownload(HttpServletResponse response) throws ClassNotFoundException {
+    subLedgerDatamigration.subLedgerSheetDownload(response);
+  }
+
+  @Permittable(value = AcceptedTokenType.TENANT, groupId = PermittableGroupIds.DATAMIGRATION_MANAGEMENT)
+  @RequestMapping(
+          value = "/subLedgers",
+          method = RequestMethod.POST,
+          consumes = MediaType.MULTIPART_FORM_DATA_VALUE
+  )
+  public ResponseEntity<String> subLledgerSheetUpload(@RequestParam("file") MultipartFile file) throws IOException {
+    subLedgerDatamigration.subLedgerSheetUpload(file);
+    return new ResponseEntity<>("Upload successuly", HttpStatus.OK);
+  }
+
 
 }

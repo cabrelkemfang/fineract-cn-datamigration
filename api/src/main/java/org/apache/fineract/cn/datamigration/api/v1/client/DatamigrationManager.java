@@ -124,4 +124,36 @@ public interface DatamigrationManager {
   )
   ResponseEntity<String> groupSheetUpload(@RequestParam("file") MultipartFile file) ;
 
+
+  //Ledgers Datamigration
+  @RequestMapping(
+          value = "/ledgers/download",
+          method = RequestMethod.GET,
+          consumes = MediaType.ALL_VALUE
+  )
+   void ledgerSheetdownload(HttpServletResponse response) ;
+
+
+  @RequestMapping(
+          value = "/ledgers",
+          method = RequestMethod.POST,
+          consumes = MediaType.MULTIPART_FORM_DATA_VALUE
+  )
+   ResponseEntity<String> ledgerSheetUpload(@RequestParam("file") MultipartFile file) ;
+
+  //SubLedgers Datamigration
+  @RequestMapping(
+          value = "/subLedgers/download",
+          method = RequestMethod.GET,
+          consumes = MediaType.ALL_VALUE
+  )
+  void subLedgerSheetdownload(HttpServletResponse response) ;
+
+
+  @RequestMapping(
+          value = "/subLedgers",
+          method = RequestMethod.POST,
+          consumes = MediaType.MULTIPART_FORM_DATA_VALUE
+  )
+  ResponseEntity<String> subLedgerSheetUpload(@RequestParam("file") MultipartFile file) ;
 }

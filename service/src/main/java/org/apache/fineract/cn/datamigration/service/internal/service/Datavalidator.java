@@ -42,6 +42,20 @@ public class Datavalidator {
     worksheet.addValidationData(validation);
   }
 
+  public static void validatorLedger(XSSFSheet worksheet, String value1, String value2,String value3,String value4,
+                                     String value5,int firstcol) {
+    XSSFDataValidationHelper dvHelper = new XSSFDataValidationHelper(worksheet);
+    XSSFDataValidationConstraint dvConstraint = (XSSFDataValidationConstraint)
+                                                        dvHelper.createExplicitListConstraint(new String[]{value1,
+                                                                value2,value3,value4,value5});
+    CellRangeAddressList addressList = new CellRangeAddressList(1, 3103, firstcol, firstcol);
+    XSSFDataValidation validation = (XSSFDataValidation) dvHelper.createValidation(
+            dvConstraint, addressList);
+    validation.setShowErrorBox(true);
+    worksheet.addValidationData(validation);
+  }
+
+
   public static void validatorWeekday(XSSFSheet worksheet, String value1, String value2,String value3,String value4,
                                       String value5,String value6,String value7,int firstcol) {
     XSSFDataValidationHelper dvHelper = new XSSFDataValidationHelper(worksheet);

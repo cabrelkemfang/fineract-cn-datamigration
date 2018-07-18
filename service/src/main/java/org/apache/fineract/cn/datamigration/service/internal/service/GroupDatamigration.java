@@ -1,6 +1,5 @@
 package org.apache.fineract.cn.datamigration.service.internal.service;
 
-import org.apache.fineract.cn.customer.api.v1.domain.ContactDetail;
 import org.apache.fineract.cn.datamigration.service.ServiceConstants;
 import org.apache.fineract.cn.datamigration.service.connector.UserManagement;
 import org.apache.fineract.cn.group.api.v1.client.GroupManager;
