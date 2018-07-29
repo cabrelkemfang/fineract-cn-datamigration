@@ -53,7 +53,7 @@ public class SubLedgerDatamigration {
     rowHeader.setHeight((short) 500);
 
     XSSFCell cell1 = rowHeader.createCell(startColIndex+0);
-    cell1.setCellValue("Ledger Identifier");
+    cell1.setCellValue("Parent Ledger Identifier");
     cell1.setCellStyle(headerCellStyle);
 
     XSSFCell cell2 = rowHeader.createCell(startColIndex+1);
@@ -104,7 +104,7 @@ public class SubLedgerDatamigration {
       Sheet firstSheet = workbook.getSheetAt(0);
       int rowCount = firstSheet.getLastRowNum() + 1;
       Row row;
-      String ledgerIdentifier=null;
+      String ParentledgerIdentifier=null;
       String type = null;
       String identifier = null;
       String name = null;
@@ -117,20 +117,20 @@ public class SubLedgerDatamigration {
         row = firstSheet.getRow(rowIndex);
 
         if (row.getCell(0) == null) {
-          ledgerIdentifier = null;
+          ParentledgerIdentifier = null;
         } else {
           switch (row.getCell(0) .getCellType()) {
 
             case Cell.CELL_TYPE_STRING:
-              ledgerIdentifier = row.getCell(0).getStringCellValue();
+              ParentledgerIdentifier = row.getCell(0).getStringCellValue();
               break;
 
             case Cell.CELL_TYPE_NUMERIC:
               if (DateUtil.isCellDateFormatted(row.getCell(0))) {
 
-                ledgerIdentifier =  date.format(row.getCell(0).getDateCellValue());
+                ParentledgerIdentifier =  date.format(row.getCell(0).getDateCellValue());
               } else {
-                ledgerIdentifier =  String.valueOf(row.getCell(0).getNumericCellValue());
+                ParentledgerIdentifier =  String.valueOf(row.getCell(0).getNumericCellValue());
               }
               break;
           }
@@ -239,9 +239,10 @@ public class SubLedgerDatamigration {
         ledger.setName(String.valueOf(name));
         ledger.setDescription(String.valueOf(description));
         ledger.setShowAccountsInChart(showAccountsInChart);
+        String parent= String.valueOf(ParentledgerIdentifier);
 
         this.userManagement.authenticate();
-        this.ledgerManager.addSubLedger(ledgerIdentifier,ledger);
+        this.ledgerManager.addSubLedger(parent,ledger);
       }
     } catch (IOException e) {
       e.printStackTrace();

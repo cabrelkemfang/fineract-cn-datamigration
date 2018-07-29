@@ -18,6 +18,15 @@ public class Datavalidator {
     worksheet.addValidationData(validation);
   }
 
+  public static void validatorString(XSSFSheet worksheet,String[] args ,  int firstcol) {
+    XSSFDataValidationHelper dvHelper = new XSSFDataValidationHelper(worksheet);
+    XSSFDataValidationConstraint dvConstraint = (XSSFDataValidationConstraint) dvHelper.createExplicitListConstraint(args);
+    CellRangeAddressList addressList = new CellRangeAddressList(1, 3103, firstcol, firstcol);
+    XSSFDataValidation validation = (XSSFDataValidation) dvHelper.createValidation(dvConstraint, addressList);
+    validation.setShowErrorBox(true);
+    worksheet.addValidationData(validation);
+  }
+
   public static void validatorType(XSSFSheet worksheet, String value1, String value2,String value3, int firstcol) {
     XSSFDataValidationHelper dvHelper = new XSSFDataValidationHelper(worksheet);
     XSSFDataValidationConstraint dvConstraint = (XSSFDataValidationConstraint)

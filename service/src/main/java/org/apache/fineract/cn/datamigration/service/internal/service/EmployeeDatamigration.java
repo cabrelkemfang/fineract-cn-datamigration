@@ -5,6 +5,8 @@ import org.apache.fineract.cn.datamigration.service.connector.UserManagement;
 import org.apache.fineract.cn.office.api.v1.client.OrganizationManager;
 import org.apache.fineract.cn.office.api.v1.domain.ContactDetail;
 import org.apache.fineract.cn.office.api.v1.domain.Employee;
+import org.apache.fineract.cn.office.api.v1.domain.Office;
+import org.apache.fineract.cn.office.api.v1.domain.OfficePage;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.*;
 import org.slf4j.Logger;
@@ -35,12 +37,24 @@ public class EmployeeDatamigration {
     this.organizationManager = organizationManager;
     this.userManagement = userManagement;
   }
+
+
   public void employeeSheetDownload(HttpServletResponse response){
+    //get all office Identifier
+
+    OfficePage officeList  = this.organizationManager.fetchOffices("",1,300,"identifier","ASC");
+    int sizeOfOfficeList=officeList.getOffices().size();
+    String[] officeIdentifier = new String[sizeOfOfficeList];
+    for (int i=0;i<=sizeOfOfficeList;i++){
+      officeIdentifier[i] = officeList.getOffices().get(i).getIdentifier();
+    }
+
     XSSFWorkbook workbook = new XSSFWorkbook();
     XSSFSheet worksheet = workbook.createSheet("Employees");
 
     Datavalidator.validator(worksheet,"BUSINESS","PRIVATE",6);
     Datavalidator.validatorType(worksheet,"EMAIL","PHONE","MOBILE",5);
+    Datavalidator.validatorString(worksheet,officeIdentifier,4);
 
     int startRowIndex = 0;
     int startColIndex = 0;

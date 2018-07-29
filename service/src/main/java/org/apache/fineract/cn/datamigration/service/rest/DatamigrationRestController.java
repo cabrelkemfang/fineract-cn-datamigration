@@ -291,7 +291,7 @@ public class DatamigrationRestController {
   //User Datamigration
   @Permittable(value = AcceptedTokenType.TENANT, groupId = PermittableGroupIds.DATAMIGRATION_MANAGEMENT)
   @RequestMapping(
-          value = "/uers/download",
+          value = "/users/download",
           method = RequestMethod.GET,
           consumes = MediaType.ALL_VALUE
   )
