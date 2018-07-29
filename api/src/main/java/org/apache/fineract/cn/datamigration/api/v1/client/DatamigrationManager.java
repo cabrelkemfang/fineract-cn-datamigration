@@ -188,4 +188,23 @@ public interface DatamigrationManager {
   )
    ResponseEntity<String> userSheetUpload(@RequestParam("file") MultipartFile file) ;
 
+
+  //JornalEnrty Datamigration
+
+  @RequestMapping(
+          value = "/journal/download",
+          method = RequestMethod.GET,
+          consumes = MediaType.ALL_VALUE
+  )
+   void journalEntryDownload(HttpServletResponse response) ;
+
+
+  @RequestMapping(
+          value = "/journal",
+          method = RequestMethod.POST,
+          consumes = MediaType.MULTIPART_FORM_DATA_VALUE
+  )
+   ResponseEntity<String> journalEntrySheetUpload(@RequestParam("file") MultipartFile file) ;
+
+
 }

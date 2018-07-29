@@ -49,6 +49,7 @@ public class DatamigrationRestController {
   private final SubLedgerDatamigration subLedgerDatamigration ;
   private final AccountsDatamigration accountsDatamigration ;
   private final UserDatamigration userDatamigration  ;
+  private final JournalEntryDatamigration journalEntryDatamigration  ;
 
   @Autowired
   public DatamigrationRestController( final CommandGateway commandGateway,
@@ -61,7 +62,8 @@ public class DatamigrationRestController {
                                       final LedgerDatamigration  ledgerDatamigration,
                                       final SubLedgerDatamigration  subLedgerDatamigration,
                                       final AccountsDatamigration  accountsDatamigration,
-                                      final UserDatamigration  userDatamigration
+                                      final UserDatamigration  userDatamigration,
+                                      final JournalEntryDatamigration  journalEntryDatamigration
                                       ) {
     super();
     this.commandGateway = commandGateway;
@@ -75,6 +77,7 @@ public class DatamigrationRestController {
     this.subLedgerDatamigration = subLedgerDatamigration;
     this.accountsDatamigration = accountsDatamigration;
     this.userDatamigration = userDatamigration;
+    this.journalEntryDatamigration = journalEntryDatamigration;
   }
 
   @Permittable(value = AcceptedTokenType.SYSTEM)
@@ -307,6 +310,29 @@ public class DatamigrationRestController {
   )
   public ResponseEntity<String> userSheetUpload(@RequestParam("file") MultipartFile file) throws IOException {
     userDatamigration.userSheetUpload(file);
+    return new ResponseEntity<>("Upload successuly", HttpStatus.OK);
+  }
+
+
+  //JornalEnrty Datamigration
+  @Permittable(value = AcceptedTokenType.TENANT, groupId = PermittableGroupIds.DATAMIGRATION_MANAGEMENT)
+  @RequestMapping(
+          value = "/journal/download",
+          method = RequestMethod.GET,
+          consumes = MediaType.ALL_VALUE
+  )
+  public void journalEntryDownload(HttpServletResponse response) throws ClassNotFoundException {
+    journalEntryDatamigration.journalEntryDownload(response);
+  }
+
+  @Permittable(value = AcceptedTokenType.TENANT, groupId = PermittableGroupIds.DATAMIGRATION_MANAGEMENT)
+  @RequestMapping(
+          value = "/journal",
+          method = RequestMethod.POST,
+          consumes = MediaType.MULTIPART_FORM_DATA_VALUE
+  )
+  public ResponseEntity<String> journalEntrySheetUpload(@RequestParam("file") MultipartFile file) throws IOException {
+    journalEntryDatamigration.journalEntrySheetUpload(file);
     return new ResponseEntity<>("Upload successuly", HttpStatus.OK);
   }
 
