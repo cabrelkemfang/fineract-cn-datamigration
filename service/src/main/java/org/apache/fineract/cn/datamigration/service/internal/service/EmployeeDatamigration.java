@@ -42,7 +42,7 @@ public class EmployeeDatamigration {
   public void employeeSheetDownload(HttpServletResponse response){
     //get all office Identifier
 
-    OfficePage officeList  = this.organizationManager.fetchOffices("",1,300,"identifier","ASC");
+    OfficePage officeList  = this.organizationManager.fetchOffices(null,null,null,null,null);
     int sizeOfOfficeList=officeList.getOffices().size();
     String[] officeIdentifier = new String[sizeOfOfficeList];
     for (int i=0;i<=sizeOfOfficeList;i++){
