@@ -30,6 +30,7 @@ import org.apache.fineract.cn.lang.config.EnableServiceException;
 import org.apache.fineract.cn.lang.config.EnableTenantContext;
 import org.apache.fineract.cn.mariadb.config.EnableMariaDB;
 import org.apache.fineract.cn.office.api.v1.client.OrganizationManager;
+import org.apache.fineract.cn.portfolio.api.v1.client.PortfolioManager;
 import org.apache.fineract.cn.teller.api.v1.client.TellerManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -62,6 +63,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter
         TellerManager.class,
         GroupManager.class,
         LedgerManager.class,
+        PortfolioManager.class
 })
 @ComponentScan({
     "org.apache.fineract.cn.datamigration.service.rest",
