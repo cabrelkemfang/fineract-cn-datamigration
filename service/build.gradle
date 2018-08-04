@@ -55,6 +55,7 @@ dependencies {
             [group: 'org.apache.fineract.cn.accounting', name: 'api', version: project.version],
             [group: 'org.apache.fineract.cn.group', name: 'api', version: project.version],
             [group: 'org.apache.fineract.cn.portfolio', name: 'api', version: project.version],
+            [group: 'org.apache.fineract.cn.provisioner', name: 'api', version: project.version],
             [group: 'org.apache.fineract.cn.identity', name: 'api', version: rootProject.version],
             [group: 'org.apache.fineract.cn.anubis', name: 'library', version: versions.frameworkanubis],
             [group: 'com.google.code.gson', name: 'gson'],

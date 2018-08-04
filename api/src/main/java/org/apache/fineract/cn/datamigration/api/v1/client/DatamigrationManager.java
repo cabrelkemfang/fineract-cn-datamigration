@@ -220,5 +220,20 @@ public interface DatamigrationManager {
   )
    ResponseEntity<String> productSheetUpload(@RequestParam("file") MultipartFile file) ;
 
+  //Tenant Migration
+  @RequestMapping(
+          value = "/tenants/download",
+          method = RequestMethod.GET,
+          consumes = MediaType.ALL_VALUE
+  )
+   void tenantSheetDownload(HttpServletResponse response);
+
+  @RequestMapping(
+          value = "/tenant",
+          method = RequestMethod.POST,
+          consumes = MediaType.MULTIPART_FORM_DATA_VALUE
+  )
+   ResponseEntity<String> tenantSheetUpload(@RequestParam("file") MultipartFile file);
+
 
 }

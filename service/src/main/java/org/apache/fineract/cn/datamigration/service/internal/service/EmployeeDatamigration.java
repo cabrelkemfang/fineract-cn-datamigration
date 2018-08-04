@@ -145,7 +145,7 @@ public class EmployeeDatamigration {
               identifier = row.getCell(0).getStringCellValue();
               break;
             case Cell.CELL_TYPE_NUMERIC:
-                identifier =  String.valueOf(row.getCell(0).getNumericCellValue());
+                identifier = String.valueOf(((Double)row.getCell(0).getNumericCellValue()).intValue());
               break;
           }
         }

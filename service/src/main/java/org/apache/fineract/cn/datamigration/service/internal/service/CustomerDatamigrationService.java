@@ -186,7 +186,7 @@ public class CustomerDatamigrationService {
      cell26.setCellValue("Application Date");
      cell26.setCellStyle(headerCellStyle);
 
-     IntStream.range(0, 25).forEach((columnIndex) -> worksheet.autoSizeColumn(columnIndex));
+     IntStream.range(0, 26).forEach((columnIndex) -> worksheet.autoSizeColumn(columnIndex));
     response.setHeader("Content-Disposition", "inline; filename=Customer.xlsx");
     response.setContentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
     try {
