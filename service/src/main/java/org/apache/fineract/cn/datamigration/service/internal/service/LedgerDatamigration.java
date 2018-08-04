@@ -3,7 +3,6 @@ package org.apache.fineract.cn.datamigration.service.internal.service;
 import org.apache.fineract.cn.accounting.api.v1.client.LedgerManager;
 import org.apache.fineract.cn.accounting.api.v1.domain.Ledger;
 import org.apache.fineract.cn.datamigration.service.ServiceConstants;
-import org.apache.fineract.cn.datamigration.service.connector.UserManagement;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.*;
 import org.slf4j.Logger;
@@ -23,16 +22,14 @@ import java.util.stream.IntStream;
 public class LedgerDatamigration {
   private final Logger logger;
   private final LedgerManager ledgerManager;
-  private final UserManagement userManagement;
+
 
   @Autowired
   public LedgerDatamigration(@Qualifier(ServiceConstants.LOGGER_NAME) final Logger logger,
-                             final LedgerManager ledgerManager,
-                             final UserManagement userManagement) {
+                             final LedgerManager ledgerManager) {
     super();
     this.logger = logger;
     this.ledgerManager = ledgerManager;
-    this.userManagement = userManagement;
   }
 
   public void ledgerSheetDownload(HttpServletResponse response){

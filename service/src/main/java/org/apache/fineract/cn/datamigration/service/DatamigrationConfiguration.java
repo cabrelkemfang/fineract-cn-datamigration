@@ -69,8 +69,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter
     "org.apache.fineract.cn.datamigration.service.rest",
     "org.apache.fineract.cn.datamigration.service.internal.service",
     "org.apache.fineract.cn.datamigration.service.internal.repository",
-    "org.apache.fineract.cn.datamigration.service.internal.command.handler",
-        "org.apache.fineract.cn.datamigration.service.connector"
+    "org.apache.fineract.cn.datamigration.service.internal.command.handler"
 })
 @EnableJpaRepositories({
     "org.apache.fineract.cn.datamigration.service.internal.repository"

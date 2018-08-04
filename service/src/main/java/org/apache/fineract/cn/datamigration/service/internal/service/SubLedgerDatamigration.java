@@ -3,7 +3,6 @@ package org.apache.fineract.cn.datamigration.service.internal.service;
 import org.apache.fineract.cn.accounting.api.v1.client.LedgerManager;
 import org.apache.fineract.cn.accounting.api.v1.domain.Ledger;
 import org.apache.fineract.cn.datamigration.service.ServiceConstants;
-import org.apache.fineract.cn.datamigration.service.connector.UserManagement;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.*;
 import org.slf4j.Logger;
@@ -15,23 +14,19 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.text.SimpleDateFormat;
 import java.util.stream.IntStream;
 
 @Service
 public class SubLedgerDatamigration {
   private final Logger logger;
   private final LedgerManager ledgerManager;
-  private final UserManagement userManagement;
 
   @Autowired
   public SubLedgerDatamigration(@Qualifier(ServiceConstants.LOGGER_NAME) final Logger logger,
-                             final LedgerManager ledgerManager,
-                             final UserManagement userManagement) {
+                             final LedgerManager ledgerManager) {
     super();
     this.logger = logger;
     this.ledgerManager = ledgerManager;
-    this.userManagement = userManagement;
   }
 
   public void subLedgerSheetDownload(HttpServletResponse response){

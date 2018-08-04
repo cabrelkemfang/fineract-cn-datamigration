@@ -68,8 +68,3 @@ async:
 flyway:
   enabled: false
 
-fineract-cn:
-  system:
-    user:
-      name: operator
-      password: init1@l

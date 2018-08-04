@@ -22,7 +22,6 @@ import org.apache.fineract.cn.customer.api.v1.client.CustomerManager;
 import org.apache.fineract.cn.customer.api.v1.domain.Address;
 import org.apache.fineract.cn.customer.api.v1.domain.ContactDetail;
 import org.apache.fineract.cn.customer.api.v1.domain.Customer;
-import org.apache.fineract.cn.datamigration.service.connector.UserManagement;
 import org.apache.fineract.cn.datamigration.service.ServiceConstants;
 import org.apache.fineract.cn.lang.DateOfBirth;
 import org.apache.poi.ss.usermodel.*;
@@ -46,17 +45,14 @@ import java.util.stream.IntStream;
 public class CustomerDatamigrationService {
   private final Logger logger;
   private final CustomerManager customerManager;
-  private final UserManagement userManagement;
 
 
   @Autowired
   public CustomerDatamigrationService(@Qualifier(ServiceConstants.LOGGER_NAME) final Logger logger,
-                                      final CustomerManager customerManager,
-                                      final UserManagement userManagement) {
+                                      final CustomerManager customerManager) {
      super();
      this.logger = logger;
      this.customerManager = customerManager;
-     this.userManagement = userManagement;
   }
 
   public static void customersSheetDownload(HttpServletResponse response){

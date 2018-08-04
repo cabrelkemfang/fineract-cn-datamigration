@@ -1,7 +1,6 @@
 package org.apache.fineract.cn.datamigration.service.internal.service;
 
 import org.apache.fineract.cn.datamigration.service.ServiceConstants;
-import org.apache.fineract.cn.datamigration.service.connector.UserManagement;
 import org.apache.fineract.cn.teller.api.v1.client.TellerManager;
 import org.apache.fineract.cn.teller.api.v1.domain.Teller;
 import org.apache.poi.ss.usermodel.*;
@@ -16,24 +15,20 @@ import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.math.BigDecimal;
-import java.text.SimpleDateFormat;
 import java.util.stream.IntStream;
 
 @Service
 public class TellerDatamigration {
   private final Logger logger;
   private final TellerManager tellerManager;
-  private final UserManagement userManagement;
 
 
   @Autowired
   public TellerDatamigration(@Qualifier(ServiceConstants.LOGGER_NAME) final Logger logger,
-                                      final TellerManager tellerManager,
-                                      final UserManagement userManagement) {
+                                      final TellerManager tellerManager) {
     super();
     this.logger = logger;
     this.tellerManager = tellerManager;
-    this.userManagement = userManagement;
   }
 
   public static void tellerSheetDownload(HttpServletResponse response){

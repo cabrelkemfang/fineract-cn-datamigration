@@ -1,7 +1,6 @@
 package org.apache.fineract.cn.datamigration.service.internal.service;
 
 import org.apache.fineract.cn.datamigration.service.ServiceConstants;
-import org.apache.fineract.cn.datamigration.service.connector.UserManagement;
 import org.apache.fineract.cn.office.api.v1.client.OrganizationManager;
 import org.apache.fineract.cn.office.api.v1.domain.ContactDetail;
 import org.apache.fineract.cn.office.api.v1.domain.Employee;
@@ -25,35 +24,32 @@ import java.util.stream.IntStream;
 public class EmployeeDatamigration {
   private final Logger logger;
   private final OrganizationManager organizationManager;
-  private final UserManagement userManagement;
 
   @Autowired
   public EmployeeDatamigration(@Qualifier(ServiceConstants.LOGGER_NAME) final Logger logger,
-                                    final OrganizationManager organizationManager,
-                                    final UserManagement userManagement) {
+                                    final OrganizationManager organizationManager) {
     super();
     this.logger = logger;
     this.organizationManager = organizationManager;
-    this.userManagement = userManagement;
   }
 
 
   public void employeeSheetDownload(HttpServletResponse response){
     //get all office Identifier
 
-   OfficePage officeList  = this.organizationManager.fetchOffices(null, null, null, null,null);
+   /*OfficePage officeList  = this.organizationManager.fetchOffices(null, null, null, null,null);
     int sizeOfOfficeList=officeList.getOffices().size();
     String[] officeIdentifier = new String[sizeOfOfficeList];
     for (int i=0;i<=sizeOfOfficeList;i++){
       officeIdentifier[i] = officeList.getOffices().get(i).getIdentifier();
-    }
+    }*/
 
     XSSFWorkbook workbook = new XSSFWorkbook();
     XSSFSheet worksheet = workbook.createSheet("Employees");
 
     Datavalidator.validator(worksheet,"BUSINESS","PRIVATE",6);
     Datavalidator.validatorType(worksheet,"EMAIL","PHONE","MOBILE",5);
-    Datavalidator.validatorString(worksheet,officeIdentifier,4);
+    //Datavalidator.validatorString(worksheet,officeIdentifier,4);
 
     int startRowIndex = 0;
     int startColIndex = 0;

@@ -1,7 +1,6 @@
 package org.apache.fineract.cn.datamigration.service.internal.service;
 
 import org.apache.fineract.cn.datamigration.service.ServiceConstants;
-import org.apache.fineract.cn.datamigration.service.connector.UserManagement;
 import org.apache.fineract.cn.portfolio.api.v1.client.PortfolioManager;
 import org.apache.fineract.cn.portfolio.api.v1.domain.*;
 import org.apache.poi.ss.usermodel.*;
@@ -26,16 +25,13 @@ public class ProductDatamigration {
 
   private final Logger logger;
   private  final PortfolioManager portfolioManager;
-  private final UserManagement userManagement;
 
   @Autowired
   public ProductDatamigration(@Qualifier(ServiceConstants.LOGGER_NAME) final Logger logger,
-                                final PortfolioManager portfolioManager,
-                                final UserManagement userManagement) {
+                                final PortfolioManager portfolioManager) {
     super();
     this.logger = logger;
     this.portfolioManager = portfolioManager;
-    this.userManagement = userManagement;
   }
 
   public static void productSheetDownload(HttpServletResponse response){

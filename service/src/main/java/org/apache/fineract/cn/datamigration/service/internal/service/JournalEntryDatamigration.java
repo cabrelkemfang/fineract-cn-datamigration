@@ -5,7 +5,6 @@ import org.apache.fineract.cn.accounting.api.v1.domain.Creditor;
 import org.apache.fineract.cn.accounting.api.v1.domain.Debtor;
 import org.apache.fineract.cn.accounting.api.v1.domain.JournalEntry;
 import org.apache.fineract.cn.datamigration.service.ServiceConstants;
-import org.apache.fineract.cn.datamigration.service.connector.UserManagement;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.*;
 import org.slf4j.Logger;
@@ -25,16 +24,13 @@ import java.util.stream.IntStream;
 public class JournalEntryDatamigration {
   private final Logger logger;
   private final LedgerManager ledgerManager;
-  private final UserManagement userManagement;
 
   @Autowired
   public JournalEntryDatamigration(@Qualifier(ServiceConstants.LOGGER_NAME) final Logger logger,
-                             final LedgerManager ledgerManager,
-                             final UserManagement userManagement) {
+                             final LedgerManager ledgerManager) {
     super();
     this.logger = logger;
     this.ledgerManager = ledgerManager;
-    this.userManagement = userManagement;
   }
 
   public void journalEntryDownload(HttpServletResponse response){

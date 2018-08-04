@@ -1,7 +1,6 @@
 package org.apache.fineract.cn.datamigration.service.internal.service;
 
 import org.apache.fineract.cn.datamigration.service.ServiceConstants;
-import org.apache.fineract.cn.datamigration.service.connector.UserManagement;
 import org.apache.fineract.cn.office.api.v1.client.OrganizationManager;
 import org.apache.fineract.cn.office.api.v1.domain.Address;
 import org.apache.fineract.cn.office.api.v1.domain.Office;
@@ -23,17 +22,15 @@ import java.util.stream.IntStream;
 public class OfficeBranchDatamigration {
   private final Logger logger;
   private final OrganizationManager organizationManager;
-  private final UserManagement userManagement;
+
 
 
   @Autowired
   public OfficeBranchDatamigration(@Qualifier(ServiceConstants.LOGGER_NAME) final Logger logger,
-                                    final OrganizationManager organizationManager,
-                                    final UserManagement userManagement) {
+                                    final OrganizationManager organizationManager) {
     super();
     this.logger = logger;
     this.organizationManager = organizationManager;
-    this.userManagement = userManagement;
   }
   public void branchSheetDownload(HttpServletResponse response){
     XSSFWorkbook workbook = new XSSFWorkbook();

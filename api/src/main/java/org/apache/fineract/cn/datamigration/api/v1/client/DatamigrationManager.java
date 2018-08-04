@@ -34,7 +34,7 @@ import java.io.IOException;
 @FeignClient(value="datamigration-v1", path="/datamigration/v1", configuration = CustomFeignClientsConfiguration.class)
 public interface DatamigrationManager {
 
-  //customer datamigration
+  //customer Migration
   @RequestMapping(
           value = "/customers/download",
           method = RequestMethod.GET,
@@ -49,7 +49,7 @@ public interface DatamigrationManager {
   )
   ResponseEntity<String> customersFormUpload(@RequestParam("file") MultipartFile file) ;
 
-  //Office Datamigration
+  //Office Migration
   @RequestMapping(
           value = "/offices/download",
           method = RequestMethod.GET,
@@ -64,7 +64,7 @@ public interface DatamigrationManager {
   )
    ResponseEntity<String> officeSheetUpload(@RequestParam("file") MultipartFile file) ;
 
-//Branch Datamigration
+//Branch Migration
   @RequestMapping(
           value = "/offices/branch/download",
           method = RequestMethod.GET,
@@ -79,7 +79,7 @@ public interface DatamigrationManager {
   )
   ResponseEntity<String> branchSheetUpload(@RequestParam("file") MultipartFile file) ;
 
-  //employee datamigration
+  //employee Migration
   @RequestMapping(
           value = "/employees/download",
           method = RequestMethod.GET,
@@ -94,7 +94,7 @@ public interface DatamigrationManager {
   )
    ResponseEntity<String> employeeSheetUpload(@RequestParam("file") MultipartFile file);
 
-//tellers datmigration
+//tellers Migration
   @RequestMapping(
           value = "/tellers/download",
           method = RequestMethod.GET,
@@ -109,7 +109,7 @@ public interface DatamigrationManager {
   )
   ResponseEntity<String> tellerSheetUpload(@RequestParam("file") MultipartFile file) ;
 
-  //group datmigration
+  //group Migration
   @RequestMapping(
           value = "/group/download",
           method = RequestMethod.GET,
@@ -125,7 +125,7 @@ public interface DatamigrationManager {
   ResponseEntity<String> groupSheetUpload(@RequestParam("file") MultipartFile file) ;
 
 
-  //Ledgers Datamigration
+  //Ledgers Migration
   @RequestMapping(
           value = "/ledgers/download",
           method = RequestMethod.GET,
@@ -141,7 +141,7 @@ public interface DatamigrationManager {
    ResponseEntity<String> ledgerSheetUpload(@RequestParam("file") MultipartFile file) ;
 
 
-  //SubLedgers Datamigration
+  //SubLedgers Migration
   @RequestMapping(
           value = "/subLedgers/download",
           method = RequestMethod.GET,
@@ -157,7 +157,7 @@ public interface DatamigrationManager {
   ResponseEntity<String> subLedgerSheetUpload(@RequestParam("file") MultipartFile file) ;
 
 
-  //Account Datamigration
+  //Account Migration
   @RequestMapping(
           value = "/accounts/download",
           method = RequestMethod.GET,
@@ -173,7 +173,7 @@ public interface DatamigrationManager {
    ResponseEntity<String> accountSheetUpload(@RequestParam("file") MultipartFile file) ;
 
 
-  //User Datamigration
+  //User Migration
   @RequestMapping(
           value = "/uers/download",
           method = RequestMethod.GET,
@@ -189,8 +189,7 @@ public interface DatamigrationManager {
    ResponseEntity<String> userSheetUpload(@RequestParam("file") MultipartFile file) ;
 
 
-  //JornalEnrty Datamigration
-
+  //JornalEnrty Migration
   @RequestMapping(
           value = "/journal/download",
           method = RequestMethod.GET,
@@ -198,13 +197,28 @@ public interface DatamigrationManager {
   )
    void journalEntryDownload(HttpServletResponse response) ;
 
-
   @RequestMapping(
           value = "/journal",
           method = RequestMethod.POST,
           consumes = MediaType.MULTIPART_FORM_DATA_VALUE
   )
    ResponseEntity<String> journalEntrySheetUpload(@RequestParam("file") MultipartFile file) ;
+
+
+  //product Migration
+  @RequestMapping(
+          value = "/products/download",
+          method = RequestMethod.GET,
+          consumes = MediaType.ALL_VALUE
+  )
+   void productSheetDownload(HttpServletResponse response) ;
+
+  @RequestMapping(
+          value = "/products",
+          method = RequestMethod.POST,
+          consumes = MediaType.MULTIPART_FORM_DATA_VALUE
+  )
+   ResponseEntity<String> productSheetUpload(@RequestParam("file") MultipartFile file) ;
 
 
 }

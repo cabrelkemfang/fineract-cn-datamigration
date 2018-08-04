@@ -1,7 +1,6 @@
 package org.apache.fineract.cn.datamigration.service.internal.service;
 
 import org.apache.fineract.cn.datamigration.service.ServiceConstants;
-import org.apache.fineract.cn.datamigration.service.connector.UserManagement;
 import org.apache.fineract.cn.group.api.v1.client.GroupManager;
 import org.apache.fineract.cn.group.api.v1.domain.Address;
 import org.apache.fineract.cn.group.api.v1.domain.Group;
@@ -16,7 +15,6 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.stream.IntStream;
 
@@ -25,16 +23,13 @@ public class GroupDatamigration {
 
   private final Logger logger;
   private final GroupManager groupManager;
-  private final UserManagement userManagement;
 
   @Autowired
   public GroupDatamigration(@Qualifier(ServiceConstants.LOGGER_NAME) final Logger logger,
-                                    final GroupManager groupManager,
-                                    final UserManagement userManagement) {
+                                    final GroupManager groupManager) {
     super();
     this.logger = logger;
     this.groupManager = groupManager;
-    this.userManagement = userManagement;
   }
   public void groupSheetDownload(HttpServletResponse response){
     XSSFWorkbook workbook = new XSSFWorkbook();

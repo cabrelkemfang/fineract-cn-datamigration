@@ -1,7 +1,6 @@
 package org.apache.fineract.cn.datamigration.service.internal.service;
 
 import org.apache.fineract.cn.datamigration.service.ServiceConstants;
-import org.apache.fineract.cn.datamigration.service.connector.UserManagement;
 import org.apache.fineract.cn.identity.api.v1.client.IdentityManager;
 import org.apache.fineract.cn.identity.api.v1.domain.UserWithPassword;
 import org.apache.poi.ss.usermodel.*;
@@ -24,16 +23,13 @@ public class UserDatamigration {
 
   private final Logger logger;
   private final IdentityManager identityManager;
-  private final UserManagement userManagement;
 
   @Autowired
   public UserDatamigration(@Qualifier(ServiceConstants.LOGGER_NAME) final Logger logger,
-                           final IdentityManager identityManager,
-                           final UserManagement userManagement) {
+                           final IdentityManager identityManager) {
     super();
     this.logger = logger;
     this.identityManager = identityManager;
-    this.userManagement = userManagement;
   }
 
   public void userSheetDownload(HttpServletResponse response){
