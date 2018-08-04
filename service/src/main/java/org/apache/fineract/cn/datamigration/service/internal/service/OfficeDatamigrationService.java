@@ -2,7 +2,6 @@ package org.apache.fineract.cn.datamigration.service.internal.service;
 
 import org.apache.fineract.cn.datamigration.service.ServiceConstants;
 import org.apache.fineract.cn.datamigration.service.connector.UserManagement;
-
 import org.apache.fineract.cn.office.api.v1.client.OrganizationManager;
 import org.apache.fineract.cn.office.api.v1.domain.Address;
 import org.apache.fineract.cn.office.api.v1.domain.Office;
@@ -14,12 +13,9 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartException;
 import org.springframework.web.multipart.MultipartFile;
-
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.text.SimpleDateFormat;
-import java.util.Iterator;
 import java.util.stream.IntStream;
 
 @Service
@@ -107,7 +103,6 @@ public class OfficeDatamigrationService {
 
   }
 
-
   public void officeSheetUpload(MultipartFile file){
     if (!file.getContentType().equals("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")) {
       throw new MultipartException("Only excel files accepted!");
@@ -141,12 +136,7 @@ public class OfficeDatamigrationService {
               break;
 
             case Cell.CELL_TYPE_NUMERIC:
-              if (DateUtil.isCellDateFormatted(row.getCell(0))) {
-
-                identifier = String.valueOf( row.getCell(0).getStringCellValue());
-              } else {
                 identifier =  String.valueOf(row.getCell(0).getNumericCellValue());
-              }
               break;
           }
         }
@@ -161,12 +151,7 @@ public class OfficeDatamigrationService {
               break;
 
             case Cell.CELL_TYPE_NUMERIC:
-              if (DateUtil.isCellDateFormatted(row.getCell(1))) {
-
-                name =  String.valueOf(row.getCell(1).getStringCellValue());
-              } else {
                 name =  String.valueOf(((Double)row.getCell(1).getNumericCellValue()).intValue());
-              }
               break;
           }
         }
@@ -181,12 +166,7 @@ public class OfficeDatamigrationService {
               break;
 
             case Cell.CELL_TYPE_NUMERIC:
-              if (DateUtil.isCellDateFormatted(row.getCell(2))) {
-
-                description =  String.valueOf(row.getCell(2).getStringCellValue());
-              } else {
                 description =   String.valueOf(((Double)row.getCell(2).getNumericCellValue()).intValue());
-              }
               break;
           }
         }
@@ -201,12 +181,7 @@ public class OfficeDatamigrationService {
               break;
 
             case Cell.CELL_TYPE_NUMERIC:
-              if (DateUtil.isCellDateFormatted(row.getCell(3))) {
-
-                street =  String.valueOf(row.getCell(3).getStringCellValue());
-              } else {
                 street =   String.valueOf(((Double)row.getCell(3).getNumericCellValue()).intValue());
-              }
               break;
           }
         }
@@ -221,12 +196,7 @@ public class OfficeDatamigrationService {
               break;
 
             case Cell.CELL_TYPE_NUMERIC:
-              if (DateUtil.isCellDateFormatted(row.getCell(4))) {
-
-                city =  String.valueOf(row.getCell(4).getStringCellValue());
-              } else {
                 city =  String.valueOf(((Double)row.getCell(4).getNumericCellValue()).intValue());
-              }
               break;
           }
         }
@@ -241,12 +211,7 @@ public class OfficeDatamigrationService {
               break;
 
             case Cell.CELL_TYPE_NUMERIC:
-              if (DateUtil.isCellDateFormatted(row.getCell(5))) {
-
-                region = String.valueOf( row.getCell(5).getStringCellValue());
-              } else {
                 region =   String.valueOf(((Double)row.getCell(5).getNumericCellValue()).intValue());
-              }
               break;
           }
         }
@@ -261,12 +226,7 @@ public class OfficeDatamigrationService {
               break;
 
             case Cell.CELL_TYPE_NUMERIC:
-              if (DateUtil.isCellDateFormatted(row.getCell(6))) {
-
-                postalCode =  String.valueOf(row.getCell(6).getStringCellValue());
-              } else {
                 postalCode =  String.valueOf(((Double)row.getCell(6).getNumericCellValue()).intValue());
-              }
               break;
           }
         }
@@ -281,12 +241,7 @@ public class OfficeDatamigrationService {
               break;
 
             case Cell.CELL_TYPE_NUMERIC:
-              if (DateUtil.isCellDateFormatted(row.getCell(7))) {
-
-                countryCode =  String.valueOf(row.getCell(7).getStringCellValue());
-              } else {
                 countryCode =  String.valueOf(((Double)row.getCell(7).getNumericCellValue()).intValue());
-              }
               break;
           }
         }
@@ -301,17 +256,12 @@ public class OfficeDatamigrationService {
               break;
 
             case Cell.CELL_TYPE_NUMERIC:
-              if (DateUtil.isCellDateFormatted(row.getCell(8))) {
-
-                country = String.valueOf( row.getCell(8).getStringCellValue());
-              } else {
                 country =  String.valueOf(((Double)row.getCell(8).getNumericCellValue()).intValue());
-              }
               break;
           }
         }
 
-        Address address = new Address();
+          Address address = new Address();
           address.setStreet(String.valueOf(street));
           address.setCity(String.valueOf(city));
           address.setRegion(String.valueOf(region));
@@ -324,7 +274,6 @@ public class OfficeDatamigrationService {
           office.setDescription(String.valueOf(description));
           office.setAddress(address);
 
-          this.userManagement.authenticate();
           this.organizationManager.createOffice(office);
         }
     } catch (IOException e) {

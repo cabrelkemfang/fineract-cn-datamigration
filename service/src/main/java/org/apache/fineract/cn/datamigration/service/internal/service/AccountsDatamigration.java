@@ -39,7 +39,7 @@ public class AccountsDatamigration {
   }
   public void accountSheetDownload(HttpServletResponse response){
     XSSFWorkbook workbook = new XSSFWorkbook();
-    XSSFSheet worksheet = workbook.createSheet("Ledgers");
+    XSSFSheet worksheet = workbook.createSheet("Accounts");
 
     Datavalidator.validatorLedger(worksheet,"ASSET","LIABILITY","EQUITY","REVENUE","EXPENSE",0);
 
@@ -83,7 +83,7 @@ public class AccountsDatamigration {
     cell7.setCellStyle(headerCellStyle);
 
 
-    IntStream.range(0, 8).forEach((columnIndex) -> worksheet.autoSizeColumn(columnIndex));
+    IntStream.range(0, 7).forEach((columnIndex) -> worksheet.autoSizeColumn(columnIndex));
     response.setHeader("Content-Disposition", "inline; filename=Accounts.xlsx");
     response.setContentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
 
@@ -118,8 +118,6 @@ public class AccountsDatamigration {
       String balance = null;
       String ledger = null;
 
-      SimpleDateFormat date=new SimpleDateFormat("yyyy-MM-dd");
-
       for (int rowIndex = 1; rowIndex < rowCount; rowIndex++) {
         row = firstSheet.getRow(rowIndex);
         if (row.getCell(0) == null) {
@@ -132,12 +130,7 @@ public class AccountsDatamigration {
               break;
 
             case Cell.CELL_TYPE_NUMERIC:
-              if (DateUtil.isCellDateFormatted(row.getCell(0))) {
-
-                type =  date.format(row.getCell(0).getDateCellValue());
-              } else {
                 type =  String.valueOf(row.getCell(0).getNumericCellValue());
-              }
               break;
           }
         }
@@ -152,12 +145,7 @@ public class AccountsDatamigration {
               break;
 
             case Cell.CELL_TYPE_NUMERIC:
-              if (DateUtil.isCellDateFormatted(row.getCell(1))) {
-
-                identifier =   date.format(row.getCell(1).getDateCellValue());
-              } else {
                 identifier =   String.valueOf(((Double)row.getCell(1).getNumericCellValue()).intValue());
-              }
               break;
           }
         }
@@ -172,12 +160,7 @@ public class AccountsDatamigration {
               break;
 
             case Cell.CELL_TYPE_NUMERIC:
-              if (DateUtil.isCellDateFormatted(row.getCell(2))) {
-
-                name =  date.format(row.getCell(2).getDateCellValue());
-              } else {
                 name =  String.valueOf(((Double)row.getCell(2).getNumericCellValue()).intValue());
-              }
               break;
           }
         }
@@ -192,12 +175,7 @@ public class AccountsDatamigration {
               break;
 
             case Cell.CELL_TYPE_NUMERIC:
-              if (DateUtil.isCellDateFormatted(row.getCell(3))) {
-
-                holders =   date.format(row.getCell(3).getDateCellValue());
-              } else {
                 holders =   String.valueOf(((Double)row.getCell(3).getNumericCellValue()).intValue());
-              }
               break;
           }
         }
@@ -212,12 +190,7 @@ public class AccountsDatamigration {
               break;
 
             case Cell.CELL_TYPE_NUMERIC:
-              if (DateUtil.isCellDateFormatted(row.getCell(4))) {
-
-                signatureAuthorities =   date.format(row.getCell(4).getDateCellValue());
-              } else {
                 signatureAuthorities =   String.valueOf(((Double)row.getCell(4).getNumericCellValue()).intValue());
-              }
               break;
           }
         }
@@ -232,12 +205,7 @@ public class AccountsDatamigration {
               break;
 
             case Cell.CELL_TYPE_NUMERIC:
-              if (DateUtil.isCellDateFormatted(row.getCell(5))) {
-
-                balance =   date.format(row.getCell(5).getDateCellValue());
-              } else {
                 balance =  String.valueOf(((Double)row.getCell(5).getNumericCellValue()).intValue());
-              }
               break;
           }
         }
@@ -252,15 +220,11 @@ public class AccountsDatamigration {
               break;
 
             case Cell.CELL_TYPE_NUMERIC:
-              if (DateUtil.isCellDateFormatted(row.getCell(6))) {
-
-                ledger =  date.format(row.getCell(6).getDateCellValue());
-              } else {
                 ledger =   String.valueOf(((Double)row.getCell(6).getNumericCellValue()).intValue());
-              }
               break;
           }
         }
+
         Set<String> holder = new HashSet<>();
         holder.add(holders);
 
@@ -276,7 +240,6 @@ public class AccountsDatamigration {
         account.setBalance(Double.valueOf(balance));
         account.setLedger(String.valueOf(ledger));
 
-        this.userManagement.authenticate();
         this.ledgerManager.createAccount(account);
       }
     } catch (IOException e) {

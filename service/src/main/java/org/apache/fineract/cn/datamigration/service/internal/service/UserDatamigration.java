@@ -109,12 +109,7 @@ public class UserDatamigration {
               break;
 
             case Cell.CELL_TYPE_NUMERIC:
-              if (DateUtil.isCellDateFormatted(row.getCell(0))) {
-
-                identifier =  date.format(row.getCell(0).getDateCellValue());
-              } else {
-                identifier =  String.valueOf(row.getCell(0).getNumericCellValue());
-              }
+              identifier =  String.valueOf(row.getCell(0).getNumericCellValue());
               break;
           }
         }
@@ -129,12 +124,7 @@ public class UserDatamigration {
               break;
 
             case Cell.CELL_TYPE_NUMERIC:
-              if (DateUtil.isCellDateFormatted(row.getCell(1))) {
-
-                role =   date.format(row.getCell(1).getDateCellValue());
-              } else {
                 role =   String.valueOf(((Double)row.getCell(1).getNumericCellValue()).intValue());
-              }
               break;
           }
         }
@@ -149,22 +139,17 @@ public class UserDatamigration {
               break;
 
             case Cell.CELL_TYPE_NUMERIC:
-              if (DateUtil.isCellDateFormatted(row.getCell(2))) {
-
-                password =  date.format(row.getCell(2).getDateCellValue());
-              } else {
                 password =  String.valueOf(((Double)row.getCell(2).getNumericCellValue()).intValue());
-              }
               break;
           }
         }
 
         UserWithPassword userWithPassword = new UserWithPassword();
-       userWithPassword.setIdentifier(String.valueOf(identifier));
-       userWithPassword.setRole(String.valueOf(role));
-       userWithPassword.setPassword(String.valueOf(password));
-        this.userManagement.authenticate();
-       this.identityManager.createUser(userWithPassword);
+        userWithPassword.setIdentifier(String.valueOf(identifier));
+        userWithPassword.setRole(String.valueOf(role));
+        userWithPassword.setPassword(String.valueOf(password));
+
+        this.identityManager.createUser(userWithPassword);
       }
     } catch (IOException e) {
       e.printStackTrace();

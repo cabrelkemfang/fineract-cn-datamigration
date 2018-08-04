@@ -18,6 +18,7 @@ import java.io.IOException;
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.stream.IntStream;
+
 @Service
 public class TellerDatamigration {
   private final Logger logger;
@@ -126,7 +127,7 @@ public class TellerDatamigration {
       String officeIdentifier = null;
       String code = null;
       String password = null;
-      String cashdrawLimit = null;
+      Double cashdrawLimit = null;
       String tellerAccountIdentifier = null;
       String vaultAccountIdentifier = null;
       String chequesReceivableAccount = null;
@@ -134,8 +135,6 @@ public class TellerDatamigration {
       Boolean denominationRequired = false;
       String assignedEmployee = null;
       String state = null;
-
-      SimpleDateFormat date=new SimpleDateFormat("yyyy-MM-dd");
 
       for (int rowIndex = 1; rowIndex < rowCount; rowIndex++) {
         row = firstSheet.getRow(rowIndex);
@@ -149,12 +148,7 @@ public class TellerDatamigration {
               break;
 
             case Cell.CELL_TYPE_NUMERIC:
-              if (DateUtil.isCellDateFormatted(row.getCell(0))) {
-
-                officeIdentifier =  date.format(row.getCell(0).getDateCellValue());
-              } else {
                 officeIdentifier =  String.valueOf(row.getCell(0).getNumericCellValue());
-              }
               break;
           }
         }
@@ -169,12 +163,7 @@ public class TellerDatamigration {
               break;
 
             case Cell.CELL_TYPE_NUMERIC:
-              if (DateUtil.isCellDateFormatted(row.getCell(1))) {
-
-                code =   date.format(row.getCell(1).getDateCellValue());
-              } else {
                 code =   String.valueOf(((Double)row.getCell(1).getNumericCellValue()).intValue());
-              }
               break;
           }
         }
@@ -189,12 +178,7 @@ public class TellerDatamigration {
               break;
 
             case Cell.CELL_TYPE_NUMERIC:
-              if (DateUtil.isCellDateFormatted(row.getCell(2))) {
-
-                password =  date.format(row.getCell(2).getDateCellValue());
-              } else {
                 password =  String.valueOf(((Double)row.getCell(2).getNumericCellValue()).intValue());
-              }
               break;
           }
         }
@@ -204,17 +188,8 @@ public class TellerDatamigration {
         } else {
           switch (row.getCell(3) .getCellType()) {
 
-            case Cell.CELL_TYPE_STRING:
-              cashdrawLimit = row.getCell(3).getStringCellValue();
-              break;
-
             case Cell.CELL_TYPE_NUMERIC:
-              if (DateUtil.isCellDateFormatted(row.getCell(3))) {
-
-                cashdrawLimit =   date.format(row.getCell(3).getDateCellValue());
-              } else {
-                cashdrawLimit =   String.valueOf(((Double)row.getCell(3).getNumericCellValue()).intValue());
-              }
+                cashdrawLimit =  ((Double)row.getCell(3).getNumericCellValue());
               break;
           }
         }
@@ -229,12 +204,7 @@ public class TellerDatamigration {
               break;
 
             case Cell.CELL_TYPE_NUMERIC:
-              if (DateUtil.isCellDateFormatted(row.getCell(4))) {
-
-                tellerAccountIdentifier =   date.format(row.getCell(4).getDateCellValue());
-              } else {
                 tellerAccountIdentifier =   String.valueOf(((Double)row.getCell(4).getNumericCellValue()).intValue());
-              }
               break;
           }
         }
@@ -249,12 +219,7 @@ public class TellerDatamigration {
               break;
 
             case Cell.CELL_TYPE_NUMERIC:
-              if (DateUtil.isCellDateFormatted(row.getCell(5))) {
-
-                vaultAccountIdentifier =   date.format(row.getCell(5).getDateCellValue());
-              } else {
                 vaultAccountIdentifier =  String.valueOf(((Double)row.getCell(5).getNumericCellValue()).intValue());
-              }
               break;
           }
         }
@@ -269,12 +234,7 @@ public class TellerDatamigration {
               break;
 
             case Cell.CELL_TYPE_NUMERIC:
-              if (DateUtil.isCellDateFormatted(row.getCell(6))) {
-
-                chequesReceivableAccount =  date.format(row.getCell(6).getDateCellValue());
-              } else {
                 chequesReceivableAccount =   String.valueOf(((Double)row.getCell(6).getNumericCellValue()).intValue());
-              }
               break;
           }
         }
@@ -289,12 +249,7 @@ public class TellerDatamigration {
               break;
 
             case Cell.CELL_TYPE_NUMERIC:
-              if (DateUtil.isCellDateFormatted(row.getCell(7))) {
-
-                cashOverShortAccount =  date.format(row.getCell(7).getDateCellValue());
-              } else {
                 cashOverShortAccount =  String.valueOf(((Double)row.getCell(7).getNumericCellValue()).intValue());
-              }
               break;
           }
         }
@@ -325,12 +280,7 @@ public class TellerDatamigration {
               break;
 
             case Cell.CELL_TYPE_NUMERIC:
-              if (DateUtil.isCellDateFormatted(row.getCell(9))) {
-
-                assignedEmployee =  date.format(row.getCell(9).getDateCellValue());
-              } else {
                 assignedEmployee =  String.valueOf(((Double)row.getCell(9).getNumericCellValue()).intValue());
-              }
               break;
           }
         }
@@ -344,12 +294,7 @@ public class TellerDatamigration {
               break;
 
             case Cell.CELL_TYPE_NUMERIC:
-              if (DateUtil.isCellDateFormatted(row.getCell(10))) {
-
-                state =  date.format(row.getCell(10).getDateCellValue());
-              } else {
                 state =  String.valueOf(((Double)row.getCell(10).getNumericCellValue()).intValue());
-              }
               break;
           }
         }
@@ -357,18 +302,16 @@ public class TellerDatamigration {
           Teller teller= new Teller();
           teller.setCode(String.valueOf(code));
           teller.setPassword(String.valueOf(password));
-          BigDecimal cashdraw = new BigDecimal(cashdrawLimit);
-          teller.setCashdrawLimit(cashdraw);
+          teller.setCashdrawLimit(BigDecimal.valueOf(cashdrawLimit));
           teller.setTellerAccountIdentifier(String.valueOf(tellerAccountIdentifier));
           teller.setVaultAccountIdentifier(String.valueOf(vaultAccountIdentifier));
-          teller.setChequesReceivableAccount(chequesReceivableAccount);
-          teller.setCashOverShortAccount(cashOverShortAccount);
+          teller.setChequesReceivableAccount(String.valueOf(chequesReceivableAccount));
+          teller.setCashOverShortAccount(String.valueOf(cashOverShortAccount));
           teller.setDenominationRequired(denominationRequired);
-          teller.setAssignedEmployee(assignedEmployee);
-          teller.setState(state);
+          teller.setAssignedEmployee(String.valueOf(assignedEmployee));
+          teller.setState(String.valueOf(state));
 
-          this.userManagement.authenticate();
-          this.tellerManager.create(officeIdentifier,teller);
+          this.tellerManager.create(String.valueOf(officeIdentifier),teller);
         }
     } catch (IOException e) {
       e.printStackTrace();

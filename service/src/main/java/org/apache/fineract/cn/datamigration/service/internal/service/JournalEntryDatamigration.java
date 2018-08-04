@@ -6,8 +6,6 @@ import org.apache.fineract.cn.accounting.api.v1.domain.Debtor;
 import org.apache.fineract.cn.accounting.api.v1.domain.JournalEntry;
 import org.apache.fineract.cn.datamigration.service.ServiceConstants;
 import org.apache.fineract.cn.datamigration.service.connector.UserManagement;
-import org.apache.fineract.cn.office.api.v1.domain.Address;
-import org.apache.fineract.cn.office.api.v1.domain.Office;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.*;
 import org.slf4j.Logger;
@@ -16,13 +14,10 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartException;
 import org.springframework.web.multipart.MultipartFile;
-
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 import java.util.stream.IntStream;
 
@@ -129,7 +124,6 @@ public class JournalEntryDatamigration {
       Sheet firstSheet = workbook.getSheetAt(0);
       int rowCount = firstSheet.getLastRowNum() + 1;
       Row row;
-
       String transactionIdentifier =null ;
       String transactionDate  =null ;
       String transactionType  =null;
@@ -154,12 +148,7 @@ public class JournalEntryDatamigration {
               break;
 
             case Cell.CELL_TYPE_NUMERIC:
-              if (DateUtil.isCellDateFormatted(row.getCell(0))) {
-
-                transactionIdentifier = String.valueOf( row.getCell(0).getStringCellValue());
-              } else {
                 transactionIdentifier =  String.valueOf(row.getCell(0).getNumericCellValue());
-              }
               break;
           }
         }
@@ -174,12 +163,7 @@ public class JournalEntryDatamigration {
               break;
 
             case Cell.CELL_TYPE_NUMERIC:
-              if (DateUtil.isCellDateFormatted(row.getCell(1))) {
-
-                transactionDate =  String.valueOf(row.getCell(1).getStringCellValue());
-              } else {
                 transactionDate =   String.valueOf(((Double)row.getCell(1).getNumericCellValue()).intValue());
-              }
               break;
           }
         }
@@ -194,12 +178,7 @@ public class JournalEntryDatamigration {
               break;
 
             case Cell.CELL_TYPE_NUMERIC:
-              if (DateUtil.isCellDateFormatted(row.getCell(2))) {
-
-                transactionType =  String.valueOf(row.getCell(2).getStringCellValue());
-              } else {
                 transactionType =  String.valueOf(((Double)row.getCell(2).getNumericCellValue()).intValue());
-              }
               break;
           }
         }
@@ -214,12 +193,7 @@ public class JournalEntryDatamigration {
               break;
 
             case Cell.CELL_TYPE_NUMERIC:
-              if (DateUtil.isCellDateFormatted(row.getCell(3))) {
-
-                clerk =  String.valueOf(row.getCell(3).getStringCellValue());
-              } else {
-                clerk =   String.valueOf(((Double)row.getCell(3).getNumericCellValue()).intValue());
-              }
+              clerk = String.valueOf(((Double)row.getCell(3).getNumericCellValue()).intValue());
               break;
           }
         }
@@ -234,12 +208,7 @@ public class JournalEntryDatamigration {
               break;
 
             case Cell.CELL_TYPE_NUMERIC:
-              if (DateUtil.isCellDateFormatted(row.getCell(4))) {
-
-                note =  String.valueOf(row.getCell(4).getStringCellValue());
-              } else {
-                note =   String.valueOf(((Double)row.getCell(4).getNumericCellValue()).intValue());
-              }
+                note =  String.valueOf(((Double)row.getCell(4).getNumericCellValue()).intValue());
               break;
           }
         }
@@ -254,12 +223,7 @@ public class JournalEntryDatamigration {
               break;
 
             case Cell.CELL_TYPE_NUMERIC:
-              if (DateUtil.isCellDateFormatted(row.getCell(5))) {
-
-                accountNumberDebtor =  String.valueOf(row.getCell(5).getStringCellValue());
-              } else {
-                accountNumberDebtor =  String.valueOf(((Double)row.getCell(5).getNumericCellValue()).intValue());
-              }
+              accountNumberDebtor =  String.valueOf(((Double)row.getCell(5).getNumericCellValue()).intValue());
               break;
           }
         }
@@ -274,12 +238,7 @@ public class JournalEntryDatamigration {
               break;
 
             case Cell.CELL_TYPE_NUMERIC:
-              if (DateUtil.isCellDateFormatted(row.getCell(6))) {
-
-                amountDebtor = String.valueOf( row.getCell(6).getStringCellValue());
-              } else {
-                amountDebtor =   String.valueOf(((Double)row.getCell(6).getNumericCellValue()).intValue());
-              }
+              amountDebtor = String.valueOf(((Double)row.getCell(6).getNumericCellValue()).intValue());
               break;
           }
         }
@@ -294,12 +253,7 @@ public class JournalEntryDatamigration {
               break;
 
             case Cell.CELL_TYPE_NUMERIC:
-              if (DateUtil.isCellDateFormatted(row.getCell(7))) {
-
-                accountNumberCreditor =  String.valueOf(row.getCell(7).getStringCellValue());
-              } else {
                 accountNumberCreditor =  String.valueOf(((Double)row.getCell(7).getNumericCellValue()).intValue());
-              }
               break;
           }
         }
@@ -314,12 +268,7 @@ public class JournalEntryDatamigration {
               break;
 
             case Cell.CELL_TYPE_NUMERIC:
-              if (DateUtil.isCellDateFormatted(row.getCell(8))) {
-
-                amountCreditor =  String.valueOf(row.getCell(8).getStringCellValue());
-              } else {
                 amountCreditor =  String.valueOf(((Double)row.getCell(8).getNumericCellValue()).intValue());
-              }
               break;
           }
         }
@@ -334,12 +283,7 @@ public class JournalEntryDatamigration {
               break;
 
             case Cell.CELL_TYPE_NUMERIC:
-              if (DateUtil.isCellDateFormatted(row.getCell(9))) {
-
-                state = String.valueOf( row.getCell(9).getStringCellValue());
-              } else {
                 state =  String.valueOf(((Double)row.getCell(9).getNumericCellValue()).intValue());
-              }
               break;
           }
         }
@@ -354,12 +298,7 @@ public class JournalEntryDatamigration {
               break;
 
             case Cell.CELL_TYPE_NUMERIC:
-              if (DateUtil.isCellDateFormatted(row.getCell(10))) {
-
-                message = String.valueOf( row.getCell(10).getStringCellValue());
-              } else {
                 message =  String.valueOf(((Double)row.getCell(10).getNumericCellValue()).intValue());
-              }
               break;
           }
         }
@@ -387,7 +326,7 @@ public class JournalEntryDatamigration {
         journalEntry.setMessage(String.valueOf(message));
         journalEntry.setState(String.valueOf(state));
 
-        this.userManagement.authenticate();
+
         this.ledgerManager.createJournalEntry(journalEntry);
       }
 

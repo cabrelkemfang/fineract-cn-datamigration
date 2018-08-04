@@ -5,7 +5,6 @@ import org.apache.fineract.cn.datamigration.service.connector.UserManagement;
 import org.apache.fineract.cn.office.api.v1.client.OrganizationManager;
 import org.apache.fineract.cn.office.api.v1.domain.ContactDetail;
 import org.apache.fineract.cn.office.api.v1.domain.Employee;
-import org.apache.fineract.cn.office.api.v1.domain.Office;
 import org.apache.fineract.cn.office.api.v1.domain.OfficePage;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.*;
@@ -42,7 +41,7 @@ public class EmployeeDatamigration {
   public void employeeSheetDownload(HttpServletResponse response){
     //get all office Identifier
 
-   OfficePage officeList  = this.organizationManager.fetchOffices(null, 0, 20, null,null);
+   OfficePage officeList  = this.organizationManager.fetchOffices(null, null, null, null,null);
     int sizeOfOfficeList=officeList.getOffices().size();
     String[] officeIdentifier = new String[sizeOfOfficeList];
     for (int i=0;i<=sizeOfOfficeList;i++){
@@ -126,7 +125,6 @@ public class EmployeeDatamigration {
       throw new MultipartException("Only excel files accepted!");
     }
     try {
-
       XSSFWorkbook workbook = new XSSFWorkbook(file.getInputStream());
       Sheet firstSheet = workbook.getSheetAt(0);
       int rowCount = firstSheet.getLastRowNum() + 1;
@@ -151,11 +149,7 @@ public class EmployeeDatamigration {
               identifier = row.getCell(0).getStringCellValue();
               break;
             case Cell.CELL_TYPE_NUMERIC:
-              if (DateUtil.isCellDateFormatted(row.getCell(0))) {
-                identifier = String.valueOf( row.getCell(0).getStringCellValue());
-              } else {
                 identifier =  String.valueOf(row.getCell(0).getNumericCellValue());
-              }
               break;
           }
         }
@@ -168,11 +162,7 @@ public class EmployeeDatamigration {
               givenName = row.getCell(1).getStringCellValue();
               break;
             case Cell.CELL_TYPE_NUMERIC:
-              if (DateUtil.isCellDateFormatted(row.getCell(1))) {
-                givenName =  String.valueOf(row.getCell(1).getStringCellValue());
-              } else {
                 givenName =  String.valueOf(((Double)row.getCell(1).getNumericCellValue()).intValue());
-              }
               break;
           }
         }
@@ -185,11 +175,7 @@ public class EmployeeDatamigration {
               middleName = row.getCell(2).getStringCellValue();
               break;
             case Cell.CELL_TYPE_NUMERIC:
-              if (DateUtil.isCellDateFormatted(row.getCell(2))) {
-                middleName =  String.valueOf(row.getCell(2).getStringCellValue());
-              } else {
                 middleName =   String.valueOf(((Double)row.getCell(2).getNumericCellValue()).intValue());
-              }
               break;
           }
         }
@@ -202,11 +188,7 @@ public class EmployeeDatamigration {
               surname = row.getCell(3).getStringCellValue();
               break;
             case Cell.CELL_TYPE_NUMERIC:
-              if (DateUtil.isCellDateFormatted(row.getCell(3))) {
-                surname =  String.valueOf(row.getCell(3).getStringCellValue());
-              } else {
                 surname =   String.valueOf(((Double)row.getCell(3).getNumericCellValue()).intValue());
-              }
               break;
           }
         }
@@ -219,11 +201,7 @@ public class EmployeeDatamigration {
               assignedOffice = row.getCell(4).getStringCellValue();
               break;
             case Cell.CELL_TYPE_NUMERIC:
-              if (DateUtil.isCellDateFormatted(row.getCell(4))) {
-                assignedOffice =  String.valueOf(row.getCell(4).getStringCellValue());
-              } else {
                 assignedOffice =  String.valueOf(((Double)row.getCell(4).getNumericCellValue()).intValue());
-              }
               break;
           }
         }
@@ -236,11 +214,7 @@ public class EmployeeDatamigration {
               type = row.getCell(5).getStringCellValue();
               break;
             case Cell.CELL_TYPE_NUMERIC:
-              if (DateUtil.isCellDateFormatted(row.getCell(5))) {
-                type = String.valueOf( row.getCell(5).getStringCellValue());
-              } else {
                 type =   String.valueOf(((Double)row.getCell(5).getNumericCellValue()).intValue());
-              }
               break;
           }
         }
@@ -270,11 +244,7 @@ public class EmployeeDatamigration {
               value = String.valueOf(row.getCell(7).getStringCellValue());
               break;
             case Cell.CELL_TYPE_NUMERIC:
-              if (DateUtil.isCellDateFormatted(row.getCell(7))) {
-                value =  String.valueOf(row.getCell(7).getStringCellValue());
-              } else {
                 value =  String.valueOf(((Double)row.getCell(7).getNumericCellValue()).intValue());
-              }
               break;
           }
         }
@@ -287,19 +257,16 @@ public class EmployeeDatamigration {
               preferenceLevel = row.getCell(8).getStringCellValue();
               break;
             case Cell.CELL_TYPE_NUMERIC:
-              if (DateUtil.isCellDateFormatted(row.getCell(8))) {
-                preferenceLevel = String.valueOf( row.getCell(8).getStringCellValue());
-              } else {
                 preferenceLevel =  String.valueOf(((Double)row.getCell(8).getNumericCellValue()).intValue());
-              }
               break;
           }
         }
-        ContactDetail contactDetail = new ContactDetail();
+          ContactDetail contactDetail = new ContactDetail();
           contactDetail.setType(String.valueOf(type));
           contactDetail.setGroup(String.valueOf(group));
           contactDetail.setValue(String.valueOf(value));
           contactDetail.setPreferenceLevel(Integer.valueOf(preferenceLevel));
+
           List<ContactDetail> contactDetails = new ArrayList<>();
           contactDetails.add(contactDetail);
 
@@ -310,7 +277,7 @@ public class EmployeeDatamigration {
           employee.setSurname(String.valueOf(surname));
           employee.setAssignedOffice(assignedOffice);
           employee.setContactDetails(contactDetails);
-          this.userManagement.authenticate();
+
           this.organizationManager.createEmployee(employee);
         }
 

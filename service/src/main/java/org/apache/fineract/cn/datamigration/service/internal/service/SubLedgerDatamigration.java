@@ -12,7 +12,6 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartException;
 import org.springframework.web.multipart.MultipartFile;
-
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -111,7 +110,6 @@ public class SubLedgerDatamigration {
       String description = null;
       Boolean showAccountsInChart = false;
 
-      SimpleDateFormat date=new SimpleDateFormat("yyyy-MM-dd");
 
       for (int rowIndex = 1; rowIndex < rowCount; rowIndex++) {
         row = firstSheet.getRow(rowIndex);
@@ -126,16 +124,10 @@ public class SubLedgerDatamigration {
               break;
 
             case Cell.CELL_TYPE_NUMERIC:
-              if (DateUtil.isCellDateFormatted(row.getCell(0))) {
-
-                ParentledgerIdentifier =  date.format(row.getCell(0).getDateCellValue());
-              } else {
                 ParentledgerIdentifier =  String.valueOf(row.getCell(0).getNumericCellValue());
-              }
               break;
           }
         }
-
 
         if (row.getCell(1) == null) {
           type = null;
@@ -147,12 +139,7 @@ public class SubLedgerDatamigration {
               break;
 
             case Cell.CELL_TYPE_NUMERIC:
-              if (DateUtil.isCellDateFormatted(row.getCell(1))) {
-
-                type =  date.format(row.getCell(1).getDateCellValue());
-              } else {
                 type =  String.valueOf(row.getCell(1).getNumericCellValue());
-              }
               break;
           }
         }
@@ -166,12 +153,7 @@ public class SubLedgerDatamigration {
               break;
 
             case Cell.CELL_TYPE_NUMERIC:
-              if (DateUtil.isCellDateFormatted(row.getCell(2))) {
-
-                identifier =   date.format(row.getCell(2).getDateCellValue());
-              } else {
                 identifier =   String.valueOf(((Double)row.getCell(2).getNumericCellValue()).intValue());
-              }
               break;
           }
         }
@@ -186,12 +168,7 @@ public class SubLedgerDatamigration {
               break;
 
             case Cell.CELL_TYPE_NUMERIC:
-              if (DateUtil.isCellDateFormatted(row.getCell(3))) {
-
-                name =  date.format(row.getCell(3).getDateCellValue());
-              } else {
                 name =  String.valueOf(((Double)row.getCell(3).getNumericCellValue()).intValue());
-              }
               break;
           }
         }
@@ -206,12 +183,7 @@ public class SubLedgerDatamigration {
               break;
 
             case Cell.CELL_TYPE_NUMERIC:
-              if (DateUtil.isCellDateFormatted(row.getCell(4))) {
-
-                description =   date.format(row.getCell(4).getDateCellValue());
-              } else {
                 description =   String.valueOf(((Double)row.getCell(4).getNumericCellValue()).intValue());
-              }
               break;
           }
         }
@@ -233,7 +205,6 @@ public class SubLedgerDatamigration {
         }
 
         Ledger ledger = new Ledger();
-
         ledger.setType(String.valueOf(type));
         ledger.setIdentifier(String.valueOf(identifier));
         ledger.setName(String.valueOf(name));
@@ -241,7 +212,6 @@ public class SubLedgerDatamigration {
         ledger.setShowAccountsInChart(showAccountsInChart);
         String parent= String.valueOf(ParentledgerIdentifier);
 
-        this.userManagement.authenticate();
         this.ledgerManager.addSubLedger(parent,ledger);
       }
     } catch (IOException e) {

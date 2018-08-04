@@ -37,7 +37,7 @@ public class OfficeBranchDatamigration {
   }
   public void branchSheetDownload(HttpServletResponse response){
     XSSFWorkbook workbook = new XSSFWorkbook();
-    XSSFSheet worksheet = workbook.createSheet("Branch");
+    XSSFSheet worksheet = workbook.createSheet("Branch_Office");
 
     int startRowIndex = 0;
     int startColIndex = 0;
@@ -142,12 +142,7 @@ public class OfficeBranchDatamigration {
               break;
 
             case Cell.CELL_TYPE_NUMERIC:
-              if (DateUtil.isCellDateFormatted(row.getCell(0))) {
-
-                identifier = String.valueOf( row.getCell(0).getStringCellValue());
-              } else {
                 identifier =  String.valueOf(row.getCell(0).getNumericCellValue());
-              }
               break;
           }
         }
@@ -162,12 +157,7 @@ public class OfficeBranchDatamigration {
               break;
 
             case Cell.CELL_TYPE_NUMERIC:
-              if (DateUtil.isCellDateFormatted(row.getCell(1))) {
-
-                parentIdentifier =  String.valueOf(row.getCell(1).getStringCellValue());
-              } else {
                 parentIdentifier =   String.valueOf(((Double)row.getCell(1).getNumericCellValue()).intValue());
-              }
               break;
           }
         }
@@ -182,12 +172,7 @@ public class OfficeBranchDatamigration {
               break;
 
             case Cell.CELL_TYPE_NUMERIC:
-              if (DateUtil.isCellDateFormatted(row.getCell(2))) {
-
-                name =  String.valueOf(row.getCell(2).getStringCellValue());
-              } else {
                 name =  String.valueOf(((Double)row.getCell(2).getNumericCellValue()).intValue());
-              }
               break;
           }
         }
@@ -202,12 +187,7 @@ public class OfficeBranchDatamigration {
               break;
 
             case Cell.CELL_TYPE_NUMERIC:
-              if (DateUtil.isCellDateFormatted(row.getCell(3))) {
-
-                description =  String.valueOf(row.getCell(3).getStringCellValue());
-              } else {
                 description =   String.valueOf(((Double)row.getCell(3).getNumericCellValue()).intValue());
-              }
               break;
           }
         }
@@ -222,12 +202,7 @@ public class OfficeBranchDatamigration {
               break;
 
             case Cell.CELL_TYPE_NUMERIC:
-              if (DateUtil.isCellDateFormatted(row.getCell(4))) {
-
-                street =  String.valueOf(row.getCell(4).getStringCellValue());
-              } else {
                 street =   String.valueOf(((Double)row.getCell(4).getNumericCellValue()).intValue());
-              }
               break;
           }
         }
@@ -242,12 +217,7 @@ public class OfficeBranchDatamigration {
               break;
 
             case Cell.CELL_TYPE_NUMERIC:
-              if (DateUtil.isCellDateFormatted(row.getCell(5))) {
-
-                city =  String.valueOf(row.getCell(5).getStringCellValue());
-              } else {
                 city =  String.valueOf(((Double)row.getCell(5).getNumericCellValue()).intValue());
-              }
               break;
           }
         }
@@ -262,12 +232,7 @@ public class OfficeBranchDatamigration {
               break;
 
             case Cell.CELL_TYPE_NUMERIC:
-              if (DateUtil.isCellDateFormatted(row.getCell(6))) {
-
-                region = String.valueOf( row.getCell(6).getStringCellValue());
-              } else {
                 region =   String.valueOf(((Double)row.getCell(6).getNumericCellValue()).intValue());
-              }
               break;
           }
         }
@@ -282,12 +247,7 @@ public class OfficeBranchDatamigration {
               break;
 
             case Cell.CELL_TYPE_NUMERIC:
-              if (DateUtil.isCellDateFormatted(row.getCell(7))) {
-
-                postalCode =  String.valueOf(row.getCell(7).getStringCellValue());
-              } else {
                 postalCode =  String.valueOf(((Double)row.getCell(7).getNumericCellValue()).intValue());
-              }
               break;
           }
         }
@@ -302,12 +262,7 @@ public class OfficeBranchDatamigration {
               break;
 
             case Cell.CELL_TYPE_NUMERIC:
-              if (DateUtil.isCellDateFormatted(row.getCell(8))) {
-
-                countryCode =  String.valueOf(row.getCell(8).getStringCellValue());
-              } else {
                 countryCode =  String.valueOf(((Double)row.getCell(8).getNumericCellValue()).intValue());
-              }
               break;
           }
         }
@@ -322,12 +277,7 @@ public class OfficeBranchDatamigration {
               break;
 
             case Cell.CELL_TYPE_NUMERIC:
-              if (DateUtil.isCellDateFormatted(row.getCell(9))) {
-
-                country = String.valueOf( row.getCell(9).getStringCellValue());
-              } else {
                 country =  String.valueOf(((Double)row.getCell(9).getNumericCellValue()).intValue());
-              }
               break;
           }
         }
@@ -346,7 +296,6 @@ public class OfficeBranchDatamigration {
         office.setAddress(address);
         office.setExternalReferences(externalReferences);
 
-        this.userManagement.authenticate();
         this.organizationManager.addBranch(parentIdentifier,office);
       }
 

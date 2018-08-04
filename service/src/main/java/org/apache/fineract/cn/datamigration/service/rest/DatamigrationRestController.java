@@ -50,6 +50,8 @@ public class DatamigrationRestController {
   private final AccountsDatamigration accountsDatamigration ;
   private final UserDatamigration userDatamigration  ;
   private final JournalEntryDatamigration journalEntryDatamigration  ;
+  private final ProductDatamigration productDatamigration  ;
+
 
   @Autowired
   public DatamigrationRestController( final CommandGateway commandGateway,
@@ -63,7 +65,8 @@ public class DatamigrationRestController {
                                       final SubLedgerDatamigration  subLedgerDatamigration,
                                       final AccountsDatamigration  accountsDatamigration,
                                       final UserDatamigration  userDatamigration,
-                                      final JournalEntryDatamigration  journalEntryDatamigration
+                                      final JournalEntryDatamigration  journalEntryDatamigration,
+                                      final ProductDatamigration  productDatamigration
                                       ) {
     super();
     this.commandGateway = commandGateway;
@@ -78,6 +81,7 @@ public class DatamigrationRestController {
     this.accountsDatamigration = accountsDatamigration;
     this.userDatamigration = userDatamigration;
     this.journalEntryDatamigration = journalEntryDatamigration;
+    this.productDatamigration = productDatamigration;
   }
 
   @Permittable(value = AcceptedTokenType.SYSTEM)
@@ -115,7 +119,7 @@ public class DatamigrationRestController {
 
   }
 
-  //Office Datamigration
+  //Office Migration
   @Permittable(value = AcceptedTokenType.TENANT, groupId = PermittableGroupIds.DATAMIGRATION_MANAGEMENT)
   @RequestMapping(
           value = "/offices/download",
@@ -137,7 +141,7 @@ public class DatamigrationRestController {
     return new ResponseEntity<>("Upload successuly", HttpStatus.OK);
   }
 
-  //Branch Datamigration
+  //Branch Migration
   @Permittable(value = AcceptedTokenType.TENANT, groupId = PermittableGroupIds.DATAMIGRATION_MANAGEMENT)
   @RequestMapping(
           value = "/offices/branch/download",
@@ -159,7 +163,7 @@ public class DatamigrationRestController {
     return new ResponseEntity<>("Upload successuly", HttpStatus.OK);
   }
 
-  //Employee Datamigration
+  //Employee Migration
   @Permittable(value = AcceptedTokenType.TENANT, groupId = PermittableGroupIds.DATAMIGRATION_MANAGEMENT)
   @RequestMapping(
           value = "/employees/download",
@@ -181,7 +185,7 @@ public class DatamigrationRestController {
     return new ResponseEntity<>("Upload successuly", HttpStatus.OK);
   }
 
-  //Teller Datamigration
+  //Teller Migration
   @Permittable(value = AcceptedTokenType.TENANT, groupId = PermittableGroupIds.DATAMIGRATION_MANAGEMENT)
   @RequestMapping(
           value = "/tellers/download",
@@ -203,7 +207,7 @@ public class DatamigrationRestController {
     return new ResponseEntity<>("Upload successuly", HttpStatus.OK);
   }
 
-  //Group Datamigration
+  //Group Migration
   @Permittable(value = AcceptedTokenType.TENANT, groupId = PermittableGroupIds.DATAMIGRATION_MANAGEMENT)
   @RequestMapping(
           value = "/group/download",
@@ -225,7 +229,7 @@ public class DatamigrationRestController {
     return new ResponseEntity<>("Upload successuly", HttpStatus.OK);
   }
 
-  //Ledgers Datamigration
+  //Ledgers Migration
   @Permittable(value = AcceptedTokenType.TENANT, groupId = PermittableGroupIds.DATAMIGRATION_MANAGEMENT)
   @RequestMapping(
           value = "/ledgers/download",
@@ -247,7 +251,7 @@ public class DatamigrationRestController {
     return new ResponseEntity<>("Upload successuly", HttpStatus.OK);
   }
 
-  //SubLedgers Datamigration
+  //SubLedgers Migration
   @Permittable(value = AcceptedTokenType.TENANT, groupId = PermittableGroupIds.DATAMIGRATION_MANAGEMENT)
   @RequestMapping(
           value = "/subLedgers/download",
@@ -269,7 +273,7 @@ public class DatamigrationRestController {
     return new ResponseEntity<>("Upload successuly", HttpStatus.OK);
   }
 
-  //Account Datamigration
+  //Account Migration
   @Permittable(value = AcceptedTokenType.TENANT, groupId = PermittableGroupIds.DATAMIGRATION_MANAGEMENT)
   @RequestMapping(
           value = "/accounts/download",
@@ -291,7 +295,7 @@ public class DatamigrationRestController {
     return new ResponseEntity<>("Upload successuly", HttpStatus.OK);
   }
 
-  //User Datamigration
+  //User Migration
   @Permittable(value = AcceptedTokenType.TENANT, groupId = PermittableGroupIds.DATAMIGRATION_MANAGEMENT)
   @RequestMapping(
           value = "/users/download",
@@ -314,7 +318,7 @@ public class DatamigrationRestController {
   }
 
 
-  //JornalEnrty Datamigration
+  //JornalEnrty Migration
   @Permittable(value = AcceptedTokenType.TENANT, groupId = PermittableGroupIds.DATAMIGRATION_MANAGEMENT)
   @RequestMapping(
           value = "/journal/download",
@@ -336,5 +340,26 @@ public class DatamigrationRestController {
     return new ResponseEntity<>("Upload successuly", HttpStatus.OK);
   }
 
+  //product Migration
+  @Permittable(value = AcceptedTokenType.TENANT, groupId = PermittableGroupIds.DATAMIGRATION_MANAGEMENT)
+  @RequestMapping(
+          value = "/products/download",
+          method = RequestMethod.GET,
+          consumes = MediaType.ALL_VALUE
+  )
+  public void productSheetDownload(HttpServletResponse response) throws ClassNotFoundException {
+    productDatamigration.productSheetDownload(response);
+  }
+
+  @Permittable(value = AcceptedTokenType.TENANT, groupId = PermittableGroupIds.DATAMIGRATION_MANAGEMENT)
+  @RequestMapping(
+          value = "/products",
+          method = RequestMethod.POST,
+          consumes = MediaType.MULTIPART_FORM_DATA_VALUE
+  )
+  public ResponseEntity<String> productSheetUpload(@RequestParam("file") MultipartFile file) throws IOException {
+    productDatamigration.productSheetUpload(file);
+    return new ResponseEntity<>("Upload successuly", HttpStatus.OK);
+  }
 
 }

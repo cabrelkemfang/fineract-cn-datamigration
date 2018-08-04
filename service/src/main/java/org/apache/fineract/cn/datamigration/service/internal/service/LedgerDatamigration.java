@@ -12,7 +12,6 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartException;
 import org.springframework.web.multipart.MultipartFile;
-
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -121,12 +120,7 @@ public class LedgerDatamigration {
               break;
 
             case Cell.CELL_TYPE_NUMERIC:
-              if (DateUtil.isCellDateFormatted(row.getCell(0))) {
-
-                type =  date.format(row.getCell(0).getDateCellValue());
-              } else {
                 type =  String.valueOf(row.getCell(0).getNumericCellValue());
-              }
               break;
           }
         }
@@ -141,12 +135,7 @@ public class LedgerDatamigration {
               break;
 
             case Cell.CELL_TYPE_NUMERIC:
-              if (DateUtil.isCellDateFormatted(row.getCell(1))) {
-
-                identifier =   date.format(row.getCell(1).getDateCellValue());
-              } else {
                 identifier =   String.valueOf(((Double)row.getCell(1).getNumericCellValue()).intValue());
-              }
               break;
           }
         }
@@ -161,12 +150,7 @@ public class LedgerDatamigration {
               break;
 
             case Cell.CELL_TYPE_NUMERIC:
-              if (DateUtil.isCellDateFormatted(row.getCell(2))) {
-
-                name =  date.format(row.getCell(2).getDateCellValue());
-              } else {
                 name =  String.valueOf(((Double)row.getCell(2).getNumericCellValue()).intValue());
-              }
               break;
           }
         }
@@ -181,12 +165,7 @@ public class LedgerDatamigration {
               break;
 
             case Cell.CELL_TYPE_NUMERIC:
-              if (DateUtil.isCellDateFormatted(row.getCell(3))) {
-
-                description =   date.format(row.getCell(3).getDateCellValue());
-              } else {
                 description =   String.valueOf(((Double)row.getCell(3).getNumericCellValue()).intValue());
-              }
               break;
           }
         }
@@ -207,7 +186,6 @@ public class LedgerDatamigration {
           }
         }
 
-
         Ledger ledger = new Ledger();
         ledger.setType(String.valueOf(type));
         ledger.setIdentifier(String.valueOf(identifier));
@@ -215,7 +193,6 @@ public class LedgerDatamigration {
         ledger.setDescription(String.valueOf(description));
         ledger.setShowAccountsInChart(showAccountsInChart);
 
-        this.userManagement.authenticate();
         this.ledgerManager.createLedger(ledger);
       }
     } catch (IOException e) {

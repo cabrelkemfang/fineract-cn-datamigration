@@ -22,7 +22,6 @@ import org.apache.fineract.cn.customer.api.v1.client.CustomerManager;
 import org.apache.fineract.cn.customer.api.v1.domain.Address;
 import org.apache.fineract.cn.customer.api.v1.domain.ContactDetail;
 import org.apache.fineract.cn.customer.api.v1.domain.Customer;
-import org.apache.fineract.cn.customer.catalog.api.v1.domain.Value;
 import org.apache.fineract.cn.datamigration.service.connector.UserManagement;
 import org.apache.fineract.cn.datamigration.service.ServiceConstants;
 import org.apache.fineract.cn.lang.DateOfBirth;
@@ -34,14 +33,11 @@ import org.slf4j.Logger;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartException;
 import org.springframework.web.multipart.MultipartFile;
-
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
-
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import java.util.stream.IntStream;
 
@@ -262,12 +258,7 @@ public class CustomerDatamigrationService {
               break;
 
             case Cell.CELL_TYPE_NUMERIC:
-              if (DateUtil.isCellDateFormatted(row.getCell(0))) {
-
-                identifier =  date.format(row.getCell(0).getDateCellValue());
-              } else {
                 identifier =  String.valueOf(row.getCell(0).getNumericCellValue());
-              }
               break;
           }
         }
@@ -282,12 +273,7 @@ public class CustomerDatamigrationService {
               break;
 
             case Cell.CELL_TYPE_NUMERIC:
-              if (DateUtil.isCellDateFormatted(row.getCell(1))) {
-
-                type =   date.format(row.getCell(1).getDateCellValue());
-              } else {
                 type =   String.valueOf(((Double)row.getCell(1).getNumericCellValue()).intValue());
-              }
               break;
           }
         }
@@ -302,12 +288,7 @@ public class CustomerDatamigrationService {
               break;
 
             case Cell.CELL_TYPE_NUMERIC:
-              if (DateUtil.isCellDateFormatted(row.getCell(2))) {
-
-                givenName =  date.format(row.getCell(2).getDateCellValue());
-              } else {
                 givenName =  String.valueOf(((Double)row.getCell(2).getNumericCellValue()).intValue());
-              }
               break;
           }
         }
@@ -322,12 +303,7 @@ public class CustomerDatamigrationService {
               break;
 
             case Cell.CELL_TYPE_NUMERIC:
-              if (DateUtil.isCellDateFormatted(row.getCell(3))) {
-
-                middleName =   date.format(row.getCell(3).getDateCellValue());
-              } else {
                 middleName =   String.valueOf(((Double)row.getCell(3).getNumericCellValue()).intValue());
-              }
               break;
           }
         }
@@ -342,12 +318,7 @@ public class CustomerDatamigrationService {
               break;
 
             case Cell.CELL_TYPE_NUMERIC:
-              if (DateUtil.isCellDateFormatted(row.getCell(4))) {
-
-                surname =   date.format(row.getCell(4).getDateCellValue());
-              } else {
                 surname =   String.valueOf(((Double)row.getCell(4).getNumericCellValue()).intValue());
-              }
               break;
           }
         }
@@ -362,12 +333,7 @@ public class CustomerDatamigrationService {
               break;
 
             case Cell.CELL_TYPE_NUMERIC:
-              if (DateUtil.isCellDateFormatted(row.getCell(5))) {
-
-                year =   date.format(row.getCell(5).getDateCellValue());
-              } else {
                 year =  String.valueOf(((Double)row.getCell(5).getNumericCellValue()).intValue());
-              }
               break;
           }
         }
@@ -382,12 +348,7 @@ public class CustomerDatamigrationService {
               break;
 
             case Cell.CELL_TYPE_NUMERIC:
-              if (DateUtil.isCellDateFormatted(row.getCell(6))) {
-
-                month =  date.format(row.getCell(6).getDateCellValue());
-              } else {
                 month =   String.valueOf(((Double)row.getCell(6).getNumericCellValue()).intValue());
-              }
               break;
           }
         }
@@ -402,12 +363,7 @@ public class CustomerDatamigrationService {
               break;
 
             case Cell.CELL_TYPE_NUMERIC:
-              if (DateUtil.isCellDateFormatted(row.getCell(7))) {
-
-                day =  date.format(row.getCell(7).getDateCellValue());
-              } else {
                 day =  String.valueOf(((Double)row.getCell(7).getNumericCellValue()).intValue());
-              }
               break;
           }
         }
@@ -442,12 +398,7 @@ public class CustomerDatamigrationService {
               break;
 
             case Cell.CELL_TYPE_NUMERIC:
-              if (DateUtil.isCellDateFormatted(row.getCell(9))) {
-
-                accountBeneficiary =  date.format(row.getCell(9).getDateCellValue());
-              } else {
                 accountBeneficiary =  String.valueOf(((Double)row.getCell(9).getNumericCellValue()).intValue());
-              }
               break;
           }
         }
@@ -461,12 +412,7 @@ public class CustomerDatamigrationService {
               break;
 
             case Cell.CELL_TYPE_NUMERIC:
-              if (DateUtil.isCellDateFormatted(row.getCell(10))) {
-
-                referenceCustomer =  date.format(row.getCell(10).getDateCellValue());
-              } else {
                 referenceCustomer =  String.valueOf(((Double)row.getCell(10).getNumericCellValue()).intValue());
-              }
               break;
           }
         }
@@ -480,12 +426,7 @@ public class CustomerDatamigrationService {
               break;
 
             case Cell.CELL_TYPE_NUMERIC:
-              if (DateUtil.isCellDateFormatted(row.getCell(11))) {
-
-                assignedOffice =  date.format(row.getCell(11).getDateCellValue());
-              } else {
                 assignedOffice =  String.valueOf(((Double)row.getCell(11).getNumericCellValue()).intValue());
-              }
               break;
           }
         }
@@ -499,12 +440,7 @@ public class CustomerDatamigrationService {
               break;
 
             case Cell.CELL_TYPE_NUMERIC:
-              if (DateUtil.isCellDateFormatted(row.getCell(12))) {
-
-                assignedEmployee =  date.format(row.getCell(12).getDateCellValue());
-              } else {
                 assignedEmployee =  String.valueOf(((Double)row.getCell(12).getNumericCellValue()).intValue());
-              }
               break;
           }
         }
@@ -518,12 +454,7 @@ public class CustomerDatamigrationService {
               break;
 
             case Cell.CELL_TYPE_NUMERIC:
-              if (DateUtil.isCellDateFormatted(row.getCell(13))) {
-
-                street =  date.format(row.getCell(13).getDateCellValue());
-              } else {
                 street =  String.valueOf(((Double)row.getCell(13).getNumericCellValue()).intValue());
-              }
               break;
           }
         }
@@ -537,12 +468,7 @@ public class CustomerDatamigrationService {
               break;
 
             case Cell.CELL_TYPE_NUMERIC:
-              if (DateUtil.isCellDateFormatted(row.getCell(14))) {
-
-                city =  date.format(row.getCell(14).getDateCellValue());
-              } else {
                 city =  String.valueOf(((Double)row.getCell(14).getNumericCellValue()).intValue());
-              }
               break;
           }
         }
@@ -556,12 +482,7 @@ public class CustomerDatamigrationService {
               break;
 
             case Cell.CELL_TYPE_NUMERIC:
-              if (DateUtil.isCellDateFormatted(row.getCell(15))) {
-
-                region =  date.format(row.getCell(15).getDateCellValue());
-              } else {
                 region =  String.valueOf(((Double)row.getCell(15).getNumericCellValue()).intValue());
-              }
               break;
           }
         }
@@ -575,12 +496,7 @@ public class CustomerDatamigrationService {
               break;
 
             case Cell.CELL_TYPE_NUMERIC:
-              if (DateUtil.isCellDateFormatted(row.getCell(16))) {
-
-                postalCode = date.format(row.getCell(16).getDateCellValue());
-              } else {
                 postalCode =  String.valueOf(((Double)row.getCell(16).getNumericCellValue()).intValue());
-              }
               break;
           }
         }
@@ -594,12 +510,7 @@ public class CustomerDatamigrationService {
               break;
 
             case Cell.CELL_TYPE_NUMERIC:
-              if (DateUtil.isCellDateFormatted(row.getCell(17))) {
-
-                countryCode =  date.format(row.getCell(17).getDateCellValue());
-              } else {
                 countryCode =  String.valueOf(((Double)row.getCell(17).getNumericCellValue()).intValue());
-              }
               break;
           }
         }
@@ -613,12 +524,7 @@ public class CustomerDatamigrationService {
               break;
 
             case Cell.CELL_TYPE_NUMERIC:
-              if (DateUtil.isCellDateFormatted(row.getCell(18))) {
-
-                country =  date.format(row.getCell(18).getDateCellValue());
-              } else {
                 country =  String.valueOf(((Double)row.getCell(18).getNumericCellValue()).intValue());
-              }
               break;
           }
         }
@@ -632,12 +538,7 @@ public class CustomerDatamigrationService {
               break;
 
             case Cell.CELL_TYPE_NUMERIC:
-              if (DateUtil.isCellDateFormatted(row.getCell(19))) {
-
-                typecontactDetail =  date.format(row.getCell(19).getDateCellValue());
-              } else {
                 typecontactDetail =  String.valueOf(((Double)row.getCell(19).getNumericCellValue()).intValue());
-              }
               break;
           }
         }
@@ -651,12 +552,7 @@ public class CustomerDatamigrationService {
               break;
 
             case Cell.CELL_TYPE_NUMERIC:
-              if (DateUtil.isCellDateFormatted(row.getCell(20))) {
-
-                group =  date.format(row.getCell(20).getDateCellValue());
-              } else {
                 group =  String.valueOf(((Double)row.getCell(20).getNumericCellValue()).intValue());
-              }
               break;
           }
         }
@@ -670,12 +566,7 @@ public class CustomerDatamigrationService {
               break;
 
             case Cell.CELL_TYPE_NUMERIC:
-              if (DateUtil.isCellDateFormatted(row.getCell(21))) {
-
-                value = date.format(row.getCell(21).getDateCellValue());
-              } else {
                 value =  String.valueOf(((Double)row.getCell(21).getNumericCellValue()).intValue());
-              }
               break;
           }
         }
@@ -689,12 +580,7 @@ public class CustomerDatamigrationService {
               break;
 
             case Cell.CELL_TYPE_NUMERIC:
-              if (DateUtil.isCellDateFormatted(row.getCell(22))) {
-
-                preferenceLevel =  date.format(row.getCell(22).getDateCellValue());
-              } else {
                 preferenceLevel =  String.valueOf(((Double)row.getCell(22).getNumericCellValue()).intValue());
-              }
               break;
           }
         }
@@ -726,12 +612,7 @@ public class CustomerDatamigrationService {
               break;
 
             case Cell.CELL_TYPE_NUMERIC:
-              if (DateUtil.isCellDateFormatted(row.getCell(24))) {
-
-                currentState =  date.format(row.getCell(24).getDateCellValue());
-              } else {
                 currentState =  String.valueOf(((Double)row.getCell(24).getNumericCellValue()).intValue());
-              }
               break;
           }
         }
@@ -747,9 +628,7 @@ public class CustomerDatamigrationService {
             case Cell.CELL_TYPE_NUMERIC:
               if (DateUtil.isCellDateFormatted(row.getCell(25))) {
 
-                applicationDate =  date.format(row.getCell(25).getDateCellValue());
-              } else {
-                applicationDate =  String.valueOf(((Double)row.getCell(25).getNumericCellValue()).intValue());
+                applicationDate = date.format(row.getCell(25).getDateCellValue());
               }
               break;
           }
@@ -794,7 +673,6 @@ public class CustomerDatamigrationService {
           customer.setCurrentState(currentState);
           customer.setApplicationDate(String.valueOf(applicationDate));
 
-          this.userManagement.authenticate();
           this.customerManager.createCustomer(customer);
         }
 
