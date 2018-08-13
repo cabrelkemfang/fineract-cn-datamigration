@@ -40,7 +40,7 @@ public interface DatamigrationManager {
           method = RequestMethod.GET,
           consumes = MediaType.ALL_VALUE
   )
-  void download(HttpServletResponse response) ;
+  void download(HttpServletResponse response) throws ClassNotFoundException;
 
   @RequestMapping(
           value = "/customers",
@@ -55,7 +55,7 @@ public interface DatamigrationManager {
           method = RequestMethod.GET,
           consumes = MediaType.ALL_VALUE
   )
-   void officeSheetdownload(HttpServletResponse response) ;
+   void officeSheetdownload(HttpServletResponse response) throws ClassNotFoundException;
 
   @RequestMapping(
           value = "/offices",
@@ -70,7 +70,7 @@ public interface DatamigrationManager {
           method = RequestMethod.GET,
           consumes = MediaType.ALL_VALUE
   )
-   void branchSheetDownload(HttpServletResponse response) ;
+   void branchSheetDownload(HttpServletResponse response) throws ClassNotFoundException;
 
   @RequestMapping(
           value = "/offices/branch",
@@ -85,7 +85,7 @@ public interface DatamigrationManager {
           method = RequestMethod.GET,
           consumes = MediaType.ALL_VALUE
   )
-   void employeeSheetdownload(HttpServletResponse response) ;
+   void employeeSheetdownload(HttpServletResponse response) throws ClassNotFoundException;
 
   @RequestMapping(
           value = "/employees",
@@ -100,7 +100,7 @@ public interface DatamigrationManager {
           method = RequestMethod.GET,
           consumes = MediaType.ALL_VALUE
   )
-   void tellerSheetDownload(HttpServletResponse response) ;
+   void tellerSheetDownload(HttpServletResponse response) throws ClassNotFoundException;
 
   @RequestMapping(
           value = "/tellers",
@@ -115,7 +115,7 @@ public interface DatamigrationManager {
           method = RequestMethod.GET,
           consumes = MediaType.ALL_VALUE
   )
-  void groupSheetDownload(HttpServletResponse response) ;
+  void groupSheetDownload(HttpServletResponse response) throws ClassNotFoundException;
 
   @RequestMapping(
           value = "/group",
@@ -131,7 +131,7 @@ public interface DatamigrationManager {
           method = RequestMethod.GET,
           consumes = MediaType.ALL_VALUE
   )
-   void ledgerSheetdownload(HttpServletResponse response) ;
+   void ledgerSheetdownload(HttpServletResponse response) throws ClassNotFoundException;
 
   @RequestMapping(
           value = "/ledgers",
@@ -147,7 +147,7 @@ public interface DatamigrationManager {
           method = RequestMethod.GET,
           consumes = MediaType.ALL_VALUE
   )
-  void subLedgerSheetdownload(HttpServletResponse response) ;
+  void subLedgerSheetdownload(HttpServletResponse response) throws ClassNotFoundException;
 
   @RequestMapping(
           value = "/subLedgers",
@@ -163,7 +163,7 @@ public interface DatamigrationManager {
           method = RequestMethod.GET,
           consumes = MediaType.ALL_VALUE
   )
- void accountSheetdownload(HttpServletResponse response) ;
+ void accountSheetdownload(HttpServletResponse response) throws ClassNotFoundException;
 
   @RequestMapping(
           value = "/accounts",
@@ -175,11 +175,11 @@ public interface DatamigrationManager {
 
   //User Migration
   @RequestMapping(
-          value = "/uers/download",
+          value = "/users/download",
           method = RequestMethod.GET,
           consumes = MediaType.ALL_VALUE
   )
-   void userSheetdownload(HttpServletResponse response) ;
+   void userSheetdownload(HttpServletResponse response) throws ClassNotFoundException;
 
   @RequestMapping(
           value = "/users",
@@ -195,7 +195,7 @@ public interface DatamigrationManager {
           method = RequestMethod.GET,
           consumes = MediaType.ALL_VALUE
   )
-   void journalEntryDownload(HttpServletResponse response) ;
+   void journalEntryDownload(HttpServletResponse response) throws ClassNotFoundException;
 
   @RequestMapping(
           value = "/journal",
@@ -211,7 +211,7 @@ public interface DatamigrationManager {
           method = RequestMethod.GET,
           consumes = MediaType.ALL_VALUE
   )
-   void productSheetDownload(HttpServletResponse response) ;
+   void productSheetDownload(HttpServletResponse response) throws ClassNotFoundException;
 
   @RequestMapping(
           value = "/products",
@@ -226,7 +226,7 @@ public interface DatamigrationManager {
           method = RequestMethod.GET,
           consumes = MediaType.ALL_VALUE
   )
-   void tenantSheetDownload(HttpServletResponse response);
+   void tenantSheetDownload(HttpServletResponse response) throws ClassNotFoundException;
 
   @RequestMapping(
           value = "/tenant",
@@ -234,6 +234,95 @@ public interface DatamigrationManager {
           consumes = MediaType.MULTIPART_FORM_DATA_VALUE
   )
    ResponseEntity<String> tenantSheetUpload(@RequestParam("file") MultipartFile file);
+
+
+  //Charge definition Migration
+  @RequestMapping(
+          value = "/charge/download",
+          method = RequestMethod.GET,
+          consumes = MediaType.ALL_VALUE
+  )
+   void chargeDefinitionSheetDownload(HttpServletResponse response) throws ClassNotFoundException;
+
+
+  @RequestMapping(
+          value = "/charge",
+          method = RequestMethod.POST,
+          consumes = MediaType.MULTIPART_FORM_DATA_VALUE
+  )
+   ResponseEntity<String> chargeDefintionSheetUpload(@RequestParam("file") MultipartFile file) throws
+          IOException ;
+
+
+  //Deposit Action Migration
+  @RequestMapping(
+          value = "/action/download",
+          method = RequestMethod.GET,
+          consumes = MediaType.ALL_VALUE
+  )
+   void depositActionSheetDownload(HttpServletResponse response) throws ClassNotFoundException;
+
+  @RequestMapping(
+          value = "/action",
+          method = RequestMethod.POST,
+          consumes = MediaType.MULTIPART_FORM_DATA_VALUE
+  )
+   ResponseEntity<String> depositActionSheetUpload(@RequestParam("file") MultipartFile file) throws IOException ;
+
+
+
+  //Group Definition Migration
+  @RequestMapping(
+          value = "/group/definition/download",
+          method = RequestMethod.GET,
+          consumes = MediaType.ALL_VALUE
+  )
+   void groupDefinitionSheetDownload(HttpServletResponse response) throws ClassNotFoundException ;
+
+  @RequestMapping(
+          value = "/group/definition",
+          method = RequestMethod.POST,
+          consumes = MediaType.MULTIPART_FORM_DATA_VALUE
+  )
+   ResponseEntity<String> groupDefifnitionSheetUpload(@RequestParam("file") MultipartFile file) throws
+          IOException ;
+
+
+
+  //Product Definition Migration
+  @RequestMapping(
+          value = "/product/definition/download",
+          method = RequestMethod.GET,
+          consumes = MediaType.ALL_VALUE
+  )
+   void productDefintionSheetDownload(HttpServletResponse response) throws ClassNotFoundException;
+
+
+  @RequestMapping(
+          value = "/product/definition",
+          method = RequestMethod.POST,
+          consumes = MediaType.MULTIPART_FORM_DATA_VALUE
+  )
+   ResponseEntity<String> productDefinitionSheetUpload(@RequestParam("file") MultipartFile file) throws
+          IOException ;
+
+
+
+  //Product Instance Migration
+  @RequestMapping(
+          value = "/product/instance/download",
+          method = RequestMethod.GET,
+          consumes = MediaType.ALL_VALUE
+  )
+   void productInstanseSheetDownload(HttpServletResponse response) throws ClassNotFoundException ;
+
+  @RequestMapping(
+          value = "/product/instance",
+          method = RequestMethod.POST,
+          consumes = MediaType.MULTIPART_FORM_DATA_VALUE
+  )
+   ResponseEntity<String> productInstanseSheetUpload(@RequestParam("file") MultipartFile file) throws
+          IOException ;
 
 
 }

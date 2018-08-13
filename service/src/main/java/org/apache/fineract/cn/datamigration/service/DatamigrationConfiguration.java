@@ -24,6 +24,7 @@ import org.apache.fineract.cn.async.config.EnableAsync;
 import org.apache.fineract.cn.cassandra.config.EnableCassandra;
 import org.apache.fineract.cn.command.config.EnableCommandProcessing;
 import org.apache.fineract.cn.customer.api.v1.client.CustomerManager;
+import org.apache.fineract.cn.deposit.api.v1.client.DepositAccountManager;
 import org.apache.fineract.cn.group.api.v1.client.GroupManager;
 import org.apache.fineract.cn.identity.api.v1.client.IdentityManager;
 import org.apache.fineract.cn.lang.config.EnableServiceException;
@@ -65,7 +66,8 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter
         GroupManager.class,
         LedgerManager.class,
         PortfolioManager.class,
-        Provisioner.class
+        Provisioner.class,
+        DepositAccountManager.class
 })
 @ComponentScan({
     "org.apache.fineract.cn.datamigration.service.rest",

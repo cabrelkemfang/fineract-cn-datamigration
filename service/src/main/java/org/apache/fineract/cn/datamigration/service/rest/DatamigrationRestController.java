@@ -40,51 +40,68 @@ public class DatamigrationRestController {
 
   private final CommandGateway commandGateway;
   private final CustomerDatamigrationService customerDatamigrationService;
-  private final OfficeDatamigrationService officeDatamigrationService;
-  private final OfficeBranchDatamigration officeBranchDatamigration;
-  private final EmployeeDatamigration employeeDatamigration;
+  private final OfficeMigration officeMigration;
+  private final OfficeBranchMigration officeBranchMigration;
+  private final EmployeeMigration employeeMigration;
   private final TellerDatamigration tellerDatamigration;
-  private final GroupDatamigration groupDatamigration;
-  private final LedgerDatamigration ledgerDatamigration;
-  private final SubLedgerDatamigration subLedgerDatamigration ;
-  private final AccountsDatamigration accountsDatamigration ;
-  private final UserDatamigration userDatamigration  ;
-  private final JournalEntryDatamigration journalEntryDatamigration  ;
-  private final ProductDatamigration productDatamigration  ;
+  private final GroupMigration groupMigration;
+  private final LedgerMigration ledgerMigration;
+  private final SubLedgerMigration subLedgerMigration;
+  private final LedgersAccountsMigration ledgersAccountsMigration;
+  private final UserMigration userMigration;
+  private final JournalEntryMigration journalEntryMigration;
+  private final LoanProductMigration loanProductMigration;
   private final TenantDatamigration tenantDatamigration  ;
+  private final DepositActionMigration depositActionMigration ;
+  private final ProductDefinitionMigration productDefinitionMigration ;
+  private final ProductInstanceMigration productInstanceMigration  ;
+  private final  GroupDefinitionMigration groupDefinitionMigration  ;
+  private final  ChargeDefinitionMigration chargeDefinitionMigration  ;
+
+
 
 
   @Autowired
   public DatamigrationRestController( final CommandGateway commandGateway,
                                       final CustomerDatamigrationService customerDatamigrationService,
-                                      final OfficeDatamigrationService officeDatamigrationService,
-                                      final OfficeBranchDatamigration officeBranchDatamigration,
-                                      final EmployeeDatamigration employeeDatamigration,
+                                      final OfficeMigration officeMigration,
+                                      final OfficeBranchMigration officeBranchMigration,
+                                      final EmployeeMigration employeeMigration,
                                       final TellerDatamigration  tellerDatamigration,
-                                      final GroupDatamigration  groupDatamigration,
-                                      final LedgerDatamigration  ledgerDatamigration,
-                                      final SubLedgerDatamigration  subLedgerDatamigration,
-                                      final AccountsDatamigration  accountsDatamigration,
-                                      final UserDatamigration  userDatamigration,
-                                      final JournalEntryDatamigration  journalEntryDatamigration,
-                                      final ProductDatamigration  productDatamigration,
-                                      final TenantDatamigration  tenantDatamigration
+                                      final GroupMigration groupMigration,
+                                      final LedgerMigration ledgerMigration,
+                                      final SubLedgerMigration subLedgerMigration,
+                                      final LedgersAccountsMigration ledgersAccountsMigration,
+                                      final UserMigration userMigration,
+                                      final JournalEntryMigration journalEntryMigration,
+                                      final LoanProductMigration loanProductMigration,
+                                      final TenantDatamigration  tenantDatamigration,
+                                      final DepositActionMigration depositActionMigration,
+                                      final ProductDefinitionMigration productDefinitionMigration,
+                                      final ProductInstanceMigration productInstanceMigration,
+                                      final  GroupDefinitionMigration groupDefinitionMigration,
+                                      final  ChargeDefinitionMigration chargeDefinitionMigration
                                       ) {
     super();
     this.commandGateway = commandGateway;
     this.customerDatamigrationService = customerDatamigrationService;
-    this.officeDatamigrationService = officeDatamigrationService;
-    this.officeBranchDatamigration = officeBranchDatamigration;
-    this.employeeDatamigration = employeeDatamigration;
+    this.officeMigration = officeMigration;
+    this.officeBranchMigration = officeBranchMigration;
+    this.employeeMigration = employeeMigration;
     this.tellerDatamigration = tellerDatamigration;
-    this.groupDatamigration = groupDatamigration;
-    this.ledgerDatamigration = ledgerDatamigration;
-    this.subLedgerDatamigration = subLedgerDatamigration;
-    this.accountsDatamigration = accountsDatamigration;
-    this.userDatamigration = userDatamigration;
-    this.journalEntryDatamigration = journalEntryDatamigration;
-    this.productDatamigration = productDatamigration;
+    this.groupMigration = groupMigration;
+    this.ledgerMigration = ledgerMigration;
+    this.subLedgerMigration = subLedgerMigration;
+    this.ledgersAccountsMigration = ledgersAccountsMigration;
+    this.userMigration = userMigration;
+    this.journalEntryMigration = journalEntryMigration;
+    this.loanProductMigration = loanProductMigration;
     this.tenantDatamigration = tenantDatamigration;
+    this.depositActionMigration=depositActionMigration;
+    this.productDefinitionMigration=productDefinitionMigration;
+    this.productInstanceMigration=productInstanceMigration;
+    this.groupDefinitionMigration=groupDefinitionMigration;
+    this.chargeDefinitionMigration=chargeDefinitionMigration;
   }
 
   @Permittable(value = AcceptedTokenType.SYSTEM)
@@ -130,7 +147,7 @@ public class DatamigrationRestController {
           consumes = MediaType.ALL_VALUE
   )
   public void officeSheetdownload(HttpServletResponse response) throws ClassNotFoundException {
-    officeDatamigrationService.officeSheetDownload(response);
+    officeMigration.officeSheetDownload(response);
   }
 
   @Permittable(value = AcceptedTokenType.TENANT, groupId = PermittableGroupIds.DATAMIGRATION_MANAGEMENT)
@@ -140,7 +157,7 @@ public class DatamigrationRestController {
           consumes = MediaType.MULTIPART_FORM_DATA_VALUE
   )
   public ResponseEntity<String> officeSheetUpload(@RequestParam("file") MultipartFile file) throws IOException {
-    officeDatamigrationService.officeSheetUpload(file);
+    officeMigration.officeSheetUpload(file);
     return new ResponseEntity<>("Upload successuly", HttpStatus.OK);
   }
 
@@ -152,7 +169,7 @@ public class DatamigrationRestController {
           consumes = MediaType.ALL_VALUE
   )
   public void branchSheetDownload(HttpServletResponse response) throws ClassNotFoundException {
-    officeBranchDatamigration.branchSheetDownload(response);
+    officeBranchMigration.branchSheetDownload(response);
   }
 
   @Permittable(value = AcceptedTokenType.TENANT, groupId = PermittableGroupIds.DATAMIGRATION_MANAGEMENT)
@@ -162,7 +179,7 @@ public class DatamigrationRestController {
           consumes = MediaType.MULTIPART_FORM_DATA_VALUE
   )
   public ResponseEntity<String> branchSheetUpload(@RequestParam("file") MultipartFile file) throws IOException {
-    officeBranchDatamigration.branchSheetUpload(file);
+    officeBranchMigration.branchSheetUpload(file);
     return new ResponseEntity<>("Upload successuly", HttpStatus.OK);
   }
 
@@ -174,7 +191,7 @@ public class DatamigrationRestController {
           consumes = MediaType.ALL_VALUE
   )
   public void employeeSheetdownload(HttpServletResponse response) throws ClassNotFoundException {
-    employeeDatamigration.employeeSheetDownload(response);
+    employeeMigration.employeeSheetDownload(response);
   }
 
   @Permittable(value = AcceptedTokenType.TENANT, groupId = PermittableGroupIds.DATAMIGRATION_MANAGEMENT)
@@ -184,7 +201,7 @@ public class DatamigrationRestController {
           consumes = MediaType.MULTIPART_FORM_DATA_VALUE
   )
   public ResponseEntity<String> employeeSheetUpload(@RequestParam("file") MultipartFile file) throws IOException {
-    employeeDatamigration.employeeSheetUpload(file);
+    employeeMigration.employeeSheetUpload(file);
     return new ResponseEntity<>("Upload successuly", HttpStatus.OK);
   }
 
@@ -218,7 +235,7 @@ public class DatamigrationRestController {
           consumes = MediaType.ALL_VALUE
   )
   public void groupSheetDownload(HttpServletResponse response) throws ClassNotFoundException {
-    groupDatamigration.groupSheetDownload(response);
+    groupMigration.groupSheetDownload(response);
   }
 
   @Permittable(value = AcceptedTokenType.TENANT, groupId = PermittableGroupIds.DATAMIGRATION_MANAGEMENT)
@@ -228,7 +245,7 @@ public class DatamigrationRestController {
           consumes = MediaType.MULTIPART_FORM_DATA_VALUE
   )
   public ResponseEntity<String> groupSheetUpload(@RequestParam("file") MultipartFile file) throws IOException {
-    groupDatamigration.groupSheetUpload(file);
+    groupMigration.groupSheetUpload(file);
     return new ResponseEntity<>("Upload successuly", HttpStatus.OK);
   }
 
@@ -240,7 +257,7 @@ public class DatamigrationRestController {
           consumes = MediaType.ALL_VALUE
   )
   public void ledgerSheetdownload(HttpServletResponse response) throws ClassNotFoundException {
-    ledgerDatamigration.ledgerSheetDownload(response);
+    ledgerMigration.ledgerSheetDownload(response);
   }
 
   @Permittable(value = AcceptedTokenType.TENANT, groupId = PermittableGroupIds.DATAMIGRATION_MANAGEMENT)
@@ -250,7 +267,7 @@ public class DatamigrationRestController {
           consumes = MediaType.MULTIPART_FORM_DATA_VALUE
   )
   public ResponseEntity<String> ledgerSheetUpload(@RequestParam("file") MultipartFile file) throws IOException {
-    ledgerDatamigration.ledgerSheetUpload(file);
+    ledgerMigration.ledgerSheetUpload(file);
     return new ResponseEntity<>("Upload successuly", HttpStatus.OK);
   }
 
@@ -262,7 +279,7 @@ public class DatamigrationRestController {
           consumes = MediaType.ALL_VALUE
   )
   public void SubLedgerSheetdownload(HttpServletResponse response) throws ClassNotFoundException {
-    subLedgerDatamigration.subLedgerSheetDownload(response);
+    subLedgerMigration.subLedgerSheetDownload(response);
   }
 
   @Permittable(value = AcceptedTokenType.TENANT, groupId = PermittableGroupIds.DATAMIGRATION_MANAGEMENT)
@@ -272,7 +289,7 @@ public class DatamigrationRestController {
           consumes = MediaType.MULTIPART_FORM_DATA_VALUE
   )
   public ResponseEntity<String> subLledgerSheetUpload(@RequestParam("file") MultipartFile file) throws IOException {
-    subLedgerDatamigration.subLedgerSheetUpload(file);
+    subLedgerMigration.subLedgerSheetUpload(file);
     return new ResponseEntity<>("Upload successuly", HttpStatus.OK);
   }
 
@@ -284,7 +301,7 @@ public class DatamigrationRestController {
           consumes = MediaType.ALL_VALUE
   )
   public void accountSheetdownload(HttpServletResponse response) throws ClassNotFoundException {
-    accountsDatamigration.accountSheetDownload(response);
+    ledgersAccountsMigration.accountSheetDownload(response);
   }
 
   @Permittable(value = AcceptedTokenType.TENANT, groupId = PermittableGroupIds.DATAMIGRATION_MANAGEMENT)
@@ -294,7 +311,7 @@ public class DatamigrationRestController {
           consumes = MediaType.MULTIPART_FORM_DATA_VALUE
   )
   public ResponseEntity<String> accountSheetUpload(@RequestParam("file") MultipartFile file) throws IOException {
-    accountsDatamigration.accountSheetUpload(file);
+    ledgersAccountsMigration.accountSheetUpload(file);
     return new ResponseEntity<>("Upload successuly", HttpStatus.OK);
   }
 
@@ -306,7 +323,7 @@ public class DatamigrationRestController {
           consumes = MediaType.ALL_VALUE
   )
   public void userSheetdownload(HttpServletResponse response) throws ClassNotFoundException {
-    userDatamigration.userSheetDownload(response);
+    userMigration.userSheetDownload(response);
   }
 
   @Permittable(value = AcceptedTokenType.TENANT, groupId = PermittableGroupIds.DATAMIGRATION_MANAGEMENT)
@@ -316,7 +333,7 @@ public class DatamigrationRestController {
           consumes = MediaType.MULTIPART_FORM_DATA_VALUE
   )
   public ResponseEntity<String> userSheetUpload(@RequestParam("file") MultipartFile file) throws IOException {
-    userDatamigration.userSheetUpload(file);
+    userMigration.userSheetUpload(file);
     return new ResponseEntity<>("Upload successuly", HttpStatus.OK);
   }
 
@@ -329,7 +346,7 @@ public class DatamigrationRestController {
           consumes = MediaType.ALL_VALUE
   )
   public void journalEntryDownload(HttpServletResponse response) throws ClassNotFoundException {
-    journalEntryDatamigration.journalEntryDownload(response);
+    journalEntryMigration.journalEntryDownload(response);
   }
 
   @Permittable(value = AcceptedTokenType.TENANT, groupId = PermittableGroupIds.DATAMIGRATION_MANAGEMENT)
@@ -339,7 +356,7 @@ public class DatamigrationRestController {
           consumes = MediaType.MULTIPART_FORM_DATA_VALUE
   )
   public ResponseEntity<String> journalEntrySheetUpload(@RequestParam("file") MultipartFile file) throws IOException {
-    journalEntryDatamigration.journalEntrySheetUpload(file);
+    journalEntryMigration.journalEntrySheetUpload(file);
     return new ResponseEntity<>("Upload successuly", HttpStatus.OK);
   }
 
@@ -351,7 +368,7 @@ public class DatamigrationRestController {
           consumes = MediaType.ALL_VALUE
   )
   public void productSheetDownload(HttpServletResponse response) throws ClassNotFoundException {
-    productDatamigration.productSheetDownload(response);
+    loanProductMigration.productSheetDownload(response);
   }
 
   @Permittable(value = AcceptedTokenType.TENANT, groupId = PermittableGroupIds.DATAMIGRATION_MANAGEMENT)
@@ -361,7 +378,7 @@ public class DatamigrationRestController {
           consumes = MediaType.MULTIPART_FORM_DATA_VALUE
   )
   public ResponseEntity<String> productSheetUpload(@RequestParam("file") MultipartFile file) throws IOException {
-    productDatamigration.productSheetUpload(file);
+    loanProductMigration.productSheetUpload(file);
     return new ResponseEntity<>("Upload successuly", HttpStatus.OK);
   }
 
@@ -386,5 +403,127 @@ public class DatamigrationRestController {
     tenantDatamigration.tenantSheetUpload(file);
     return new ResponseEntity<>("Upload successuly", HttpStatus.OK);
   }
+
+
+  //Charge definition Migration
+  @Permittable(value = AcceptedTokenType.TENANT, groupId = PermittableGroupIds.DATAMIGRATION_MANAGEMENT)
+  @RequestMapping(
+          value = "/charge/download",
+          method = RequestMethod.GET,
+          consumes = MediaType.ALL_VALUE
+  )
+  public void chargeDefinitionSheetDownload(HttpServletResponse response) throws ClassNotFoundException {
+    chargeDefinitionMigration.chargedefinitionSheetDownload(response);
+  }
+
+  @Permittable(value = AcceptedTokenType.TENANT, groupId = PermittableGroupIds.DATAMIGRATION_MANAGEMENT)
+  @RequestMapping(
+          value = "/charge",
+          method = RequestMethod.POST,
+          consumes = MediaType.MULTIPART_FORM_DATA_VALUE
+  )
+  public ResponseEntity<String> chargeDefintionSheetUpload(@RequestParam("file") MultipartFile file) throws
+          IOException {
+    chargeDefinitionMigration.chargedefinitionSheetUpload(file);
+    return new ResponseEntity<>("Upload successuly", HttpStatus.OK);
+  }
+
+
+  //Deposit Action Migration
+  @Permittable(value = AcceptedTokenType.TENANT, groupId = PermittableGroupIds.DATAMIGRATION_MANAGEMENT)
+  @RequestMapping(
+          value = "/action/download",
+          method = RequestMethod.GET,
+          consumes = MediaType.ALL_VALUE
+  )
+  public void depositActionSheetDownload(HttpServletResponse response) throws ClassNotFoundException {
+    depositActionMigration.actionSheetDownload(response);
+  }
+
+  @Permittable(value = AcceptedTokenType.TENANT, groupId = PermittableGroupIds.DATAMIGRATION_MANAGEMENT)
+  @RequestMapping(
+          value = "/action",
+          method = RequestMethod.POST,
+          consumes = MediaType.MULTIPART_FORM_DATA_VALUE
+  )
+  public ResponseEntity<String> depositActionSheetUpload(@RequestParam("file") MultipartFile file) throws IOException {
+    depositActionMigration.actionSheetUpload(file);
+    return new ResponseEntity<>("Upload successuly", HttpStatus.OK);
+  }
+
+
+  //Group Definition Migration
+  @Permittable(value = AcceptedTokenType.TENANT, groupId = PermittableGroupIds.DATAMIGRATION_MANAGEMENT)
+  @RequestMapping(
+          value = "/group/definition/download",
+          method = RequestMethod.GET,
+          consumes = MediaType.ALL_VALUE
+  )
+  public void groupDefinitionSheetDownload(HttpServletResponse response) throws ClassNotFoundException {
+    groupDefinitionMigration.groupDefinitionSheetDownload(response);
+  }
+
+  @Permittable(value = AcceptedTokenType.TENANT, groupId = PermittableGroupIds.DATAMIGRATION_MANAGEMENT)
+  @RequestMapping(
+          value = "/group/definition",
+          method = RequestMethod.POST,
+          consumes = MediaType.MULTIPART_FORM_DATA_VALUE
+  )
+  public ResponseEntity<String> groupDefifnitionSheetUpload(@RequestParam("file") MultipartFile file) throws
+          IOException {
+    groupDefinitionMigration.groupDefinitionSheetUpload(file);
+    return new ResponseEntity<>("Upload successuly", HttpStatus.OK);
+  }
+
+
+  //Product Definition Migration
+  @Permittable(value = AcceptedTokenType.TENANT, groupId = PermittableGroupIds.DATAMIGRATION_MANAGEMENT)
+  @RequestMapping(
+          value = "/product/definition/download",
+          method = RequestMethod.GET,
+          consumes = MediaType.ALL_VALUE
+  )
+  public void productDefintionSheetDownload(HttpServletResponse response) throws ClassNotFoundException {
+    productDefinitionMigration.productDefinitionSheetDownload(response);
+  }
+
+  @Permittable(value = AcceptedTokenType.TENANT, groupId = PermittableGroupIds.DATAMIGRATION_MANAGEMENT)
+  @RequestMapping(
+          value = "/product/definition",
+          method = RequestMethod.POST,
+          consumes = MediaType.MULTIPART_FORM_DATA_VALUE
+  )
+  public ResponseEntity<String> productDefinitionSheetUpload(@RequestParam("file") MultipartFile file) throws
+          IOException {
+    productDefinitionMigration.productDefinitionSheetUpload(file);
+    return new ResponseEntity<>("Upload successuly", HttpStatus.OK);
+  }
+
+
+  //Product Instance Migration
+  @Permittable(value = AcceptedTokenType.TENANT, groupId = PermittableGroupIds.DATAMIGRATION_MANAGEMENT)
+  @RequestMapping(
+          value = "/product/instance/download",
+          method = RequestMethod.GET,
+          consumes = MediaType.ALL_VALUE
+  )
+  public void productInstanseSheetDownload(HttpServletResponse response) throws ClassNotFoundException {
+    productInstanceMigration.productInstanceSheetDownload(response);
+  }
+
+  @Permittable(value = AcceptedTokenType.TENANT, groupId = PermittableGroupIds.DATAMIGRATION_MANAGEMENT)
+  @RequestMapping(
+          value = "/product/instance",
+          method = RequestMethod.POST,
+          consumes = MediaType.MULTIPART_FORM_DATA_VALUE
+  )
+  public ResponseEntity<String> productInstanseSheetUpload(@RequestParam("file") MultipartFile file) throws
+          IOException {
+    productInstanceMigration.productInstanseSheetUpload(file);
+    return new ResponseEntity<>("Upload successuly", HttpStatus.OK);
+  }
+
+
+
 
 }

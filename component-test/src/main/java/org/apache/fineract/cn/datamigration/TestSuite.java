@@ -23,7 +23,22 @@ import org.junit.runners.Suite;
 
 @RunWith(Suite.class)
 @Suite.SuiteClasses({
-    TestSample.class,
+
+                         /*   TestOfficeMigration.class,
+                            TestEmployeeMigration.class,
+                            TestLedgerMigration.class,
+                            TestSubLedgerMigration.class,
+                            TestBranchOfficeMigration.class,
+                            TestLedgerAccountSheetGenerator.class,
+                            TestGroupDefintionMigration.class,
+                            TestGroupMigration.class,
+                            TestProductInstanceMigration.class,
+                            TestGroupDefintionMigration.class,
+                            TestActionMigration.class,
+                            TestTellerMigration.class,
+                            TestUserMigration.class,*/
+
+
     //TODO: when you create a new component test, add it here so you can run it with the suite.
 })
 public class TestSuite extends SuiteTestEnvironment {

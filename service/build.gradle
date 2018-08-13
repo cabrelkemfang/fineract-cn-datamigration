@@ -52,6 +52,7 @@ dependencies {
             [group: 'org.apache.fineract.cn.customer', name: 'api', version: project.version],
             [group: 'org.apache.fineract.cn.office', name: 'api', version: project.version],
             [group: 'org.apache.fineract.cn.teller', name: 'api', version: project.version],
+            [group: 'org.apache.fineract.cn.deposit-account-management', name: 'api', version: project.version],
             [group: 'org.apache.fineract.cn.accounting', name: 'api', version: project.version],
             [group: 'org.apache.fineract.cn.group', name: 'api', version: project.version],
             [group: 'org.apache.fineract.cn.portfolio', name: 'api', version: project.version],
@@ -64,7 +65,10 @@ dependencies {
             [group: 'org.apache.fineract.cn', name: 'cassandra', version: versions.frameworkcassandra],
             [group: 'org.apache.fineract.cn', name: 'mariadb', version: versions.frameworkmariadb],
             [group: 'org.apache.fineract.cn', name: 'command', version: versions.frameworkcommand],
-            [group: 'org.hibernate', name: 'hibernate-validator', version: versions.validator]
+            [group: 'org.hibernate', name: 'hibernate-validator', version: versions.validator],
+            [group: 'junit', name: 'junit', version: '4.12'],
+            [group: 'org.springframework.boot', name: 'spring-boot-starter-test']
+
     )
 }
 

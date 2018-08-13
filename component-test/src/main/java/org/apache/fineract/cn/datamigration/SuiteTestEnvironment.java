@@ -33,8 +33,8 @@ import org.junit.rules.TestRule;
  * initializing and de-initializing external resources.
  */
 public class SuiteTestEnvironment {
-  static final String APP_VERSION = "1";
-  static final String APP_NAME = "datamigration-v" + APP_VERSION;
+  //static final String APP_VERSION = "1";
+  static final String APP_NAME = "datamigration-v1";
 
   static final TestEnvironment testEnvironment = new TestEnvironment(APP_NAME);
   static final CassandraInitializer cassandraInitializer = new CassandraInitializer();
