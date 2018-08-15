@@ -62,7 +62,7 @@ public class TellerDatamigration {
     cell3.setCellStyle(headerCellStyle);
 
     XSSFCell cell4 = rowHeader.createCell(startColIndex+3);
-    cell4.setCellValue("Cashdraw Limit");
+    cell4.setCellValue("Cash draw Limit");
     cell4.setCellStyle(headerCellStyle);
 
     XSSFCell cell5 = rowHeader.createCell(startColIndex+4);
@@ -130,6 +130,7 @@ public class TellerDatamigration {
       Boolean denominationRequired = false;
       String assignedEmployee = null;
       String state = null;
+      String officeId=null;
 
       for (int rowIndex = 1; rowIndex < rowCount; rowIndex++) {
         row = firstSheet.getRow(rowIndex);
@@ -293,7 +294,6 @@ public class TellerDatamigration {
               break;
           }
         }
-
           Teller teller= new Teller();
           teller.setCode(String.valueOf(code));
           teller.setPassword(String.valueOf(password));
@@ -305,8 +305,9 @@ public class TellerDatamigration {
           teller.setDenominationRequired(denominationRequired);
           teller.setAssignedEmployee(String.valueOf(assignedEmployee));
           teller.setState(String.valueOf(state));
+          officeId=String.valueOf(officeIdentifier);
 
-          this.tellerManager.create(String.valueOf(officeIdentifier),teller);
+          this.tellerManager.create(officeId,teller);
         }
     } catch (IOException e) {
       e.printStackTrace();

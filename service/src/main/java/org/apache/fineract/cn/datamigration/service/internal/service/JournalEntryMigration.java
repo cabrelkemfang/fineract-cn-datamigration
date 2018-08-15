@@ -91,10 +91,10 @@ public class JournalEntryMigration {
     cell10.setCellStyle(headerCellStyle);
 
     XSSFCell cell11= rowHeader.createCell(startColIndex+10);
-    cell10.setCellValue("Message");
-    cell10.setCellStyle(headerCellStyle);
+    cell11.setCellValue("Message");
+    cell11.setCellStyle(headerCellStyle);
 
-    IntStream.range(0, 10).forEach((columnIndex) -> worksheet.autoSizeColumn(columnIndex));
+    IntStream.range(0, 11).forEach((columnIndex) -> worksheet.autoSizeColumn(columnIndex));
     response.setHeader("Content-Disposition", "inline; filename=JournalENtry.xlsx");
     response.setContentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
 
@@ -324,8 +324,9 @@ public class JournalEntryMigration {
         journalEntry.setNote(String.valueOf(note));
         journalEntry.setCreditors(creditors);
         journalEntry.setDebtors(debtors);
-        journalEntry.setMessage(String.valueOf(message));
         journalEntry.setState(String.valueOf(state));
+        journalEntry.setMessage(String.valueOf(message));
+
 
         this.ledgerManager.createJournalEntry(journalEntry);
       }

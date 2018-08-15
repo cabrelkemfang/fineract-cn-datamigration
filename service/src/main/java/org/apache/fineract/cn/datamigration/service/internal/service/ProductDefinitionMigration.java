@@ -132,7 +132,7 @@ public class ProductDefinitionMigration {
     cell18.setCellStyle(headerCellStyle);
 
     XSSFCell cell19= rowHeader.createCell(startColIndex+18);
-    cell19.setCellValue(" Income Account Identifier ");
+    cell19.setCellValue("  Income Account Identifier ");
     cell19.setCellStyle(headerCellStyle);
 
     XSSFCell cell20= rowHeader.createCell(startColIndex+19);

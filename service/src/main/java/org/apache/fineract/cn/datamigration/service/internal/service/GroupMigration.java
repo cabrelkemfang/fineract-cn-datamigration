@@ -36,7 +36,7 @@ public class GroupMigration {
     XSSFSheet worksheet = workbook.createSheet("Group");
 
     Datavalidator.validatorWeekday(worksheet,"MONDAY","TUESDAY","WEDNESDAY","THURSDAY","FRIDAY","SATURDAY","SUNDAY",7);
-
+    Datavalidator.validatorType(worksheet,"PENDING","ACTIVE","CLOSED",8);
     int startRowIndex = 0;
     int startColIndex = 0;
 
@@ -205,7 +205,7 @@ public class GroupMigration {
         } else {
           switch (row.getCell(3) .getCellType()) {
             case Cell.CELL_TYPE_STRING:
-              leaders = row.getCell(2).getStringCellValue();
+              leaders = row.getCell(3).getStringCellValue();
               break;
 
             case Cell.CELL_TYPE_NUMERIC:
@@ -225,7 +225,7 @@ public class GroupMigration {
               break;
 
             case Cell.CELL_TYPE_NUMERIC:
-              members =  String.valueOf(((Double)row.getCell(3).getNumericCellValue()).intValue());
+              members =  String.valueOf(((Double)row.getCell(4).getNumericCellValue()).intValue());
               break;
           }
         }
@@ -255,7 +255,7 @@ public class GroupMigration {
               break;
 
             case Cell.CELL_TYPE_NUMERIC:
-              assignedEmployee =  String.valueOf(((Double)row.getCell(3).getNumericCellValue()).intValue());
+              assignedEmployee =  String.valueOf(((Double)row.getCell(6).getNumericCellValue()).intValue());
               break;
           }
         }
@@ -298,7 +298,7 @@ public class GroupMigration {
               break;
 
             case Cell.CELL_TYPE_NUMERIC:
-              status =  String.valueOf(((Double)row.getCell(98).getNumericCellValue()).intValue());
+              status =  String.valueOf(((Double)row.getCell(8).getNumericCellValue()).intValue());
               break;
           }
         }
