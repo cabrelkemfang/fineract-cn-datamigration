@@ -2,6 +2,7 @@ package org.apache.fineract.cn.datamigration.service.internal.service;
 
 import org.apache.fineract.cn.accounting.api.v1.client.LedgerManager;
 import org.apache.fineract.cn.accounting.api.v1.domain.Ledger;
+import org.apache.fineract.cn.accounting.api.v1.domain.LedgerPage;
 import org.apache.fineract.cn.datamigration.service.ServiceConstants;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.*;
@@ -33,8 +34,26 @@ public class SubLedgerMigration {
     XSSFWorkbook workbook = new XSSFWorkbook();
     XSSFSheet worksheet = workbook.createSheet("SubLedgers");
 
+
+    //get all office Identifier
+
+   /*OfficePage officeList  = this.organizationManager.fetchOffices(null, null, null, null,null);
+    int sizeOfOfficeList=officeList.getOffices().size();
+    String[] officeIdentifier = new String[sizeOfOfficeList];
+    for (int i=0;i<=sizeOfOfficeList;i++){
+      officeIdentifier[i] = officeList.getOffices().get(i).getIdentifier();
+    }*/
+    final LedgerPage currentLedgerPage = this.ledgerManager.fetchLedgers(false, null, null, null, null, null, null);
+    int sizeOfLedger=currentLedgerPage.getLedgers().size();
+    
+    String [] ledgerIdentifier = new String[sizeOfLedger];
+    for(int i=0;i<sizeOfLedger;i++){
+      ledgerIdentifier[i]=currentLedgerPage.getLedgers().get(i).getIdentifier();
+    }
+
     Datavalidator.validatorLedger(worksheet,"ASSET","LIABILITY","EQUITY","REVENUE","EXPENSE",1);
     Datavalidator.validator(worksheet,"TRUE","FALSE",5);
+    Datavalidator.validatorString(worksheet,ledgerIdentifier,0);
     int startRowIndex = 0;
     int startColIndex = 0;
 
