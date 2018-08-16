@@ -35,17 +35,9 @@ public class SubLedgerMigration {
     XSSFSheet worksheet = workbook.createSheet("SubLedgers");
 
 
-    //get all office Identifier
-
-   /*OfficePage officeList  = this.organizationManager.fetchOffices(null, null, null, null,null);
-    int sizeOfOfficeList=officeList.getOffices().size();
-    String[] officeIdentifier = new String[sizeOfOfficeList];
-    for (int i=0;i<=sizeOfOfficeList;i++){
-      officeIdentifier[i] = officeList.getOffices().get(i).getIdentifier();
-    }*/
     final LedgerPage currentLedgerPage = this.ledgerManager.fetchLedgers(false, null, null, null, null, null, null);
     int sizeOfLedger=currentLedgerPage.getLedgers().size();
-    
+
     String [] ledgerIdentifier = new String[sizeOfLedger];
     for(int i=0;i<sizeOfLedger;i++){
       ledgerIdentifier[i]=currentLedgerPage.getLedgers().get(i).getIdentifier();
@@ -138,7 +130,7 @@ public class SubLedgerMigration {
               break;
 
             case Cell.CELL_TYPE_NUMERIC:
-                ParentledgerIdentifier =  String.valueOf(row.getCell(0).getNumericCellValue());
+                ParentledgerIdentifier =  String.valueOf(((Double)row.getCell(0).getNumericCellValue()).intValue());
               break;
           }
         }
@@ -153,7 +145,7 @@ public class SubLedgerMigration {
               break;
 
             case Cell.CELL_TYPE_NUMERIC:
-                type =  String.valueOf(row.getCell(1).getNumericCellValue());
+                type =  String.valueOf(((Double)row.getCell(1).getNumericCellValue()).intValue());
               break;
           }
         }

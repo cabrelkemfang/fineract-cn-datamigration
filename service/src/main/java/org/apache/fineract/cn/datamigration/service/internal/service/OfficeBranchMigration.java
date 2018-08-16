@@ -4,6 +4,7 @@ import org.apache.fineract.cn.datamigration.service.ServiceConstants;
 import org.apache.fineract.cn.office.api.v1.client.OrganizationManager;
 import org.apache.fineract.cn.office.api.v1.domain.Address;
 import org.apache.fineract.cn.office.api.v1.domain.Office;
+import org.apache.fineract.cn.office.api.v1.domain.OfficePage;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.*;
 import org.slf4j.Logger;
@@ -36,11 +37,20 @@ public class OfficeBranchMigration {
     XSSFWorkbook workbook = new XSSFWorkbook();
     XSSFSheet worksheet = workbook.createSheet("Branch_Office");
 
+    OfficePage officeList  = this.organizationManager.fetchOffices(null, 0, 10, null,null);
+    int sizeOfOfficeList=officeList.getOffices().size();
+    String[] officeIdentifier = new String[sizeOfOfficeList];
+    for (int i=0;i<=sizeOfOfficeList;i++){
+      officeIdentifier[i] = officeList.getOffices().get(i).getIdentifier();
+    }
+
     int startRowIndex = 0;
     int startColIndex = 0;
+    Datavalidator.validatorString(worksheet,officeIdentifier,1);
 
     Font font = worksheet.getWorkbook().createFont();
     XSSFCellStyle headerCellStyle = worksheet.getWorkbook().createCellStyle();
+
 
     headerCellStyle.setWrapText(true);
     headerCellStyle.setFont(font);

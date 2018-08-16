@@ -1,6 +1,8 @@
 package org.apache.fineract.cn.datamigration.service.internal.service;
 
 import org.apache.fineract.cn.datamigration.service.ServiceConstants;
+import org.apache.fineract.cn.office.api.v1.client.OrganizationManager;
+import org.apache.fineract.cn.office.api.v1.domain.OfficePage;
 import org.apache.fineract.cn.teller.api.v1.client.TellerManager;
 import org.apache.fineract.cn.teller.api.v1.domain.Teller;
 import org.apache.poi.ss.usermodel.*;
@@ -21,21 +23,33 @@ import java.util.stream.IntStream;
 public class TellerDatamigration {
   private final Logger logger;
   private final TellerManager tellerManager;
+  private final OrganizationManager organizationManager;
 
 
   @Autowired
   public TellerDatamigration(@Qualifier(ServiceConstants.LOGGER_NAME) final Logger logger,
-                                      final TellerManager tellerManager) {
+                                      final TellerManager tellerManager,
+                                      final OrganizationManager organizationManager) {
     super();
     this.logger = logger;
     this.tellerManager = tellerManager;
+    this.organizationManager = organizationManager;
   }
 
-  public static void tellerSheetDownload(HttpServletResponse response){
+  public  void tellerSheetDownload(HttpServletResponse response){
     XSSFWorkbook workbook = new XSSFWorkbook();
     XSSFSheet worksheet = workbook.createSheet("Tellers");
+
+    OfficePage officeList = organizationManager.fetchOffices(null, 0, 10, null,null);
+    int sizeOfOfficeList=officeList.getOffices().size();
+    String[] officeIdentifier = new String[sizeOfOfficeList];
+    for (int i=0;i<=sizeOfOfficeList;i++){
+      officeIdentifier[i] = officeList.getOffices().get(i).getIdentifier();
+    }
+
     Datavalidator.validator(worksheet,"TRUE","FALSE",8);
     Datavalidator.validatorState(worksheet,"ACTIVE","CLOSED","OPEN","PAUSED",10);
+    Datavalidator.validatorString(worksheet,officeIdentifier,0);
 
     int startRowIndex = 0;
     int startColIndex = 0;
@@ -144,7 +158,7 @@ public class TellerDatamigration {
               break;
 
             case Cell.CELL_TYPE_NUMERIC:
-                officeIdentifier =  String.valueOf(row.getCell(0).getNumericCellValue());
+                officeIdentifier =  String.valueOf(((Double)row.getCell(0).getNumericCellValue()).intValue());
               break;
           }
         }

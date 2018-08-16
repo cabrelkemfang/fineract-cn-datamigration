@@ -2,6 +2,7 @@ package org.apache.fineract.cn.datamigration.service.internal.service;
 
 import org.apache.fineract.cn.accounting.api.v1.client.LedgerManager;
 import org.apache.fineract.cn.accounting.api.v1.domain.Account;
+import org.apache.fineract.cn.accounting.api.v1.domain.LedgerPage;
 import org.apache.fineract.cn.datamigration.service.ServiceConstants;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.*;
@@ -34,9 +35,16 @@ public class LedgersAccountsMigration {
   public void accountSheetDownload(HttpServletResponse response){
     XSSFWorkbook workbook = new XSSFWorkbook();
     XSSFSheet worksheet = workbook.createSheet("Accounts");
+    final LedgerPage currentLedgerPage = this.ledgerManager.fetchLedgers(false, null, null, null, null, null, null);
+    int sizeOfLedger=currentLedgerPage.getLedgers().size();
+
+    String [] ledgerIdentifier = new String[sizeOfLedger];
+    for(int i=0;i<sizeOfLedger;i++){
+      ledgerIdentifier[i]=currentLedgerPage.getLedgers().get(i).getIdentifier();
+    }
 
     Datavalidator.validatorLedger(worksheet,"ASSET","LIABILITY","EQUITY","REVENUE","EXPENSE",0);
-
+    Datavalidator.validatorString(worksheet,ledgerIdentifier,6);
     int startRowIndex = 0;
     int startColIndex = 0;
 
@@ -124,7 +132,7 @@ public class LedgersAccountsMigration {
               break;
 
             case Cell.CELL_TYPE_NUMERIC:
-                type =  String.valueOf(row.getCell(0).getNumericCellValue());
+                type =   String.valueOf(((Double)row.getCell(0).getNumericCellValue()).intValue());
               break;
           }
         }

@@ -132,7 +132,7 @@ public class OfficeMigration {
               break;
 
             case Cell.CELL_TYPE_NUMERIC:
-                identifier =  String.valueOf(row.getCell(0).getNumericCellValue());
+                identifier =  String.valueOf(((Double)row.getCell(0).getNumericCellValue()).intValue());
               break;
           }
         }

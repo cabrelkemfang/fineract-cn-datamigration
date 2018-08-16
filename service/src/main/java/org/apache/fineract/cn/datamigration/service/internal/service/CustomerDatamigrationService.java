@@ -24,6 +24,8 @@ import org.apache.fineract.cn.customer.api.v1.domain.ContactDetail;
 import org.apache.fineract.cn.customer.api.v1.domain.Customer;
 import org.apache.fineract.cn.datamigration.service.ServiceConstants;
 import org.apache.fineract.cn.lang.DateOfBirth;
+import org.apache.fineract.cn.office.api.v1.client.OrganizationManager;
+import org.apache.fineract.cn.office.api.v1.domain.OfficePage;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,19 +47,28 @@ import java.util.stream.IntStream;
 public class CustomerDatamigrationService {
   private final Logger logger;
   private final CustomerManager customerManager;
+  private final OrganizationManager organizationManager;
 
 
   @Autowired
   public CustomerDatamigrationService(@Qualifier(ServiceConstants.LOGGER_NAME) final Logger logger,
-                                      final CustomerManager customerManager) {
+                                      final CustomerManager customerManager,
+                                      final OrganizationManager organizationManager) {
      super();
      this.logger = logger;
      this.customerManager = customerManager;
+     this.organizationManager = organizationManager;
   }
 
-  public static void customersSheetDownload(HttpServletResponse response){
+  public  void customersSheetDownload(HttpServletResponse response){
      XSSFWorkbook workbook = new XSSFWorkbook();
      XSSFSheet worksheet = workbook.createSheet("Customers");
+    OfficePage officeList  = this.organizationManager.fetchOffices(null, 0, 10, null,null);
+    int sizeOfOfficeList=officeList.getOffices().size();
+    String[] officeIdentifier = new String[sizeOfOfficeList];
+    for (int i=0;i<=sizeOfOfficeList;i++){
+      officeIdentifier[i] = officeList.getOffices().get(i).getIdentifier();
+    }
 
     Datavalidator.validator(worksheet,"PERSON","BUSINESS",1);
     Datavalidator.validator(worksheet,"TRUE","FALSE",8);
@@ -66,6 +77,7 @@ public class CustomerDatamigrationService {
 
     Datavalidator.validator(worksheet,"BUSINESS","PRIVATE",20);
     Datavalidator.validatorType(worksheet,"EMAIL","PHONE","MOBILE",19);
+    Datavalidator.validatorString(worksheet,officeIdentifier,11);
 
      int startRowIndex = 0;
      int startColIndex = 0;

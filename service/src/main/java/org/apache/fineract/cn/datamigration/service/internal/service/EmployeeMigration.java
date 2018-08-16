@@ -36,20 +36,19 @@ public class EmployeeMigration {
 
   public void employeeSheetDownload(HttpServletResponse response){
     //get all office Identifier
-
-   /*OfficePage officeList  = this.organizationManager.fetchOffices(null, null, null, null,null);
+    OfficePage officeList  = this.organizationManager.fetchOffices(null, 0, 10, null,null);
     int sizeOfOfficeList=officeList.getOffices().size();
     String[] officeIdentifier = new String[sizeOfOfficeList];
     for (int i=0;i<=sizeOfOfficeList;i++){
       officeIdentifier[i] = officeList.getOffices().get(i).getIdentifier();
-    }*/
+    }
 
     XSSFWorkbook workbook = new XSSFWorkbook();
     XSSFSheet worksheet = workbook.createSheet("Employees");
 
     Datavalidator.validator(worksheet,"BUSINESS","PRIVATE",6);
     Datavalidator.validatorType(worksheet,"EMAIL","PHONE","MOBILE",5);
-    //Datavalidator.validatorString(worksheet,officeIdentifier,4);
+    Datavalidator.validatorString(worksheet,officeIdentifier,4);
 
     int startRowIndex = 0;
     int startColIndex = 0;

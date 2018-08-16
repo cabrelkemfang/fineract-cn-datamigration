@@ -4,6 +4,9 @@ import org.apache.fineract.cn.datamigration.service.ServiceConstants;
 import org.apache.fineract.cn.group.api.v1.client.GroupManager;
 import org.apache.fineract.cn.group.api.v1.domain.Address;
 import org.apache.fineract.cn.group.api.v1.domain.Group;
+import org.apache.fineract.cn.group.api.v1.domain.GroupDefinition;
+import org.apache.fineract.cn.office.api.v1.client.OrganizationManager;
+import org.apache.fineract.cn.office.api.v1.domain.OfficePage;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.*;
 import org.slf4j.Logger;
@@ -23,20 +26,41 @@ public class GroupMigration {
 
   private final Logger logger;
   private final GroupManager groupManager;
+  private final OrganizationManager organizationManager ;
 
   @Autowired
   public GroupMigration(@Qualifier(ServiceConstants.LOGGER_NAME) final Logger logger,
-                        final GroupManager groupManager) {
+                        final GroupManager groupManager,
+                        final OrganizationManager organizationManager) {
     super();
     this.logger = logger;
     this.groupManager = groupManager;
+    this.organizationManager = organizationManager;
   }
   public void groupSheetDownload(HttpServletResponse response){
     XSSFWorkbook workbook = new XSSFWorkbook();
     XSSFSheet worksheet = workbook.createSheet("Group");
 
+   OfficePage officeList  = this.organizationManager.fetchOffices(null, 0, 10, null,null);
+    int sizeOfOfficeList=officeList.getOffices().size();
+    String[] officeIdentifier = new String[sizeOfOfficeList];
+    for (int i=0;i<=sizeOfOfficeList;i++){
+      officeIdentifier[i] = officeList.getOffices().get(i).getIdentifier();
+    }
+
+    List<GroupDefinition> groupDefinitions = this.groupManager.fetchGroupDefinitions();
+    int sizeOfGroupDfinition= groupDefinitions.size();
+    String [] groupDefinitionIdentifier=new String[sizeOfGroupDfinition];
+    for (int i=0;i<sizeOfGroupDfinition;i++){
+      groupDefinitionIdentifier[i]=groupDefinitions.get(i).getIdentifier();
+    }
+
+
+
     Datavalidator.validatorWeekday(worksheet,"MONDAY","TUESDAY","WEDNESDAY","THURSDAY","FRIDAY","SATURDAY","SUNDAY",7);
     Datavalidator.validatorType(worksheet,"PENDING","ACTIVE","CLOSED",8);
+    Datavalidator.validatorString(worksheet,officeIdentifier,5);
+    Datavalidator.validatorString(worksheet,groupDefinitionIdentifier,1);
     int startRowIndex = 0;
     int startColIndex = 0;
 
@@ -165,7 +189,7 @@ public class GroupMigration {
               break;
 
             case Cell.CELL_TYPE_NUMERIC:
-              identifier =  String.valueOf(row.getCell(0).getNumericCellValue());
+              identifier = String.valueOf(((Double)row.getCell(0).getNumericCellValue()).intValue());
               break;
           }
         }
