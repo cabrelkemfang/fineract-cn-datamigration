@@ -35,7 +35,7 @@ public class LedgersAccountsMigration {
   public void accountSheetDownload(HttpServletResponse response){
     XSSFWorkbook workbook = new XSSFWorkbook();
     XSSFSheet worksheet = workbook.createSheet("Accounts");
-    final LedgerPage currentLedgerPage = this.ledgerManager.fetchLedgers(false, null, null, null, null, null, null);
+    final LedgerPage currentLedgerPage = this.ledgerManager.fetchLedgers(true, null, null, null, null, null, null);
     int sizeOfLedger=currentLedgerPage.getLedgers().size();
 
     String [] ledgerIdentifier = new String[sizeOfLedger];

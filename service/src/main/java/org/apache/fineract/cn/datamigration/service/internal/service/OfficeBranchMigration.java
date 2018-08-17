@@ -37,16 +37,9 @@ public class OfficeBranchMigration {
     XSSFWorkbook workbook = new XSSFWorkbook();
     XSSFSheet worksheet = workbook.createSheet("Branch_Office");
 
-    OfficePage officeList  = this.organizationManager.fetchOffices(null, 0, 10, null,null);
-    int sizeOfOfficeList=officeList.getOffices().size();
-    String[] officeIdentifier = new String[sizeOfOfficeList];
-    for (int i=0;i<=sizeOfOfficeList;i++){
-      officeIdentifier[i] = officeList.getOffices().get(i).getIdentifier();
-    }
-
     int startRowIndex = 0;
     int startColIndex = 0;
-    Datavalidator.validatorString(worksheet,officeIdentifier,1);
+   // Datavalidator.validatorString(worksheet,officeIdentifier,1);
 
     Font font = worksheet.getWorkbook().createFont();
     XSSFCellStyle headerCellStyle = worksheet.getWorkbook().createCellStyle();

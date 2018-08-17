@@ -40,16 +40,10 @@ public class TellerDatamigration {
     XSSFWorkbook workbook = new XSSFWorkbook();
     XSSFSheet worksheet = workbook.createSheet("Tellers");
 
-    OfficePage officeList = organizationManager.fetchOffices(null, 0, 10, null,null);
-    int sizeOfOfficeList=officeList.getOffices().size();
-    String[] officeIdentifier = new String[sizeOfOfficeList];
-    for (int i=0;i<=sizeOfOfficeList;i++){
-      officeIdentifier[i] = officeList.getOffices().get(i).getIdentifier();
-    }
 
     Datavalidator.validator(worksheet,"TRUE","FALSE",8);
     Datavalidator.validatorState(worksheet,"ACTIVE","CLOSED","OPEN","PAUSED",10);
-    Datavalidator.validatorString(worksheet,officeIdentifier,0);
+  //  Datavalidator.validatorString(worksheet,officeIdentifier,0);
 
     int startRowIndex = 0;
     int startColIndex = 0;

@@ -57,6 +57,7 @@ public class DatamigrationRestController {
   private final ProductInstanceMigration productInstanceMigration  ;
   private final  GroupDefinitionMigration groupDefinitionMigration  ;
   private final  ChargeDefinitionMigration chargeDefinitionMigration  ;
+  private final  TransactionTypeMigration transactionTypeMigration  ;
 
 
 
@@ -80,7 +81,8 @@ public class DatamigrationRestController {
                                       final ProductDefinitionMigration productDefinitionMigration,
                                       final ProductInstanceMigration productInstanceMigration,
                                       final  GroupDefinitionMigration groupDefinitionMigration,
-                                      final  ChargeDefinitionMigration chargeDefinitionMigration
+                                      final  ChargeDefinitionMigration chargeDefinitionMigration,
+                                      final  TransactionTypeMigration transactionTypeMigration
                                       ) {
     super();
     this.commandGateway = commandGateway;
@@ -102,6 +104,7 @@ public class DatamigrationRestController {
     this.productInstanceMigration=productInstanceMigration;
     this.groupDefinitionMigration=groupDefinitionMigration;
     this.chargeDefinitionMigration=chargeDefinitionMigration;
+    this.transactionTypeMigration=transactionTypeMigration;
   }
 
   @Permittable(value = AcceptedTokenType.SYSTEM)
@@ -523,7 +526,28 @@ public class DatamigrationRestController {
     return new ResponseEntity<>("Upload successuly", HttpStatus.OK);
   }
 
+//Transaction Type
+@Permittable(value = AcceptedTokenType.TENANT, groupId = PermittableGroupIds.DATAMIGRATION_MANAGEMENT)
+@RequestMapping(
+        value = "/transation_type/download",
+        method = RequestMethod.GET,
+        consumes = MediaType.ALL_VALUE
+)
+public void transactionTypeSheetdownload(HttpServletResponse response) throws ClassNotFoundException {
+  transactionTypeMigration.transactionTypeSheetDownload(response);
+}
 
+  @Permittable(value = AcceptedTokenType.TENANT, groupId = PermittableGroupIds.DATAMIGRATION_MANAGEMENT)
+  @RequestMapping(
+          value = "/transation_type",
+          method = RequestMethod.POST,
+          consumes = MediaType.MULTIPART_FORM_DATA_VALUE
+  )
+  public ResponseEntity<String> transactionTypeSheetUpload(@RequestParam("file") MultipartFile file) throws
+          IOException {
+    transactionTypeMigration.transactionTypeSheetUpload(file);
+    return new ResponseEntity<>("Upload successuly", HttpStatus.OK);
+  }
 
 
 }

@@ -41,12 +41,6 @@ public class GroupMigration {
     XSSFWorkbook workbook = new XSSFWorkbook();
     XSSFSheet worksheet = workbook.createSheet("Group");
 
-   OfficePage officeList  = this.organizationManager.fetchOffices(null, null, null, null,null);
-    int sizeOfOfficeList=officeList.getOffices().size();
-    String[] officeIdentifier = new String[sizeOfOfficeList];
-    for (int i=0;i<=sizeOfOfficeList;i++){
-      officeIdentifier[i] = officeList.getOffices().get(i).getIdentifier();
-    }
 
     List<GroupDefinition> groupDefinitions = this.groupManager.fetchGroupDefinitions();
     int sizeOfGroupDfinition= groupDefinitions.size();
@@ -59,7 +53,7 @@ public class GroupMigration {
 
     Datavalidator.validatorWeekday(worksheet,"MONDAY","TUESDAY","WEDNESDAY","THURSDAY","FRIDAY","SATURDAY","SUNDAY",7);
     Datavalidator.validatorType(worksheet,"PENDING","ACTIVE","CLOSED",8);
-    Datavalidator.validatorString(worksheet,officeIdentifier,5);
+   // Datavalidator.validatorString(worksheet,officeIdentifier,5);
     Datavalidator.validatorString(worksheet,groupDefinitionIdentifier,1);
     int startRowIndex = 0;
     int startColIndex = 0;

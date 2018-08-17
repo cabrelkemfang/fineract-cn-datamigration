@@ -1,5 +1,6 @@
 package org.apache.fineract.cn.datamigration.service.internal.service;
 
+import org.apache.fineract.cn.accounting.api.v1.domain.LedgerPage;
 import org.apache.fineract.cn.datamigration.service.ServiceConstants;
 import org.apache.fineract.cn.portfolio.api.v1.client.PortfolioManager;
 import org.apache.fineract.cn.portfolio.api.v1.domain.*;
@@ -38,8 +39,17 @@ public class LoanProductMigration {
     XSSFWorkbook workbook = new XSSFWorkbook();
     XSSFSheet worksheet = workbook.createSheet("Products");
 
+    final LedgerPage currentLedgerPage = this.ledgerManager.fetchLedgers(false, null, null, null, null, null, null);
+    int sizeOfLedger=currentLedgerPage.getLedgers().size();
+
+    String [] ledgerIdentifier = new String[sizeOfLedger];
+    for(int i=0;i<sizeOfLedger;i++){
+      ledgerIdentifier[i]=currentLedgerPage.getLedgers().get(i).getIdentifier();
+    }
+
     Datavalidator.validator(worksheet,"CURRENT_BALANCE","BEGINNING_BALANCE",9);
     Datavalidator.validator(worksheet,"TRUE","FALSE",12);
+    Datavalidator.validatorString(worksheet,ledgerIdentifier,18);
     int startRowIndex = 0;
     int startColIndex = 0;
 

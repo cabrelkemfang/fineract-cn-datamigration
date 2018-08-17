@@ -325,4 +325,23 @@ public interface DatamigrationManager {
           IOException ;
 
 
+  //Transaction Type
+  @RequestMapping(
+          value = "/transation_type/download",
+          method = RequestMethod.GET,
+          consumes = MediaType.ALL_VALUE
+  )
+   void transactionTypeSheetdownload(HttpServletResponse response) throws ClassNotFoundException ;
+
+
+  @RequestMapping(
+          value = "/transation_type",
+          method = RequestMethod.POST,
+          consumes = MediaType.MULTIPART_FORM_DATA_VALUE
+  )
+   ResponseEntity<String> transactionTypeSheetUpload(@RequestParam("file") MultipartFile file) throws
+          IOException ;
+
+
+
 }

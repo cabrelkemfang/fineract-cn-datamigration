@@ -4,12 +4,14 @@ import org.apache.fineract.cn.accounting.api.v1.client.LedgerManager;
 import org.apache.fineract.cn.accounting.api.v1.domain.Creditor;
 import org.apache.fineract.cn.accounting.api.v1.domain.Debtor;
 import org.apache.fineract.cn.accounting.api.v1.domain.JournalEntry;
+import org.apache.fineract.cn.accounting.api.v1.domain.TransactionTypePage;
 import org.apache.fineract.cn.datamigration.service.ServiceConstants;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.*;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartException;
 import org.springframework.web.multipart.MultipartFile;
@@ -37,7 +39,17 @@ public class JournalEntryMigration {
   public void journalEntryDownload(HttpServletResponse response){
     XSSFWorkbook workbook = new XSSFWorkbook();
     XSSFSheet worksheet = workbook.createSheet("JournalEntry");
+
+    final TransactionTypePage transactionTypePage  = this.ledgerManager.fetchTransactionTypes(null, 0, 100, "identifier", Sort.Direction.DESC.name());
+    int sizeOfLedger=transactionTypePage.getTransactionTypes().size();
+
+    String [] ledgerIdentifier = new String[sizeOfLedger];
+    for(int i=0;i<sizeOfLedger;i++){
+      ledgerIdentifier[i]=transactionTypePage.getTransactionTypes().get(i).getCode();
+    }
+
     Datavalidator.validator(worksheet,"PENDING","PROCESSED",9);
+    Datavalidator.validatorString(worksheet,ledgerIdentifier,2);
 
     int startRowIndex = 0;
     int startColIndex = 0;

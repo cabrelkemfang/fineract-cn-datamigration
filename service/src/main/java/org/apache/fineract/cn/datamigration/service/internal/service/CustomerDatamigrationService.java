@@ -63,12 +63,6 @@ public class CustomerDatamigrationService {
   public  void customersSheetDownload(HttpServletResponse response){
      XSSFWorkbook workbook = new XSSFWorkbook();
      XSSFSheet worksheet = workbook.createSheet("Customers");
-    OfficePage officeList  = this.organizationManager.fetchOffices(null, 0, 10, null,null);
-    int sizeOfOfficeList=officeList.getOffices().size();
-    String[] officeIdentifier = new String[sizeOfOfficeList];
-    for (int i=0;i<=sizeOfOfficeList;i++){
-      officeIdentifier[i] = officeList.getOffices().get(i).getIdentifier();
-    }
 
     Datavalidator.validator(worksheet,"PERSON","BUSINESS",1);
     Datavalidator.validator(worksheet,"TRUE","FALSE",8);
@@ -77,7 +71,7 @@ public class CustomerDatamigrationService {
 
     Datavalidator.validator(worksheet,"BUSINESS","PRIVATE",20);
     Datavalidator.validatorType(worksheet,"EMAIL","PHONE","MOBILE",19);
-    Datavalidator.validatorString(worksheet,officeIdentifier,11);
+   // Datavalidator.validatorString(worksheet,officeIdentifier,11);
 
      int startRowIndex = 0;
      int startColIndex = 0;
