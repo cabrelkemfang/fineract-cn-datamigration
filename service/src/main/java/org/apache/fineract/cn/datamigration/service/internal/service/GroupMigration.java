@@ -41,7 +41,7 @@ public class GroupMigration {
     XSSFWorkbook workbook = new XSSFWorkbook();
     XSSFSheet worksheet = workbook.createSheet("Group");
 
-   OfficePage officeList  = this.organizationManager.fetchOffices(null, 0, 10, null,null);
+   OfficePage officeList  = this.organizationManager.fetchOffices(null, null, null, null,null);
     int sizeOfOfficeList=officeList.getOffices().size();
     String[] officeIdentifier = new String[sizeOfOfficeList];
     for (int i=0;i<=sizeOfOfficeList;i++){
