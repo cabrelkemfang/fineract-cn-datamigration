@@ -1,5 +1,7 @@
 package org.apache.fineract.cn.datamigration.service.internal.service;
 
+
+import org.apache.fineract.cn.accounting.api.v1.client.LedgerManager;
 import org.apache.fineract.cn.accounting.api.v1.domain.LedgerPage;
 import org.apache.fineract.cn.datamigration.service.ServiceConstants;
 import org.apache.fineract.cn.portfolio.api.v1.client.PortfolioManager;
@@ -26,16 +28,20 @@ public class LoanProductMigration {
 
   private final Logger logger;
   private  final PortfolioManager portfolioManager;
+  private final LedgerManager ledgerManager;
 
   @Autowired
-  public LoanProductMigration(@Qualifier(ServiceConstants.LOGGER_NAME) final Logger logger,
-                              final PortfolioManager portfolioManager) {
+  public LoanProductMigration(@Qualifier(ServiceConstants.LOGGER_NAME)
+                                final Logger logger,
+                                final PortfolioManager portfolioManager,
+                                final LedgerManager ledgerManager) {
     super();
     this.logger = logger;
     this.portfolioManager = portfolioManager;
+    this.ledgerManager = ledgerManager;
   }
 
-  public static void productSheetDownload(HttpServletResponse response){
+  public  void productSheetDownload(HttpServletResponse response){
     XSSFWorkbook workbook = new XSSFWorkbook();
     XSSFSheet worksheet = workbook.createSheet("Products");
 
