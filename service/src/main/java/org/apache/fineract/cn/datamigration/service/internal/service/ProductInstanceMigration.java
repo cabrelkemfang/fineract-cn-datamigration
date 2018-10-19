@@ -1,6 +1,7 @@
 package org.apache.fineract.cn.datamigration.service.internal.service;
 
 import org.apache.fineract.cn.datamigration.service.ServiceConstants;
+import org.apache.fineract.cn.datamigration.service.internal.service.hleper.DepositAccountManagementService;
 import org.apache.fineract.cn.deposit.api.v1.client.DepositAccountManager;
 import org.apache.fineract.cn.deposit.api.v1.instance.domain.ProductInstance;
 import org.apache.poi.ss.usermodel.*;
@@ -22,15 +23,15 @@ import java.util.stream.IntStream;
 @Service
 public class ProductInstanceMigration {
   private final Logger logger;
-  private final DepositAccountManager depositAccountManager;
+  private final DepositAccountManagementService depositAccountManagementService;
 
 
   @Autowired
   public ProductInstanceMigration(@Qualifier(ServiceConstants.LOGGER_NAME) final Logger logger,
-                                    final DepositAccountManager depositAccountManager) {
+                                    final DepositAccountManagementService depositAccountManagementService) {
     super();
     this.logger = logger;
-    this.depositAccountManager = depositAccountManager;
+    this.depositAccountManagementService = depositAccountManagementService;
   }
 
   public static void productInstanceSheetDownload(HttpServletResponse response){
@@ -226,7 +227,7 @@ public class ProductInstanceMigration {
         productInstance.setState(String.valueOf(state));
         productInstance.setBalance(balance);
 
-        this.depositAccountManager.create(productInstance);
+        this.depositAccountManagementService.createProductInstance(productInstance);
 
       }
     } catch (IOException e) {

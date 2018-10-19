@@ -4,6 +4,7 @@ import org.apache.fineract.cn.accounting.api.v1.client.LedgerManager;
 import org.apache.fineract.cn.accounting.api.v1.domain.Ledger;
 import org.apache.fineract.cn.accounting.api.v1.domain.LedgerPage;
 import org.apache.fineract.cn.datamigration.service.ServiceConstants;
+import org.apache.fineract.cn.datamigration.service.internal.service.hleper.AccountingService;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.*;
 import org.slf4j.Logger;
@@ -12,6 +13,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartException;
 import org.springframework.web.multipart.MultipartFile;
+
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -20,32 +22,32 @@ import java.util.stream.IntStream;
 @Service
 public class SubLedgerMigration {
   private final Logger logger;
-  private final LedgerManager ledgerManager;
+  private final AccountingService accountingService;
 
   @Autowired
   public SubLedgerMigration(@Qualifier(ServiceConstants.LOGGER_NAME) final Logger logger,
-                            final LedgerManager ledgerManager) {
+                            final AccountingService accountingService) {
     super();
     this.logger = logger;
-    this.ledgerManager = ledgerManager;
+    this.accountingService = accountingService;
   }
 
-  public void subLedgerSheetDownload(HttpServletResponse response){
+  public void subLedgerSheetDownload(HttpServletResponse response) {
     XSSFWorkbook workbook = new XSSFWorkbook();
     XSSFSheet worksheet = workbook.createSheet("SubLedgers");
 
 
-    final LedgerPage currentLedgerPage = this.ledgerManager.fetchLedgers(false, null, null, null, null, null, null);
-    int sizeOfLedger=currentLedgerPage.getLedgers().size();
+    final LedgerPage currentLedgerPage = this.accountingService.fetchLeger();
+    int sizeOfLedger = currentLedgerPage.getLedgers().size();
 
-    String [] ledgerIdentifier = new String[sizeOfLedger];
-    for(int i=0;i<sizeOfLedger;i++){
-      ledgerIdentifier[i]=currentLedgerPage.getLedgers().get(i).getIdentifier();
+    String[] ledgerIdentifier = new String[sizeOfLedger];
+    for (int i = 0; i < sizeOfLedger; i++) {
+      ledgerIdentifier[i] = currentLedgerPage.getLedgers().get(i).getIdentifier();
     }
 
-    Datavalidator.validatorLedger(worksheet,"ASSET","LIABILITY","EQUITY","REVENUE","EXPENSE",1);
-    Datavalidator.validator(worksheet,"TRUE","FALSE",5);
-    Datavalidator.validatorString(worksheet,ledgerIdentifier,0);
+    Datavalidator.validatorLedger(worksheet, "ASSET", "LIABILITY", "EQUITY", "REVENUE", "EXPENSE", 1);
+    Datavalidator.validator(worksheet, "TRUE", "FALSE", 5);
+    Datavalidator.validatorString(worksheet, ledgerIdentifier, 0);
     int startRowIndex = 0;
     int startColIndex = 0;
 
@@ -57,27 +59,27 @@ public class SubLedgerMigration {
     XSSFRow rowHeader = worksheet.createRow((short) startRowIndex);
     rowHeader.setHeight((short) 500);
 
-    XSSFCell cell1 = rowHeader.createCell(startColIndex+0);
+    XSSFCell cell1 = rowHeader.createCell(startColIndex + 0);
     cell1.setCellValue("Parent Ledger Identifier");
     cell1.setCellStyle(headerCellStyle);
 
-    XSSFCell cell2 = rowHeader.createCell(startColIndex+1);
+    XSSFCell cell2 = rowHeader.createCell(startColIndex + 1);
     cell2.setCellValue("Type");
     cell2.setCellStyle(headerCellStyle);
 
-    XSSFCell cell3 = rowHeader.createCell(startColIndex+2);
+    XSSFCell cell3 = rowHeader.createCell(startColIndex + 2);
     cell3.setCellValue("Identifier");
     cell3.setCellStyle(headerCellStyle);
 
-    XSSFCell cell4 = rowHeader.createCell(startColIndex+3);
+    XSSFCell cell4 = rowHeader.createCell(startColIndex + 3);
     cell4.setCellValue("Name");
     cell4.setCellStyle(headerCellStyle);
 
-    XSSFCell cell5 = rowHeader.createCell(startColIndex+4);
+    XSSFCell cell5 = rowHeader.createCell(startColIndex + 4);
     cell5.setCellValue("Description");
     cell5.setCellStyle(headerCellStyle);
 
-    XSSFCell cell6= rowHeader.createCell(startColIndex+5);
+    XSSFCell cell6 = rowHeader.createCell(startColIndex + 5);
     cell6.setCellValue("Show Accounts In Chart");
     cell6.setCellStyle(headerCellStyle);
 
@@ -100,7 +102,7 @@ public class SubLedgerMigration {
 
   }
 
-  public void subLedgerSheetUpload(MultipartFile file){
+  public void subLedgerSheetUpload(MultipartFile file) {
     if (!file.getContentType().equals("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")) {
       throw new MultipartException("Only excel files accepted!");
     }
@@ -109,7 +111,7 @@ public class SubLedgerMigration {
       Sheet firstSheet = workbook.getSheetAt(0);
       int rowCount = firstSheet.getLastRowNum() + 1;
       Row row;
-      String ParentledgerIdentifier=null;
+      String ParentledgerIdentifier = null;
       String type = null;
       String identifier = null;
       String name = null;
@@ -123,14 +125,14 @@ public class SubLedgerMigration {
         if (row.getCell(0) == null) {
           ParentledgerIdentifier = null;
         } else {
-          switch (row.getCell(0) .getCellType()) {
+          switch (row.getCell(0).getCellType()) {
 
             case Cell.CELL_TYPE_STRING:
               ParentledgerIdentifier = row.getCell(0).getStringCellValue();
               break;
 
             case Cell.CELL_TYPE_NUMERIC:
-                ParentledgerIdentifier =  String.valueOf(((Double)row.getCell(0).getNumericCellValue()).intValue());
+              ParentledgerIdentifier = String.valueOf(((Double) row.getCell(0).getNumericCellValue()).intValue());
               break;
           }
         }
@@ -138,28 +140,28 @@ public class SubLedgerMigration {
         if (row.getCell(1) == null) {
           type = null;
         } else {
-          switch (row.getCell(1) .getCellType()) {
+          switch (row.getCell(1).getCellType()) {
 
             case Cell.CELL_TYPE_STRING:
               type = row.getCell(1).getStringCellValue();
               break;
 
             case Cell.CELL_TYPE_NUMERIC:
-                type =  String.valueOf(((Double)row.getCell(1).getNumericCellValue()).intValue());
+              type = String.valueOf(((Double) row.getCell(1).getNumericCellValue()).intValue());
               break;
           }
         }
         if (row.getCell(2) == null) {
           identifier = null;
         } else {
-          switch (row.getCell(2) .getCellType()) {
+          switch (row.getCell(2).getCellType()) {
 
             case Cell.CELL_TYPE_STRING:
               identifier = row.getCell(2).getStringCellValue();
               break;
 
             case Cell.CELL_TYPE_NUMERIC:
-                identifier =   String.valueOf(((Double)row.getCell(2).getNumericCellValue()).intValue());
+              identifier = String.valueOf(((Double) row.getCell(2).getNumericCellValue()).intValue());
               break;
           }
         }
@@ -167,14 +169,14 @@ public class SubLedgerMigration {
         if (row.getCell(3) == null) {
           name = null;
         } else {
-          switch (row.getCell(3) .getCellType()) {
+          switch (row.getCell(3).getCellType()) {
 
             case Cell.CELL_TYPE_STRING:
               name = row.getCell(3).getStringCellValue();
               break;
 
             case Cell.CELL_TYPE_NUMERIC:
-                name =  String.valueOf(((Double)row.getCell(3).getNumericCellValue()).intValue());
+              name = String.valueOf(((Double) row.getCell(3).getNumericCellValue()).intValue());
               break;
           }
         }
@@ -182,14 +184,14 @@ public class SubLedgerMigration {
         if (row.getCell(4) == null) {
           description = null;
         } else {
-          switch (row.getCell(4) .getCellType()) {
+          switch (row.getCell(4).getCellType()) {
 
             case Cell.CELL_TYPE_STRING:
               description = row.getCell(4).getStringCellValue();
               break;
 
             case Cell.CELL_TYPE_NUMERIC:
-                description =   String.valueOf(((Double)row.getCell(4).getNumericCellValue()).intValue());
+              description = String.valueOf(((Double) row.getCell(4).getNumericCellValue()).intValue());
               break;
           }
         }
@@ -197,13 +199,13 @@ public class SubLedgerMigration {
         if (row.getCell(5) == null) {
           showAccountsInChart = false;
         } else {
-          switch (row.getCell(5) .getCellType()) {
+          switch (row.getCell(5).getCellType()) {
 
             case Cell.CELL_TYPE_NUMERIC:
 
-              if(((Double)row.getCell(5).getNumericCellValue()).intValue()==0){
+              if (((Double) row.getCell(5).getNumericCellValue()).intValue() == 0) {
                 showAccountsInChart = Boolean.parseBoolean("false");
-              }else{
+              } else {
                 showAccountsInChart = Boolean.parseBoolean("true");
               }
               break;
@@ -216,9 +218,9 @@ public class SubLedgerMigration {
         ledger.setName(String.valueOf(name));
         ledger.setDescription(String.valueOf(description));
         ledger.setShowAccountsInChart(showAccountsInChart);
-        String parent= String.valueOf(ParentledgerIdentifier);
+        String parent = String.valueOf(ParentledgerIdentifier);
 
-        this.ledgerManager.addSubLedger(parent,ledger);
+        this.accountingService.createSubLeger(parent, ledger);
       }
     } catch (IOException e) {
       e.printStackTrace();

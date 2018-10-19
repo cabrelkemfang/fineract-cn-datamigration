@@ -1,10 +1,8 @@
 package org.apache.fineract.cn.datamigration.service.internal.service;
 
-import org.apache.fineract.cn.accounting.api.v1.client.LedgerManager;
-import org.apache.fineract.cn.accounting.api.v1.domain.Account;
-import org.apache.fineract.cn.accounting.api.v1.domain.LedgerPage;
 import org.apache.fineract.cn.accounting.api.v1.domain.TransactionType;
 import org.apache.fineract.cn.datamigration.service.ServiceConstants;
+import org.apache.fineract.cn.datamigration.service.internal.service.hleper.AccountingService;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Font;
 import org.apache.poi.ss.usermodel.Row;
@@ -25,17 +23,17 @@ import java.util.stream.IntStream;
 @Service
 public class TransactionTypeMigration {
   private final Logger logger;
-  private final LedgerManager ledgerManager;
+  private final AccountingService accountingService;
 
   @Autowired
   public TransactionTypeMigration(@Qualifier(ServiceConstants.LOGGER_NAME) final Logger logger,
-                                  final LedgerManager ledgerManager) {
+                                  final AccountingService accountingService) {
     super();
     this.logger = logger;
-    this.ledgerManager = ledgerManager;
+    this.accountingService = accountingService;
   }
 
-  public void transactionTypeSheetDownload(HttpServletResponse response){
+  public void transactionTypeSheetDownload(HttpServletResponse response) {
     XSSFWorkbook workbook = new XSSFWorkbook();
     XSSFSheet worksheet = workbook.createSheet("Transaction_Type");
 
@@ -50,15 +48,15 @@ public class TransactionTypeMigration {
     XSSFRow rowHeader = worksheet.createRow((short) startRowIndex);
     rowHeader.setHeight((short) 500);
 
-    XSSFCell cell1 = rowHeader.createCell(startColIndex+0);
+    XSSFCell cell1 = rowHeader.createCell(startColIndex + 0);
     cell1.setCellValue("Code");
     cell1.setCellStyle(headerCellStyle);
 
-    XSSFCell cell2 = rowHeader.createCell(startColIndex+1);
+    XSSFCell cell2 = rowHeader.createCell(startColIndex + 1);
     cell2.setCellValue("Name");
     cell2.setCellStyle(headerCellStyle);
 
-    XSSFCell cell3 = rowHeader.createCell(startColIndex+2);
+    XSSFCell cell3 = rowHeader.createCell(startColIndex + 2);
     cell3.setCellValue("Description");
     cell3.setCellStyle(headerCellStyle);
 
@@ -80,7 +78,7 @@ public class TransactionTypeMigration {
 
   }
 
-  public void transactionTypeSheetUpload(MultipartFile file){
+  public void transactionTypeSheetUpload(MultipartFile file) {
     if (!file.getContentType().equals("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")) {
       throw new MultipartException("Only excel files accepted!");
     }
@@ -98,14 +96,14 @@ public class TransactionTypeMigration {
         if (row.getCell(0) == null) {
           code = null;
         } else {
-          switch (row.getCell(0) .getCellType()) {
+          switch (row.getCell(0).getCellType()) {
 
             case Cell.CELL_TYPE_STRING:
               code = row.getCell(0).getStringCellValue();
               break;
 
             case Cell.CELL_TYPE_NUMERIC:
-              code =   String.valueOf(((Double)row.getCell(0).getNumericCellValue()).intValue());
+              code = String.valueOf(((Double) row.getCell(0).getNumericCellValue()).intValue());
               break;
           }
         }
@@ -113,14 +111,14 @@ public class TransactionTypeMigration {
         if (row.getCell(1) == null) {
           name = null;
         } else {
-          switch (row.getCell(1) .getCellType()) {
+          switch (row.getCell(1).getCellType()) {
 
             case Cell.CELL_TYPE_STRING:
               name = row.getCell(1).getStringCellValue();
               break;
 
             case Cell.CELL_TYPE_NUMERIC:
-              name =   String.valueOf(((Double)row.getCell(1).getNumericCellValue()).intValue());
+              name = String.valueOf(((Double) row.getCell(1).getNumericCellValue()).intValue());
               break;
           }
         }
@@ -128,14 +126,14 @@ public class TransactionTypeMigration {
         if (row.getCell(2) == null) {
           description = null;
         } else {
-          switch (row.getCell(2) .getCellType()) {
+          switch (row.getCell(2).getCellType()) {
 
             case Cell.CELL_TYPE_STRING:
               description = row.getCell(2).getStringCellValue();
               break;
 
             case Cell.CELL_TYPE_NUMERIC:
-              description =  String.valueOf(((Double)row.getCell(2).getNumericCellValue()).intValue());
+              description = String.valueOf(((Double) row.getCell(2).getNumericCellValue()).intValue());
               break;
           }
         }
@@ -145,7 +143,7 @@ public class TransactionTypeMigration {
         transactionType.setName(String.valueOf(name));
         transactionType.setDescription(String.valueOf(description));
 
-        this.ledgerManager.createTransactionType(transactionType);
+        this.accountingService.createTransactionType(transactionType);
       }
     } catch (IOException e) {
       e.printStackTrace();
