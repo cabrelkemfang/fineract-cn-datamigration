@@ -41,7 +41,7 @@ public class DatamigrationRestController {
   private final CommandGateway commandGateway;
   private final CustomerDatamigrationService customerDatamigrationService;
   private final OfficeMigration officeMigration;
-  private final OfficeBranchMigration officeBranchMigration;
+  private final branchOfficeMigration branchOfficeMigration;
   private final EmployeeMigration employeeMigration;
   private final TellerDatamigration tellerDatamigration;
   private final GroupMigration groupMigration;
@@ -66,7 +66,7 @@ public class DatamigrationRestController {
   public DatamigrationRestController( final CommandGateway commandGateway,
                                       final CustomerDatamigrationService customerDatamigrationService,
                                       final OfficeMigration officeMigration,
-                                      final OfficeBranchMigration officeBranchMigration,
+                                      final branchOfficeMigration branchOfficeMigration,
                                       final EmployeeMigration employeeMigration,
                                       final TellerDatamigration  tellerDatamigration,
                                       final GroupMigration groupMigration,
@@ -88,7 +88,7 @@ public class DatamigrationRestController {
     this.commandGateway = commandGateway;
     this.customerDatamigrationService = customerDatamigrationService;
     this.officeMigration = officeMigration;
-    this.officeBranchMigration = officeBranchMigration;
+    this.branchOfficeMigration = branchOfficeMigration;
     this.employeeMigration = employeeMigration;
     this.tellerDatamigration = tellerDatamigration;
     this.groupMigration = groupMigration;
@@ -172,7 +172,7 @@ public class DatamigrationRestController {
           consumes = MediaType.ALL_VALUE
   )
   public void branchSheetDownload(HttpServletResponse response) throws ClassNotFoundException {
-    officeBranchMigration.branchSheetDownload(response);
+    branchOfficeMigration.branchSheetDownload(response);
   }
 
   @Permittable(value = AcceptedTokenType.TENANT, groupId = PermittableGroupIds.DATAMIGRATION_MANAGEMENT)
@@ -182,7 +182,7 @@ public class DatamigrationRestController {
           consumes = MediaType.MULTIPART_FORM_DATA_VALUE
   )
   public ResponseEntity<String> branchSheetUpload(@RequestParam("file") MultipartFile file) throws IOException {
-    officeBranchMigration.branchSheetUpload(file);
+    branchOfficeMigration.branchSheetUpload(file);
     return new ResponseEntity<>("Upload successuly", HttpStatus.OK);
   }
 
