@@ -1,6 +1,8 @@
 package org.apache.fineract.cn.datamigration.service.internal.service;
 
 import org.apache.fineract.cn.datamigration.service.ServiceConstants;
+import org.apache.fineract.cn.datamigration.service.internal.service.helper.GroupService;
+import org.apache.fineract.cn.datamigration.service.internal.service.helper.OrganizationService;
 import org.apache.fineract.cn.group.api.v1.client.GroupManager;
 import org.apache.fineract.cn.group.api.v1.domain.Address;
 import org.apache.fineract.cn.group.api.v1.domain.Group;
@@ -25,30 +27,30 @@ import java.util.stream.IntStream;
 public class GroupMigration {
 
   private final Logger logger;
-  private final GroupManager groupManager;
-  private final OrganizationManager organizationManager ;
+  private final GroupService groupService;
+  private final OrganizationService organizationService ;
 
   @Autowired
   public GroupMigration(@Qualifier(ServiceConstants.LOGGER_NAME) final Logger logger,
-                        final GroupManager groupManager,
-                        final OrganizationManager organizationManager) {
+                        final GroupService groupService,
+                        final OrganizationService organizationService) {
     super();
     this.logger = logger;
-    this.groupManager = groupManager;
-    this.organizationManager = organizationManager;
+    this.groupService = groupService;
+    this.organizationService = organizationService;
   }
   public void groupSheetDownload(HttpServletResponse response){
     XSSFWorkbook workbook = new XSSFWorkbook();
     XSSFSheet worksheet = workbook.createSheet("Group");
 
 
-    List<GroupDefinition> groupDefinitions = this.groupManager.fetchGroupDefinitions();
-    int sizeOfGroupDfinition= groupDefinitions.size();
-    String [] groupDefinitionIdentifier=new String[sizeOfGroupDfinition];
-    for (int i=0;i<sizeOfGroupDfinition;i++){
+    List<GroupDefinition> groupDefinitions = this.groupService.fetchGroupDefinitions();
+    int sizeOfGroupDefinition= groupDefinitions.size();
+
+    String [] groupDefinitionIdentifier=new String[sizeOfGroupDefinition];
+    for (int i=0;i<sizeOfGroupDefinition;i++){
       groupDefinitionIdentifier[i]=groupDefinitions.get(i).getIdentifier();
     }
-
 
 
     Datavalidator.validatorWeekday(worksheet,"MONDAY","TUESDAY","WEDNESDAY","THURSDAY","FRIDAY","SATURDAY","SUNDAY",7);
@@ -68,7 +70,7 @@ public class GroupMigration {
     rowHeader.setHeight((short) 500);
 
     XSSFCell cell1 = rowHeader.createCell(startColIndex+0);
-    cell1.setCellValue("Identifier");
+    cell1.setCellValue("Group Identifier");
     cell1.setCellStyle(headerCellStyle);
 
     XSSFCell cell2 = rowHeader.createCell(startColIndex+1);
@@ -431,7 +433,7 @@ public class GroupMigration {
         group.setStatus(String.valueOf(status));
         group.setAddress(address);
 
-        this.groupManager.createGroup(group);
+        this.groupService.createGroup(group);
       }
 
     } catch (IOException e) {

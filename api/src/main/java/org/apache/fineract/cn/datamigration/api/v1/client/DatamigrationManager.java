@@ -51,14 +51,14 @@ public interface DatamigrationManager {
 
   //Office Migration
   @RequestMapping(
-          value = "/offices/download",
+          value = "/office/download",
           method = RequestMethod.GET,
           consumes = MediaType.ALL_VALUE
   )
    void officeSheetdownload(HttpServletResponse response) throws ClassNotFoundException;
 
   @RequestMapping(
-          value = "/offices",
+          value = "/office",
           method = RequestMethod.POST,
           consumes = MediaType.MULTIPART_FORM_DATA_VALUE
   )
@@ -205,70 +205,20 @@ public interface DatamigrationManager {
    ResponseEntity<String> journalEntrySheetUpload(@RequestParam("file") MultipartFile file) ;
 
 
-  //product Migration
+  //Loan product Migration
   @RequestMapping(
-          value = "/products/download",
+          value = "/loan/download",
           method = RequestMethod.GET,
           consumes = MediaType.ALL_VALUE
   )
    void productSheetDownload(HttpServletResponse response) throws ClassNotFoundException;
 
   @RequestMapping(
-          value = "/products",
+          value = "/loan",
           method = RequestMethod.POST,
           consumes = MediaType.MULTIPART_FORM_DATA_VALUE
   )
    ResponseEntity<String> productSheetUpload(@RequestParam("file") MultipartFile file) ;
-
-  //Tenant Migration
-  @RequestMapping(
-          value = "/tenants/download",
-          method = RequestMethod.GET,
-          consumes = MediaType.ALL_VALUE
-  )
-   void tenantSheetDownload(HttpServletResponse response) throws ClassNotFoundException;
-
-  @RequestMapping(
-          value = "/tenant",
-          method = RequestMethod.POST,
-          consumes = MediaType.MULTIPART_FORM_DATA_VALUE
-  )
-   ResponseEntity<String> tenantSheetUpload(@RequestParam("file") MultipartFile file);
-
-
-  //Charge definition Migration
-  @RequestMapping(
-          value = "/charge/download",
-          method = RequestMethod.GET,
-          consumes = MediaType.ALL_VALUE
-  )
-   void chargeDefinitionSheetDownload(HttpServletResponse response) throws ClassNotFoundException;
-
-
-  @RequestMapping(
-          value = "/charge",
-          method = RequestMethod.POST,
-          consumes = MediaType.MULTIPART_FORM_DATA_VALUE
-  )
-   ResponseEntity<String> chargeDefintionSheetUpload(@RequestParam("file") MultipartFile file) throws
-          IOException ;
-
-
-  //Deposit Action Migration
-  @RequestMapping(
-          value = "/action/download",
-          method = RequestMethod.GET,
-          consumes = MediaType.ALL_VALUE
-  )
-   void depositActionSheetDownload(HttpServletResponse response) throws ClassNotFoundException;
-
-  @RequestMapping(
-          value = "/action",
-          method = RequestMethod.POST,
-          consumes = MediaType.MULTIPART_FORM_DATA_VALUE
-  )
-   ResponseEntity<String> depositActionSheetUpload(@RequestParam("file") MultipartFile file) throws IOException ;
-
 
 
   //Group Definition Migration

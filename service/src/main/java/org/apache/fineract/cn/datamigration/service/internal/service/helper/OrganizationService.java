@@ -16,11 +16,12 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.fineract.cn.datamigration.service.internal.service.hleper;
+package org.apache.fineract.cn.datamigration.service.internal.service.helper;
 
 import org.apache.fineract.cn.datamigration.service.ServiceConstants;
-import org.apache.fineract.cn.portfolio.api.v1.client.PortfolioManager;
-import org.apache.fineract.cn.portfolio.api.v1.domain.Product;
+import org.apache.fineract.cn.office.api.v1.client.OrganizationManager;
+import org.apache.fineract.cn.office.api.v1.domain.Employee;
+import org.apache.fineract.cn.office.api.v1.domain.Office;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -29,25 +30,43 @@ import org.springframework.stereotype.Service;
 import java.util.Optional;
 
 @Service
-public class PortfolioService {
+public class OrganizationService {
 
   private final Logger logger;
-  private final PortfolioManager portfolioManager;
+  private final OrganizationManager organizationManager;
 
   @Autowired
-  public PortfolioService(@Qualifier(ServiceConstants.LOGGER_NAME) final Logger logger,
-                          final PortfolioManager portfolioManager) {
+  public OrganizationService(@Qualifier(ServiceConstants.LOGGER_NAME) final Logger logger,
+                             final OrganizationManager organizationManager) {
     super();
     this.logger = logger;
-    this.portfolioManager = portfolioManager;
+    this.organizationManager = organizationManager;
   }
 
-  public Optional<String> createLoanProduct(final Product product) {
+  public Optional<String> createOffice(final Office office) {
     try {
-      this.portfolioManager.createProduct(product);
+      this.organizationManager.createOffice(office);
       return Optional.empty();
     } catch (Exception e) {
       return Optional.of("Error while processing the office.");
+    }
+  }
+
+  public Optional<String> createEmployee(final Employee employee) {
+    try {
+      this.organizationManager.createEmployee(employee);
+      return Optional.empty();
+    } catch (Exception e) {
+      return Optional.of("Error while processing the employee.");
+    }
+  }
+
+  public Optional<String> createBranchOffice(String officeIdentifier, final Office office) {
+    try {
+      this.organizationManager.addBranch(officeIdentifier, office);
+      return Optional.empty();
+    } catch (Exception e) {
+      return Optional.of("Error while processing the  office branch.");
     }
   }
 

@@ -1,7 +1,7 @@
 package org.apache.fineract.cn.datamigration.service.internal.service;
 
 import org.apache.fineract.cn.datamigration.service.ServiceConstants;
-import org.apache.fineract.cn.datamigration.service.internal.service.hleper.OrganizationService;
+import org.apache.fineract.cn.datamigration.service.internal.service.helper.OrganizationService;
 import org.apache.fineract.cn.office.api.v1.domain.Address;
 import org.apache.fineract.cn.office.api.v1.domain.Office;
 import org.apache.poi.ss.usermodel.Cell;

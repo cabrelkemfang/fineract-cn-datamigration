@@ -23,6 +23,8 @@ import org.apache.fineract.cn.customer.api.v1.domain.Address;
 import org.apache.fineract.cn.customer.api.v1.domain.ContactDetail;
 import org.apache.fineract.cn.customer.api.v1.domain.Customer;
 import org.apache.fineract.cn.datamigration.service.ServiceConstants;
+import org.apache.fineract.cn.datamigration.service.internal.service.helper.CustomerService;
+import org.apache.fineract.cn.datamigration.service.internal.service.helper.OrganizationService;
 import org.apache.fineract.cn.lang.DateOfBirth;
 import org.apache.fineract.cn.office.api.v1.client.OrganizationManager;
 import org.apache.fineract.cn.office.api.v1.domain.OfficePage;
@@ -44,20 +46,20 @@ import java.util.stream.IntStream;
 
 
 @Service
-public class CustomerDatamigrationService {
+public class CustomerMigration {
   private final Logger logger;
-  private final CustomerManager customerManager;
-  private final OrganizationManager organizationManager;
+  private final CustomerService customerService;
+  private final OrganizationService organizationService;
 
 
   @Autowired
-  public CustomerDatamigrationService(@Qualifier(ServiceConstants.LOGGER_NAME) final Logger logger,
-                                      final CustomerManager customerManager,
-                                      final OrganizationManager organizationManager) {
+  public CustomerMigration(@Qualifier(ServiceConstants.LOGGER_NAME) final Logger logger,
+                           final CustomerService customerService,
+                           final OrganizationService organizationService) {
      super();
      this.logger = logger;
-     this.customerManager = customerManager;
-     this.organizationManager = organizationManager;
+     this.customerService = customerService;
+     this.organizationService = organizationService;
   }
 
   public  void customersSheetDownload(HttpServletResponse response){
@@ -86,7 +88,7 @@ public class CustomerDatamigrationService {
 
 
      XSSFCell cell1 = rowHeader.createCell(startColIndex+0);
-     cell1.setCellValue("Identifier");
+     cell1.setCellValue("Customer Identifier");
      cell1.setCellStyle(headerCellStyle);
 
      XSSFCell cell2 = rowHeader.createCell(startColIndex+1);
@@ -675,7 +677,7 @@ public class CustomerDatamigrationService {
           customer.setCurrentState(currentState);
           customer.setApplicationDate(String.valueOf(applicationDate));
 
-          this.customerManager.createCustomer(customer);
+          this.customerService.createCustomer(customer);
         }
 
       } catch (IOException e) {

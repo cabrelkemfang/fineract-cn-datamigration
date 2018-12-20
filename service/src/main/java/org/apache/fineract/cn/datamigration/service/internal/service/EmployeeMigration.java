@@ -1,11 +1,9 @@
 package org.apache.fineract.cn.datamigration.service.internal.service;
 
 import org.apache.fineract.cn.datamigration.service.ServiceConstants;
-import org.apache.fineract.cn.datamigration.service.internal.service.hleper.OrganizationService;
-import org.apache.fineract.cn.office.api.v1.client.OrganizationManager;
+import org.apache.fineract.cn.datamigration.service.internal.service.helper.OrganizationService;
 import org.apache.fineract.cn.office.api.v1.domain.ContactDetail;
 import org.apache.fineract.cn.office.api.v1.domain.Employee;
-import org.apache.fineract.cn.office.api.v1.domain.OfficePage;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.*;
 import org.slf4j.Logger;

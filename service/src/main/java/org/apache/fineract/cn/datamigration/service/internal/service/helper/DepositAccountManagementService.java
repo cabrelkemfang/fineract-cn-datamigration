@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.fineract.cn.datamigration.service.internal.service.hleper;
+package org.apache.fineract.cn.datamigration.service.internal.service.helper;
 
 import org.apache.fineract.cn.datamigration.service.ServiceConstants;
 import org.apache.fineract.cn.deposit.api.v1.client.DepositAccountManager;

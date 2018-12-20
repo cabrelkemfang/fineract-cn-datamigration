@@ -6,7 +6,7 @@ import org.apache.fineract.cn.accounting.api.v1.domain.Debtor;
 import org.apache.fineract.cn.accounting.api.v1.domain.JournalEntry;
 import org.apache.fineract.cn.accounting.api.v1.domain.TransactionTypePage;
 import org.apache.fineract.cn.datamigration.service.ServiceConstants;
-import org.apache.fineract.cn.datamigration.service.internal.service.hleper.AccountingService;
+import org.apache.fineract.cn.datamigration.service.internal.service.helper.AccountingService;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.*;
 import org.slf4j.Logger;

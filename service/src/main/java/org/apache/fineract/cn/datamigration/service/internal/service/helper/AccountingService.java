@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.fineract.cn.datamigration.service.internal.service.hleper;
+package org.apache.fineract.cn.datamigration.service.internal.service.helper;
 
 
 import org.apache.fineract.cn.accounting.api.v1.client.LedgerManager;
@@ -49,7 +49,7 @@ public class AccountingService {
       this.ledgerManager.createLedger(ledger);
       return Optional.empty();
     } catch (Exception e) {
-      return Optional.of("Error while processing the office.");
+      return Optional.of("Error while processing the ledger.");
     }
   }
 
@@ -62,7 +62,7 @@ public class AccountingService {
       this.ledgerManager.addSubLedger(ledgerIdentifier, ledger);
       return Optional.empty();
     } catch (Exception e) {
-      return Optional.of("Error while processing the office.");
+      return Optional.of("Error while processing the subLedger.");
     }
   }
 
@@ -71,7 +71,7 @@ public class AccountingService {
       this.ledgerManager.createAccount(account);
       return Optional.empty();
     } catch (Exception e) {
-      return Optional.of("Error while processing the office.");
+      return Optional.of("Error while processing the account.");
     }
   }
 
@@ -80,7 +80,7 @@ public class AccountingService {
       this.ledgerManager.createTransactionType(transactionType);
       return Optional.empty();
     } catch (Exception e) {
-      return Optional.of("Error while processing the office.");
+      return Optional.of("Error while processing the transaction type.");
     }
   }
 
@@ -89,7 +89,7 @@ public class AccountingService {
       this.ledgerManager.createJournalEntry(journalEntry);
       return Optional.empty();
     } catch (Exception e) {
-      return Optional.of("Error while processing the office.");
+      return Optional.of("Error while processing the journal entry.");
     }
   }
 

@@ -1,7 +1,7 @@
 package org.apache.fineract.cn.datamigration.service.internal.service;
 
 import org.apache.fineract.cn.datamigration.service.ServiceConstants;
-import org.apache.fineract.cn.datamigration.service.internal.service.hleper.DepositAccountManagementService;
+import org.apache.fineract.cn.datamigration.service.internal.service.helper.DepositAccountManagementService;
 import org.apache.fineract.cn.deposit.api.v1.definition.domain.Charge;
 import org.apache.fineract.cn.deposit.api.v1.definition.domain.Currency;
 import org.apache.fineract.cn.deposit.api.v1.definition.domain.ProductDefinition;

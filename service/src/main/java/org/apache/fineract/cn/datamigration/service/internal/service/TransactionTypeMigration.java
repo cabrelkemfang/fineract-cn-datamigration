@@ -2,7 +2,7 @@ package org.apache.fineract.cn.datamigration.service.internal.service;
 
 import org.apache.fineract.cn.accounting.api.v1.domain.TransactionType;
 import org.apache.fineract.cn.datamigration.service.ServiceConstants;
-import org.apache.fineract.cn.datamigration.service.internal.service.hleper.AccountingService;
+import org.apache.fineract.cn.datamigration.service.internal.service.helper.AccountingService;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Font;
 import org.apache.poi.ss.usermodel.Row;

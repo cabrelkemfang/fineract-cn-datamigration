@@ -1,6 +1,7 @@
 package org.apache.fineract.cn.datamigration.service.internal.service;
 
 import org.apache.fineract.cn.datamigration.service.ServiceConstants;
+import org.apache.fineract.cn.datamigration.service.internal.service.helper.GroupService;
 import org.apache.fineract.cn.group.api.v1.client.GroupManager;
 import org.apache.fineract.cn.group.api.v1.domain.Cycle;
 import org.apache.fineract.cn.group.api.v1.domain.GroupDefinition;
@@ -24,14 +25,14 @@ import java.util.stream.IntStream;
 public class GroupDefinitionMigration {
 
   private final Logger logger;
-  private final GroupManager groupManager;
+  private final GroupService groupService;
 
   @Autowired
   public GroupDefinitionMigration(@Qualifier(ServiceConstants.LOGGER_NAME) final Logger logger,
-                        final GroupManager groupManager) {
+                        final GroupService groupService) {
     super();
     this.logger = logger;
-    this.groupManager = groupManager;
+    this.groupService = groupService;
   }
 
   public static void groupDefinitionSheetDownload(HttpServletResponse response){
@@ -235,7 +236,7 @@ public class GroupDefinitionMigration {
         groupDefinition.setMinimalSize(Integer.valueOf(minimalSize));
         groupDefinition.setMaximalSize(Integer.valueOf(maximalSize));
         groupDefinition.setCycle(cycle);
-        this.groupManager.createGroupDefinition(groupDefinition);
+        this.groupService.createGroupDefinition(groupDefinition);
       }
     } catch (IOException e) {
       e.printStackTrace();
